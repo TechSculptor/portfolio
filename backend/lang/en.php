@@ -7,6 +7,15 @@ return [
     'nav_register' => 'Register',
     'nav_about' => 'The Office',
     'nav_dashboard' => 'Dashboard',
+    'week_label' => 'Week of:',
+    'today_btn' => 'Today',
+    'monday' => 'Monday',
+    'tuesday' => 'Tuesday',
+    'wednesday' => 'Wednesday',
+    'thursday' => 'Thursday',
+    'friday' => 'Friday',
+    'saturday' => 'Saturday',
+    'sunday' => 'Sunday',
     'nav_logout' => 'Logout',
 
     // About

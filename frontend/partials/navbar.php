@@ -28,78 +28,89 @@ function getLangUrl($lang)
 
 <?php
 // Function to check if link is active
-function isActive($path) {
+
+function isActive($path)
+{
     global $currentUri;
-    // Simple check: if URI starts with path (for roots like /about) or matches exactly.
-    // For root /, we need exact match or empty path logic if necessary, but visually checking:
-    // $currentUri might contain query params.
     $pathOnly = parse_url($currentUri, PHP_URL_PATH);
-    if ($path === '/' && ($pathOnly === '/' || $pathOnly === '/index.php')) return true;
-    if ($path !== '/' && strpos($pathOnly, $path) === 0) return true;
+    if ($path === '/' && ($pathOnly === '/' || $pathOnly === '/index.php'))
+        return true;
+    if ($path !== '/' && strpos($pathOnly, $path) === 0)
+        return true;
     return false;
 }
-function activeClass($path) {
-    return isActive($path) ? 'w3-grey' : 'w3-white';
+function activeClass($path)
+{
+    return isActive($path) ? 'active-tab' : '';
 }
 ?>
-    <!-- Fixed top navigation -->
-    <div class="w3-top">
-        <div class="w3-bar w3-red w3-card w3-left-align w3-large">
-            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red"
-                href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i
-                    class="fa fa-bars"></i></a>
+<!-- Fixed top navigation -->
+<div class="w3-top">
+    <div class="w3-bar w3-red w3-card w3-left-align w3-large">
+        <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red"
+            href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i
+                class="fa fa-bars"></i></a>
 
-            <a href="/" class="w3-bar-item w3-button w3-padding-large <?php echo activeClass('/'); ?>"><?php echo __('nav_home'); ?></a>
-            <a href="/about"
-                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white <?php echo activeClass('/about'); ?>"><?php echo __('nav_about'); ?></a>
-            <a href="/doctors"
-                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white <?php echo activeClass('/doctors'); ?>"><?php echo __('nav_doctors'); ?></a>
-            <?php if ($isLoggedIn) { ?>
-                <a href="/dashboard"
-                    class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white <?php echo activeClass('/dashboard'); ?>"><?php echo __('nav_dashboard'); ?></a>
-                <?php if ($userType === 'admin') { ?>
-                    <a href="/admin_doctors"
-                        class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white <?php echo activeClass('/admin_doctors'); ?>"><?php echo __('dashboard_manage_docs'); ?></a>
-                <?php } ?>
-                <a href="javascript:void(0)" onclick="openLogoutModal()"
-                    class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right"><?php echo __('nav_logout'); ?></a>
-            <?php } else { ?>
-                <a href="/login"
-                    class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right <?php echo activeClass('/login'); ?>"><?php echo __('nav_login'); ?></a>
-                <a href="/register"
-                    class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right <?php echo activeClass('/register'); ?>"><?php echo __('nav_register'); ?></a>
+        <a href="/"
+            class="w3-bar-item w3-button w3-padding-large <?php echo activeClass('/'); ?>"><?php echo __('nav_home'); ?></a>
+        <a href="/about"
+            class="w3-bar-item w3-button w3-hide-small w3-padding-large <?php echo activeClass('/about'); ?>"><?php echo __('nav_about'); ?></a>
+        <a href="/doctors"
+            class="w3-bar-item w3-button w3-hide-small w3-padding-large <?php echo activeClass('/doctors'); ?>"><?php echo __('nav_doctors'); ?></a>
+        <?php if ($isLoggedIn) { ?>
+            <a href="/dashboard"
+                class="w3-bar-item w3-button w3-hide-small w3-padding-large <?php echo activeClass('/dashboard'); ?>"><?php echo __('nav_dashboard'); ?></a>
+            <?php if ($userType === 'admin') { ?>
+                <a href="/admin_doctors"
+                    class="w3-bar-item w3-button w3-hide-small w3-padding-large <?php echo activeClass('/admin_doctors'); ?>"><?php echo __('dashboard_manage_docs'); ?></a>
             <?php } ?>
+            <a href="javascript:void(0)" onclick="openLogoutModal()"
+                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-right-align-flex"
+                style="margin-left: auto;"><?php echo __('nav_logout'); ?></a>
+        <?php } else { ?>
+            <a href="/login"
+                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-right-align-flex <?php echo activeClass('/login'); ?>"
+                style="margin-left: auto;"><?php echo __('nav_login'); ?></a>
+            <a href="/register"
+                class="w3-bar-item w3-button w3-hide-small w3-padding-large <?php echo activeClass('/register'); ?>"><?php echo __('nav_register'); ?></a>
+        <?php } ?>
 
-            <!-- Language Switcher -->
-            <a href="<?php echo getLangUrl('fr'); ?>"
-                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right"
-                style="font-size: 0.8em;">FR</a>
-            <a href="<?php echo getLangUrl('en'); ?>"
-                class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right"
-                style="font-size: 0.8em;">EN</a>
-        </div>
+        <!-- Language Switcher -->
+        <a href="<?php echo getLangUrl('fr'); ?>"
+            class="w3-bar-item w3-button w3-hide-small w3-padding-large lang-btn">FR</a>
+        <a href="<?php echo getLangUrl('en'); ?>"
+            class="w3-bar-item w3-button w3-hide-small w3-padding-large lang-btn">EN</a>
+    </div>
 
-        <!-- Mobile menu -->
-        <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
-            <a href="/" class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_home'); ?></a>
-            <a href="/about" class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_about'); ?></a>
-            <a href="/doctors" class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_doctors'); ?></a>
-            <?php if ($isLoggedIn) { ?>
-                <a href="/dashboard" class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_dashboard'); ?></a>
-                <?php if ($userType === 'admin') { ?>
-                    <a href="/admin_doctors"
-                        class="w3-bar-item w3-button w3-padding-large"><?php echo __('dashboard_manage_docs'); ?></a>
-                <?php } ?>
-                <a href="javascript:void(0)" onclick="openLogoutModal()"
-                    class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_logout'); ?></a>
-            <?php } else { ?>
-                <a href="/login" class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_login'); ?></a>
-                <a href="/register" class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_register'); ?></a>
+    <!-- Mobile menu -->
+    <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+        <a href="/"
+            class="w3-bar-item w3-button w3-padding-large <?php echo activeClass('/'); ?>"><?php echo __('nav_home'); ?></a>
+        <a href="/about"
+            class="w3-bar-item w3-button w3-padding-large <?php echo activeClass('/about'); ?>"><?php echo __('nav_about'); ?></a>
+        <a href="/doctors"
+            class="w3-bar-item w3-button w3-padding-large <?php echo activeClass('/doctors'); ?>"><?php echo __('nav_doctors'); ?></a>
+        <?php if ($isLoggedIn) { ?>
+            <a href="/dashboard"
+                class="w3-bar-item w3-button w3-padding-large <?php echo activeClass('/dashboard'); ?>"><?php echo __('nav_dashboard'); ?></a>
+            <?php if ($userType === 'admin') { ?>
+                <a href="/admin_doctors"
+                    class="w3-bar-item w3-button w3-padding-large <?php echo activeClass('/admin_doctors'); ?>"><?php echo __('dashboard_manage_docs'); ?></a>
             <?php } ?>
-            <a href="<?php echo getLangUrl('fr'); ?>" class="w3-bar-item w3-button w3-padding-large">FR</a>
-            <a href="<?php echo getLangUrl('en'); ?>" class="w3-bar-item w3-button w3-padding-large">EN</a>
+            <a href="javascript:void(0)" onclick="openLogoutModal()"
+                class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_logout'); ?></a>
+        <?php } else { ?>
+            <a href="/login"
+                class="w3-bar-item w3-button w3-padding-large <?php echo activeClass('/login'); ?>"><?php echo __('nav_login'); ?></a>
+            <a href="/register"
+                class="w3-bar-item w3-button w3-padding-large <?php echo activeClass('/register'); ?>"><?php echo __('nav_register'); ?></a>
+        <?php } ?>
+        <div class="w3-bar-item w3-light-grey">
+            <a href="<?php echo getLangUrl('fr'); ?>" class="w3-button lang-btn">FR</a>
+            <a href="<?php echo getLangUrl('en'); ?>" class="w3-button lang-btn">EN</a>
         </div>
     </div>
+</div>
 
 <!-- Logout Confirmation Modal -->
 <div id="logoutModal" class="modal">

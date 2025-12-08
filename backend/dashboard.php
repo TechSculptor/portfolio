@@ -9,14 +9,12 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-
-
 // Inclure le fichier de connexion à la base de données (db.php)
 require_once "config/db.php";
 
 // Récupérer l'ID et le type de l'utilisateur connecté
 $userId = $_SESSION['user_id'];
-$userType = isset($_SESSION['user_type']) ? $_SESSION['user_type'] : 'patient';
+$userType = isset($_SESSION['user_type']) ? $_SESSION['user_type'] : null;
 
 // Récupérer les informations de l'utilisateur
 if ($userType === 'admin') {
@@ -29,31 +27,14 @@ if ($userType === 'admin') {
     $stmt->execute(['user_id' => $userId]);
     $user = $stmt->fetch();
     $displayName = 'Dr. ' . $user['first_name'] . ' ' . $user['last_name'];
-} else {
+} elseif ($userType === 'patient') {
     $stmt = $conn->prepare("SELECT * FROM PATIENT WHERE patient_id = :user_id");
     $stmt->execute(['user_id' => $userId]);
     $user = $stmt->fetch();
     $displayName = $user['first_name'] . ' ' . $user['last_name'];
-}
-
-// Tableau des couleurs pour les rendez-vous de l'utilisateur authentifié
-$colors = [
-    '#ffcccc',
-    '#ff9999',
-    '#ff6666',
-    '#ff3333',
-    '#ff0000',
-];
-
-// Compteur pour les couleurs
-$colorIndex = 0;
-
-// Fonction pour récupérer la prochaine couleur du tableau
-function getNextColor($colors, &$colorIndex)
-{
-    $color = $colors[$colorIndex];
-    $colorIndex = ($colorIndex + 1) % count($colors);
-    return $color;
+} else {
+    // Type inconnu ou non défini
+    $displayName = "Utilisateur";
 }
 
 // Traitement de la soumission du formulaire d'annulation de rendez-vous
@@ -81,77 +62,85 @@ if (isset($_POST['cancel_appointment_id'])) {
     exit;
 }
 
-// Récupérer les rendez-vous avec informations du patient et du médecin
-if ($userType === 'admin') {
-    // Admin voit tous les rendez-vous ou filtré
-    $sqlAdmin = "
+
+// LOGIC: Filter and Data Fetching
+$appointments = []; // For Patient List
+$appointmentsGrid = []; // For Weekly View (Admin/Doctor)
+$selectedDate = date('Y-m-d');
+$mondayTs = 0;
+$sundayTs = 0;
+
+if ($userType === 'admin' || $userType === 'doctor') {
+    // 1. Determine Week Range
+    $selectedDate = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
+    $ts = strtotime($selectedDate);
+    // Find Monday of this week (N: 1=Mon, 7=Sun)
+    $dayOfWeek = date('N', $ts);
+    $mondayTs = strtotime('-' . ($dayOfWeek - 1) . ' days', $ts);
+    $sundayTs = strtotime('+6 days', $mondayTs);
+
+    $startDate = date('Y-m-d', $mondayTs);
+    $endDate = date('Y-m-d', $sundayTs);
+
+    // 2. Base Query
+    $sql = "
         SELECT 
             a.appointment_id, 
             a.appointment_date, 
             a.appointment_time, 
             a.reason, 
-            a.is_first_appointment,
             a.status,
             p.first_name as patient_first_name,
             p.last_name as patient_last_name,
             d.first_name as doctor_first_name,
             d.last_name as doctor_last_name,
             d.specialty,
-            a.patient_id
+            a.doctor_id
         FROM APPOINTMENT a
         JOIN PATIENT p ON a.patient_id = p.patient_id
         JOIN DOCTOR d ON a.doctor_id = d.doctor_id
+        WHERE a.appointment_date BETWEEN :start AND :end
     ";
 
-    if (isset($_GET['view_doctor']) && is_numeric($_GET['view_doctor'])) {
-        $sqlAdmin .= " WHERE a.doctor_id = :filter_doc_id";
-        $sqlAdmin .= " ORDER BY a.appointment_date, a.appointment_time";
-        $stmt = $conn->prepare($sqlAdmin);
-        $stmt->execute(['filter_doc_id' => $_GET['view_doctor']]);
-    } else {
-        $sqlAdmin .= " ORDER BY a.appointment_date, a.appointment_time";
-        $stmt = $conn->prepare($sqlAdmin);
-        $stmt->execute();
+    $params = ['start' => $startDate, 'end' => $endDate];
+
+    // Admin Filter
+    if ($userType === 'admin') {
+        if (isset($_GET['view_doctor']) && is_numeric($_GET['view_doctor'])) {
+            $sql .= " AND a.doctor_id = :doc_id";
+            $params['doc_id'] = $_GET['view_doctor'];
+        }
+    } elseif ($userType === 'doctor') {
+        $sql .= " AND a.doctor_id = :user_id";
+        $params['user_id'] = $userId;
     }
-} elseif ($userType === 'doctor') {
-    // Doctor voit seulement SES rendez-vous
+
+    $sql .= " ORDER BY a.appointment_date, a.appointment_time";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute($params);
+    $rawAppointments = $stmt->fetchAll();
+
+    // 3. Restructure for Grid: [Date][Time] = AppointmentData
+    foreach ($rawAppointments as $appt) {
+        $d = $appt['appointment_date'];
+        // Format time to H:i (09:00:00 -> 09:00)
+        $t = substr($appt['appointment_time'], 0, 5);
+        $appointmentsGrid[$d][$t] = $appt;
+    }
+
+} elseif ($userType === 'patient') {
+    // Patient: Logic remains simple list
     $stmt = $conn->prepare("
         SELECT 
             a.appointment_id, 
             a.appointment_date, 
             a.appointment_time, 
             a.reason, 
-            a.is_first_appointment,
             a.status,
-            p.first_name as patient_first_name,
-            p.last_name as patient_last_name,
             d.first_name as doctor_first_name,
             d.last_name as doctor_last_name,
-            d.specialty,
-            a.patient_id
-        FROM APPOINTMENT a
-        JOIN PATIENT p ON a.patient_id = p.patient_id
-        JOIN DOCTOR d ON a.doctor_id = d.doctor_id
-        WHERE a.doctor_id = :user_id
-        ORDER BY a.appointment_date, a.appointment_time
-    ");
-    $stmt->execute(['user_id' => $userId]);
-} else {
-    // Patient voit seulement ses rendez-vous (et infos docteur)
-    $stmt = $conn->prepare("
-        SELECT 
-            a.appointment_id, 
-            a.appointment_date, 
-            a.appointment_time, 
-            a.reason, 
-            a.is_first_appointment,
-            a.status,
-            p.first_name as patient_first_name,
-            p.last_name as patient_last_name,
-            d.first_name as doctor_first_name,
-            d.last_name as doctor_last_name,
-            d.specialty,
-            a.patient_id
+            a.doctor_id
         FROM APPOINTMENT a
         JOIN DOCTOR d ON a.doctor_id = d.doctor_id
         JOIN PATIENT p ON a.patient_id = p.patient_id
@@ -159,10 +148,8 @@ if ($userType === 'admin') {
         ORDER BY a.appointment_date, a.appointment_time
     ");
     $stmt->execute(['user_id' => $userId]);
+    $appointments = $stmt->fetchAll();
 }
-
-$appointments = $stmt->fetchAll();
-
 ?>
 
 <!DOCTYPE html>
@@ -189,66 +176,175 @@ $appointments = $stmt->fetchAll();
         }
 
         .dashboard-container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: auto;
             padding-top: 50px;
             padding-bottom: 50px;
         }
 
-/* Sidebar Styles */
-.sidebar {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    right: 0;
-    background-color: #fff;
-    overflow-x: hidden;
-    transition: 0.5s;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-}
+        .appointment-card {
+            margin-bottom: 20px;
+            text-align: left;
+        }
 
-.sidebar.open {
-    width: 350px;
-}
+        /* Week Grid Styles */
+        .week-grid {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            background-color: white;
+        }
 
-.sidebar-header {
-    background-color: #f44336;
-    color: white;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .day-column {
+            flex: 1;
+            min-width: 140px;
+            border-right: 1px solid #eee;
+        }
 
-.sidebar-header h3 {
-    margin: 0;
-    font-size: 1.2rem;
-}
+        .day-column:last-child {
+            border-right: none;
+        }
 
-.close-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-}
+        .day-header {
+            padding: 10px;
+            text-align: center;
+            background-color: #f44336;
+            color: white;
+            border-bottom: 1px solid #ccc;
+            font-weight: bold;
+        }
 
-.sidebar-content {
-    padding: 20px;
-}
+        .day-column.weekend .day-header {
+            background-color: #e57373;
+        }
 
-#sidebar-overlay {
-    display: none;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 900;
-}
+        .day-column.weekend {
+            background-color: #f9f9f9;
+        }
+
+        .time-slot {
+            height: 70px;
+            border-bottom: 1px solid #eee;
+            padding: 2px;
+            position: relative;
+            font-size: 0.8em;
+        }
+
+        .time-label {
+            color: #888;
+            font-size: 0.7em;
+            position: absolute;
+            top: 2px;
+            left: 4px;
+        }
+
+        .appt-block {
+            background-color: #2196F3;
+            color: white;
+            border-radius: 4px;
+            padding: 4px;
+            height: 90%;
+            width: 96%;
+            margin: 2% auto;
+            overflow: hidden;
+            font-size: 0.9em;
+            cursor: pointer;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .appt-block.confirmed {
+            background-color: #4CAF50;
+        }
+
+        .appt-block.cancelled {
+            background-color: #f44336;
+            opacity: 0.7;
+        }
+
+        .appt-block:hover {
+            transform: scale(1.02);
+            z-index: 10;
+            position: relative;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            right: 0;
+            background-color: #fff;
+            overflow-x: hidden;
+            transition: 0.5s;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar.open {
+            width: 350px;
+        }
+
+        .sidebar-header {
+            background-color: #f44336;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 900;
+        }
+
+        /* Admin specific */
+        .admin-option {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+        }
+
+        .admin-option:hover {
+            background-color: #f1f1f1;
+        }
+
+        .admin-option i {
+            margin-right: 15px;
+            font-size: 1.2em;
+            color: #d32f2f;
+        }
     </style>
 </head>
 
@@ -277,78 +373,128 @@ $appointments = $stmt->fetchAll();
                     <i class="fa fa-calendar"></i> <?php echo __('dashboard_view_avail'); ?>
                 </button>
             <?php } elseif ($userType === 'admin') { ?>
-                <!-- Admin Actions: Open Sidebar -->
-                <button class="w3-button w3-green w3-round w3-margin-small" onclick="openAdminSidebar()">
-                    <i class="fa fa-cogs"></i> <?php echo __('dashboard_manage_docs'); ?>
-                </button>
+                <!-- Admin Actions: Manage Doctors -->
+                <a class="w3-button w3-green w3-round w3-margin-small" href="/admin_doctors">
+                    <i class="fa fa-user-md"></i> <?php echo __('dashboard_manage_docs'); ?>
+                </a>
             <?php } ?>
         </div>
 
-        <!-- Appointments List -->
-        <div class="w3-container">
-            <h3 class="w3-center w3-text-grey"><?php echo __('dashboard_your_appts'); ?></h3>
+        <?php if ($userType === 'patient') { ?>
+            <!-- PATIENT VIEW (Simple List) -->
+            <div class="w3-container" style="max-width: 800px; margin: auto;">
+                <h3 class="w3-center w3-text-grey"><?php echo __('dashboard_your_appts'); ?></h3>
+                <?php if (isset($_GET['success']) && $_GET['success'] == 'appointment_added') { ?>
+                    <div class="w3-panel w3-green w3-display-container w3-round">
+                        <span onclick="this.parentElement.style.display='none'"
+                            class="w3-button w3-green w3-large w3-display-topright">&times;</span>
+                        <p><?php echo __('dashboard_success_appt'); ?></p>
+                    </div>
+                <?php } ?>
 
-            <?php if (isset($_GET['success']) && $_GET['success'] == 'appointment_added') { ?>
-                <div class="w3-panel w3-green w3-display-container w3-round">
-                    <span onclick="this.parentElement.style.display='none'"
-                        class="w3-button w3-green w3-large w3-display-topright">&times;</span>
-                    <p><?php echo __('dashboard_success_appt'); ?></p>
-                </div>
-            <?php } ?>
-
-            <?php if (empty($appointments)) { ?>
-                <div class="w3-panel w3-pale-yellow w3-leftbar w3-border-yellow w3-center">
-                    <p><?php echo __('dashboard_no_appts'); ?></p>
-                </div>
-            <?php } else { ?>
-                <?php foreach ($appointments as $row): ?>
-                    <div class="w3-card w3-white w3-round appointment-card">
-                        <header
-                            class="w3-container <?php echo ($row['status'] === 'cancelled') ? 'w3-red' : (($row['status'] === 'confirmed') ? 'w3-green' : 'w3-blue'); ?>">
-                            <h4><i class="fa fa-calendar-check-o"></i>
-                                <?php echo date('d/m/Y', strtotime($row['appointment_date'])); ?> à
-                                <?php echo substr($row['appointment_time'], 0, 5); ?>
-                            </h4>
-                        </header>
-                        <div class="w3-container w3-padding-16">
-                            <?php if ($userType === 'patient') { ?>
+                <?php if (empty($appointments)) { ?>
+                    <div class="w3-panel w3-pale-yellow w3-leftbar w3-border-yellow w3-center">
+                        <p><?php echo __('dashboard_no_appts'); ?></p>
+                    </div>
+                <?php } else { ?>
+                    <?php foreach ($appointments as $row): ?>
+                        <div class="w3-card w3-white w3-round appointment-card">
+                            <header
+                                class="w3-container <?php echo ($row['status'] === 'cancelled') ? 'w3-red' : (($row['status'] === 'confirmed') ? 'w3-green' : 'w3-blue'); ?>">
+                                <h4><i class="fa fa-calendar-check-o"></i>
+                                    <?php echo date('d/m/Y', strtotime($row['appointment_date'])); ?> à
+                                    <?php echo substr($row['appointment_time'], 0, 5); ?>
+                                </h4>
+                            </header>
+                            <div class="w3-container w3-padding-16">
                                 <p><strong><?php echo __('dashboard_doctor'); ?></strong> Dr.
                                     <?php echo htmlspecialchars($row['doctor_first_name'] . ' ' . $row['doctor_last_name']); ?>
                                 </p>
-                            <?php } else { ?>
-                                <p><strong><?php echo __('dashboard_patient'); ?></strong>
-                                    <?php echo htmlspecialchars($row['patient_first_name'] . ' ' . $row['patient_last_name']); ?>
-                                </p>
-                                <?php if ($userType === 'admin') { ?>
-                                    <p><strong><?php echo __('dashboard_doctor'); ?></strong> Dr.
-                                        <?php echo htmlspecialchars($row['doctor_first_name'] . ' ' . $row['doctor_last_name']); ?>
-                                    </p>
-                                <?php } ?>
+                                <p><strong><?php echo __('dashboard_reason'); ?></strong>
+                                    <?php echo htmlspecialchars($row['reason']); ?></p>
+                                <p><strong><?php echo __('dashboard_status'); ?></strong>
+                                    <?php echo __("status_" . $row['status']) ?? $row['status']; ?></p>
+                            </div>
+                            <?php if ($row['status'] !== 'cancelled') { ?>
+                                <footer class="w3-container w3-light-grey w3-padding">
+                                    <form method="post" action="/dashboard"
+                                        onsubmit="return confirm('<?php echo __('dashboard_confirm_cancel'); ?>');">
+                                        <input type="hidden" name="cancel_appointment_id" value="<?php echo $row['appointment_id']; ?>">
+                                        <button type="submit"
+                                            class="w3-button w3-red w3-round w3-small w3-right"><?php echo __('dashboard_cancel'); ?></button>
+                                    </form>
+                                </footer>
                             <?php } ?>
-
-                            <p><strong><?php echo __('dashboard_reason'); ?></strong>
-                                <?php echo htmlspecialchars($row['reason']); ?></p>
-                            <p><strong><?php echo __('dashboard_status'); ?></strong>
-                                <?php
-                                $statusKey = 'status_' . $row['status'];
-                                echo __($statusKey) ?? $row['status'];
-                                ?>
-                            </p>
                         </div>
-                        <?php if ($row['status'] !== 'cancelled') { ?>
-                            <footer class="w3-container w3-light-grey w3-padding">
-                                <form method="post" action="/dashboard"
-                                    onsubmit="return confirm('<?php echo __('dashboard_confirm_cancel'); ?>');">
-                                    <input type="hidden" name="cancel_appointment_id" value="<?php echo $row['appointment_id']; ?>">
-                                    <button type="submit"
-                                        class="w3-button w3-red w3-round w3-small w3-right"><?php echo __('dashboard_cancel'); ?></button>
-                                </form>
-                            </footer>
+                    <?php endforeach; ?>
+                <?php } ?>
+            </div>
+
+        <?php } elseif ($userType === 'admin' || $userType === 'doctor') { ?>
+            <!-- ADMIN & DOCTOR VIEW (Weekly Grid) -->
+
+            <!-- Date Selector -->
+            <div class="w3-container w3-card w3-white w3-padding w3-margin-bottom w3-center">
+                <form method="get" action="/dashboard">
+                    <?php if (isset($_GET['view_doctor']))
+                        echo '<input type="hidden" name="view_doctor" value="' . htmlspecialchars($_GET['view_doctor']) . '">'; ?>
+                    <label><strong><?php echo __('week_label'); ?></strong></label>
+                    <input type="date" name="date" value="<?php echo $selectedDate; ?>" onchange="this.form.submit()">
+                    <noscript><button type="submit">Aller</button></noscript>
+                    <span class="w3-margin-left">
+                        (<?php echo date('d/m', $mondayTs) . ' - ' . date('d/m', $sundayTs); ?>)
+                    </span>
+                    <a href="/dashboard"
+                        class="w3-button w3-small w3-grey w3-round w3-margin-left"><?php echo __('today_btn'); ?></a>
+                </form>
+            </div>
+
+            <div class="week-grid w3-card">
+                <?php
+                // Loop 7 days
+                for ($i = 0; $i < 7; $i++) {
+                    $currentDayTs = strtotime('+' . $i . ' days', $mondayTs);
+                    $dateStr = date('Y-m-d', $currentDayTs);
+                    $dayNameEnglish = date('l', $currentDayTs);
+
+                    $dayNameEnglish = strtolower(date('l', $currentDayTs));
+                    $dayNameTranslated = __($dayNameEnglish);
+
+                    $isWeekend = ($i >= 5); // Sat (5) Sun (6)
+                    ?>
+                    <div class="day-column <?php echo $isWeekend ? 'weekend' : ''; ?>">
+                        <div class="day-header">
+                            <?php echo $dayNameTranslated; ?><br>
+                            <?php echo date('d/m', $currentDayTs); ?>
+                        </div>
+
+                        <?php
+                        // Time Slots: 09:00 to 16:00
+                        for ($h = 9; $h <= 16; $h++) {
+                            $timeStr = sprintf('%02d:00', $h);
+                            $appt = isset($appointmentsGrid[$dateStr][$timeStr]) ? $appointmentsGrid[$dateStr][$timeStr] : null;
+                            ?>
+                            <div class="time-slot" title="<?php echo $timeStr; ?>">
+                                <!-- <span class="time-label"><?php echo $timeStr; ?></span> -->
+                                <?php if ($appt): ?>
+                                    <div class="appt-block <?php echo $appt['status']; ?>"
+                                        onclick="alert('Patient: <?php echo htmlspecialchars($appt['patient_first_name'] . ' ' . $appt['patient_last_name']) . '\nMotif: ' . htmlspecialchars($appt['reason']); ?>')">
+                                        <strong><?php echo htmlspecialchars(substr($appt['patient_first_name'], 0, 1) . '. ' . $appt['patient_last_name']); ?></strong>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         <?php } ?>
                     </div>
-                <?php endforeach; ?>
-            <?php } ?>
-        </div>
+                <?php } ?>
+            </div>
+
+            <div class="legend w3-margin-top w3-center">
+                <span class="w3-tag w3-blue">En attente</span>
+                <span class="w3-tag w3-green">Confirmé</span>
+                <span class="w3-tag w3-red">Annulé</span>
+                <p class="w3-small w3-text-grey w3-margin-top">Cliquez sur un rendez-vous pour voir les détails.</p>
+            </div>
+        <?php } ?>
     </div>
 
     <!-- Availability Sidebar (Patient Only) -->
@@ -369,29 +515,9 @@ $appointments = $stmt->fetchAll();
             <div class="sidebar-header">
                 <h3><?php echo __('admin_doc_title'); ?></h3>
                 <button class="close-btn"
-                    onclick="document.getElementById('adminSidebar').style.display='none'">&times;</button>
+                    onclick="document.getElementById('adminSidebar').classList.remove('open'); document.getElementById('sidebar-overlay').style.display='none';">&times;</button>
             </div>
             <div class="sidebar-content w3-container">
-                <style>
-                    .admin-option {
-                        cursor: pointer;
-                        padding: 10px;
-                        border-bottom: 1px solid #ddd;
-                        display: flex;
-                        align-items: center;
-                    }
-
-                    .admin-option:hover {
-                        background-color: #f1f1f1;
-                    }
-
-                    .admin-option i {
-                        margin-right: 15px;
-                        font-size: 1.2em;
-                        color: #d32f2f;
-                    }
-                </style>
-
                 <!-- Main Options -->
                 <div id="adminMenu">
                     <div class="admin-option" onclick="location.href='/admin_doctors'">
@@ -425,7 +551,8 @@ $appointments = $stmt->fetchAll();
                 </div>
             </div>
         </div>
-        <div id="sidebar-overlay" onclick="document.getElementById('adminSidebar').style.display='none'"
+        <div id="sidebar-overlay"
+            onclick="document.getElementById('adminSidebar').classList.remove('open'); document.getElementById('sidebar-overlay').style.display='none';"
             style="display:none;"></div>
 
         <script>
@@ -434,25 +561,15 @@ $appointments = $stmt->fetchAll();
                 document.getElementById('adminSidebar').classList.add('open');
                 document.getElementById('sidebar-overlay').style.display = 'block';
             }
-            // Override close logic for admin
-            document.querySelector('#adminSidebar .close-btn').onclick = function () {
-                document.getElementById('adminSidebar').classList.remove('open');
-                document.getElementById('sidebar-overlay').style.display = 'none';
-            };
 
             // Filter logic
             function filterAppointments(doctorId) {
-                // Reload page with filter or simple JS filter?
-                // Let's reload to filter the main view
                 window.location.href = '/dashboard?view_doctor=' + doctorId;
             }
         </script>
     <?php } ?>
 
     <?php include '../frontend/partials/footer.php'; ?>
-
-    <!-- Fix availability.js calls if file is missing in correct path -->
-    <!-- Assuming /frontend/js/availability.js exists and is loaded -->
 
 </body>
 

@@ -7,6 +7,15 @@ return [
     'nav_register' => 'Inscription',
     'nav_about' => 'Le Cabinet',
     'nav_dashboard' => 'Tableau de bord',
+    'week_label' => 'Semaine du :',
+    'today_btn' => "Aujourd'hui",
+    'monday' => 'Lundi',
+    'tuesday' => 'Mardi',
+    'wednesday' => 'Mercredi',
+    'thursday' => 'Jeudi',
+    'friday' => 'Vendredi',
+    'saturday' => 'Samedi',
+    'sunday' => 'Dimanche',
     'nav_logout' => 'Déconnexion',
 
     // About
