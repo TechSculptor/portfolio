@@ -1,0 +1,126 @@
+<?php
+return [
+    // Navbar
+    'nav_home' => 'Accueil',
+    'nav_doctors' => 'Les Médecins',
+    'nav_login' => 'Connexion',
+    'nav_register' => 'Inscription',
+    'nav_about' => 'Le Cabinet',
+    'nav_dashboard' => 'Tableau de bord',
+    'nav_logout' => 'Déconnexion',
+
+    // About
+    'about_title' => 'Le Cabinet',
+    'about_subtitle' => 'Un environnement moderne et accueillant',
+    'about_section1_title' => 'Notre Philosophie',
+    'about_section1_text' => 'Nous croyons en une approche humaine de la médecine. Notre cabinet a été conçu pour apaiser et rassurer, avec des espaces lumineux et confortables.',
+    'about_section2_title' => 'Équipements de Pointe',
+    'about_section2_text' => 'Nous disposons des dernières technologies médicales pour assurer des diagnostics précis et des soins de qualité supérieure pour tous nos patients.',
+
+    // Home
+    'home_welcome' => 'Bienvenue au Cabinet Médical',
+    'home_subtitle' => 'Votre santé, notre priorité',
+    'home_desc' => 'Une équipe de professionnels à votre écoute pour tous vos besoins médicaux.',
+    'home_cta' => 'Prendre Rendez-vous',
+    'home_hours' => 'Nos Horaires',
+    'home_hours_text' => 'Lundi - Vendredi : 9h00 - 18h00',
+    'home_emergency' => 'Urgences',
+    'home_emergency_text' => 'En cas d\'urgence vitale, composez le 15',
+
+    // Footer
+    'footer_text' => '© 2025 Cabinet Fictif Médical. Tous droits réservés.',
+    'footer_privacy' => 'Politique de confidentialité',
+    'footer_terms' => 'Mentions légales',
+
+    // Login
+    'login_title' => 'Connexion',
+    'login_no_account' => 'Vous n\'avez pas de compte ?',
+    'login_create_account' => 'Créer un compte',
+    'login_sf_username' => 'Nom d\'utilisateur ou email',
+    'login_sf_password' => 'Mot de passe',
+    'login_btn' => 'Se connecter',
+
+    // Register
+    'register_title' => 'Inscription',
+    'register_already_account' => 'Déjà un compte ?',
+    'register_login_link' => 'Se connecter',
+    'register_sf_username' => 'Nom d\'utilisateur',
+    'register_sf_email' => 'Email',
+    'register_sf_password' => 'Mot de passe',
+    'register_sf_confirm_password' => 'Confirmer le mot de passe',
+    'register_sf_firstname' => 'Prénom',
+    'register_sf_lastname' => 'Nom',
+    'register_sf_phone' => 'Téléphone',
+    'register_btn' => 'S\'inscrire',
+
+    // Dashboard
+    'dashboard_title' => 'Tableau de Bord',
+    'dashboard_welcome' => 'Bienvenue,',
+    'dashboard_admin_badge' => 'Administrateur',
+    'dashboard_actions' => 'Actions',
+    'dashboard_book_appt' => 'Prendre rendez-vous',
+    'dashboard_view_avail' => 'Voir disponibilités',
+    'dashboard_manage_docs' => 'Gérer les médecins',
+    'dashboard_your_appts' => 'Vos Rendez-vous',
+    'dashboard_no_appts' => 'Vous n\'avez aucun rendez-vous programmé.',
+    'dashboard_patient' => 'Patient :',
+    'dashboard_doctor' => 'Médecin :',
+    'dashboard_reason' => 'Motif :',
+    'dashboard_status' => 'Statut :',
+    'dashboard_cancel' => 'Annuler',
+    'dashboard_confirm_cancel' => 'Voulez-vous vraiment annuler ce rendez-vous ?',
+    'dashboard_success_appt' => 'Rendez-vous confirmé avec succès !',
+
+    // Book Appointment
+    'book_title' => 'Prendre Rendez-vous',
+    'book_select_doctor' => 'Choisir un médecin :',
+    'book_select_default' => 'Sélectionner un médecin',
+    'book_date' => 'Date :',
+    'book_time' => 'Heure :',
+    'book_reason' => 'Motif de consultation :',
+    'book_first_visit' => 'Est-ce votre première visite ?',
+    'book_btn' => 'Confirmer le rendez-vous',
+    'book_back' => 'Retour',
+
+    // Doctors List
+    'doctors_title' => 'Nos Médecins',
+    'doctors_specialty' => 'Spécialité :',
+    'doctors_view_avail' => 'Voir les disponibilités',
+
+    // Availability
+    'avail_title' => 'Disponibilités des Médecins',
+    'avail_desc' => 'Consultez les créneaux horaires disponibles pour prendre rendez-vous.',
+    'avail_morning' => 'Matinée (9h00 - 12h00)',
+    'avail_afternoon' => 'Après-midi (13h00 - 16h00)',
+    'avail_legend' => 'Légende :',
+    'avail_free' => 'Créneau disponible',
+    'avail_taken' => 'Créneau déjà réservé',
+    'avail_login_note' => 'Note: Vous devez être connecté en tant que patient pour réserver un créneau.',
+    'avail_login_btn' => 'Se connecter',
+
+    // Admin Doctors
+    'admin_doc_title' => 'Gestion des Médecins (Admin)',
+    'admin_doc_add' => 'Ajouter un nouveau médecin',
+    'admin_doc_edit' => 'Modifier un médecin',
+    'admin_sf_firstname' => 'Prénom :',
+    'admin_sf_lastname' => 'Nom :',
+    'admin_sf_specialty' => 'Spécialité :',
+    'admin_sf_desc' => 'Description :',
+    'admin_btn_add' => 'Ajouter le médecin',
+    'admin_btn_update' => 'Mettre à jour',
+    'admin_btn_cancel' => 'Annuler',
+    'admin_list' => 'Liste des médecins',
+    'admin_th_id' => 'ID',
+    'admin_th_name' => 'Nom Complet',
+    'admin_th_specialty' => 'Spécialité',
+    'admin_th_desc' => 'Description',
+    'admin_th_actions' => 'Actions',
+    'admin_btn_modify' => 'Modifier',
+    'admin_btn_delete' => 'Supprimer',
+    'admin_confirm_delete' => 'Êtes-vous sûr de vouloir supprimer ce médecin ?',
+
+    // Status
+    'status_pending' => 'En attente',
+    'status_confirmed' => 'Confirmé',
+    'status_cancelled' => 'Annulé',
+];
