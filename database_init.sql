@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS PATIENT (
     phone_number VARCHAR(20),
     email_verified BOOLEAN DEFAULT FALSE,
     verification_token VARCHAR(64),
+    reset_token VARCHAR(64),
+    reset_token_expiry TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -81,25 +83,21 @@ CREATE INDEX IF NOT EXISTS idx_appointment_status ON APPOINTMENT(status);
 -- ============================================================
 
 -- Insert default admin user (username: admin, password: admin123)
--- Password hash for 'admin123'
+-- Password hash generated and verified via PHP script
 INSERT INTO ADMIN (admin_id, username, email, password_hash) 
 VALUES (
     1, 
     'admin', 
     'admin@cabinet.com',
-    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
-) ON CONFLICT (admin_id) DO NOTHING;
+    '$2y$10$E7sgNf1.copJfUVFgJhjceTGLtFiHmYPhYkhJzgNa3.63nop9Qqou'
+) ON CONFLICT (admin_id) DO UPDATE SET password_hash = EXCLUDED.password_hash;
 
 -- Insert sample doctors
--- Insert sample doctors (Password: doc123)
--- Hash: $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi
--- Insert sample doctors (Password: doctor123)
--- Insert sample doctors (Passwords are 'doctor1', 'doctor2', 'doctor3')
--- Hashes generated via PHP password_hash()
+-- Passwords: doctor1, doctor2, doctor3 (hashes verified via PHP)
 INSERT INTO DOCTOR (doctor_id, first_name, last_name, specialty, description, email, username, password_hash) VALUES
-(1, 'Marie', 'Dubois', 'Médecin généraliste', 'Spécialiste en médecine générale avec 15 ans d''expérience', 'marie.dubois@cabinet.com', 'dr.dubois', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-(2, 'Jean', 'Martin', 'Pédiatre', 'Expert en pédiatrie, spécialisé dans le suivi des enfants', 'jean.martin@cabinet.com', 'dr.martin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-(3, 'Sophie', 'Bernard', 'Cardiologue', 'Cardiologue expérimentée, consultations et examens cardiovasculaires', 'sophie.bernard@cabinet.com', 'dr.bernard', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
+(1, 'Marie', 'Dubois', 'Médecin généraliste', 'Spécialiste en médecine générale avec 15 ans d''expérience', 'marie.dubois@cabinet.com', 'dr.dubois', '$2y$10$0LvH0z55jz1VpLNraYWVme/hNR1yF.owdBoIhlQqmqeVb.Gg4SiPa'),
+(2, 'Jean', 'Martin', 'Pédiatre', 'Expert en pédiatrie, spécialisé dans le suivi des enfants', 'jean.martin@cabinet.com', 'dr.martin', '$2y$10$0UEW0vUfYSPXHhW0gqM8O.ZTymCGFGk8ZRffUZpwNuo8SWMX.GskO'),
+(3, 'Sophie', 'Bernard', 'Cardiologue', 'Cardiologue expérimentée, consultations et examens cardiovasculaires', 'sophie.bernard@cabinet.com', 'dr.bernard', '$2y$10$h7EyN5gnTl6gZV3apWY7.O5WAp6JoFFHCld0pOv0q8Sa/GzO0V5KK')
 ON CONFLICT (doctor_id) DO UPDATE SET 
     email = EXCLUDED.email, 
     username = EXCLUDED.username, 
@@ -117,13 +115,33 @@ VALUES (
     '0612345678'
 ) ON CONFLICT (patient_id) DO NOTHING;
 
--- Insert sample appointments
+-- Insert sample appointments (20 varied entries)
 INSERT INTO APPOINTMENT (patient_id, doctor_id, appointment_date, appointment_time, reason, is_first_appointment, status) VALUES
-(1, 1, CURRENT_DATE + INTERVAL '3 days', '09:30:00', 'Consultation de suivi', false, 'confirmed'),
-(1, 2, CURRENT_DATE + INTERVAL '7 days', '14:00:00', 'Première consultation', true, 'pending'),
-(1, 3, CURRENT_DATE + INTERVAL '10 days', '10:00:00', 'Bilan cardiaque', true, 'confirmed'),
+-- Rendez-vous passés
+(1, 1, CURRENT_DATE - INTERVAL '2 months', '09:00:00', 'Bilan annuel', false, 'confirmed'),
 (1, 1, CURRENT_DATE - INTERVAL '1 month', '11:00:00', 'Grippe saisonnière', false, 'confirmed'),
-(1, 3, CURRENT_DATE + INTERVAL '5 days', '16:00:00', 'Annulation imprévue', false, 'cancelled')
+(1, 2, CURRENT_DATE - INTERVAL '3 weeks', '14:30:00', 'Vaccination enfant', true, 'confirmed'),
+(1, 3, CURRENT_DATE - INTERVAL '2 weeks', '10:00:00', 'Électrocardiogramme', false, 'confirmed'),
+(1, 1, CURRENT_DATE - INTERVAL '5 days', '15:00:00', 'Résultats analyses', false, 'confirmed'),
+-- Rendez-vous annulés
+(1, 2, CURRENT_DATE - INTERVAL '1 week', '09:30:00', 'Consultation annulée', false, 'cancelled'),
+(1, 3, CURRENT_DATE + INTERVAL '2 days', '16:00:00', 'Report demandé', false, 'cancelled'),
+-- Rendez-vous à venir (cette semaine)
+(1, 1, CURRENT_DATE + INTERVAL '1 day', '09:30:00', 'Consultation de suivi', false, 'confirmed'),
+(1, 2, CURRENT_DATE + INTERVAL '2 days', '10:30:00', 'Vaccination rappel', false, 'pending'),
+(1, 3, CURRENT_DATE + INTERVAL '3 days', '11:00:00', 'Bilan cardiaque', true, 'confirmed'),
+-- Rendez-vous semaine prochaine
+(1, 1, CURRENT_DATE + INTERVAL '5 days', '14:00:00', 'Renouvellement ordonnance', false, 'pending'),
+(1, 2, CURRENT_DATE + INTERVAL '6 days', '09:00:00', 'Consultation pédiatrique', false, 'confirmed'),
+(1, 3, CURRENT_DATE + INTERVAL '7 days', '15:30:00', 'Suivi tension artérielle', false, 'pending'),
+-- Rendez-vous dans 2 semaines
+(1, 1, CURRENT_DATE + INTERVAL '10 days', '10:00:00', 'Certificat médical', false, 'pending'),
+(1, 2, CURRENT_DATE + INTERVAL '12 days', '14:00:00', 'Bilan de croissance', true, 'pending'),
+(1, 3, CURRENT_DATE + INTERVAL '14 days', '11:30:00', 'Écho cardiaque', false, 'pending'),
+-- Rendez-vous dans 1 mois
+(1, 1, CURRENT_DATE + INTERVAL '21 days', '16:00:00', 'Consultation générale', false, 'pending'),
+(1, 2, CURRENT_DATE + INTERVAL '28 days', '09:30:00', 'Suivi vaccinal', false, 'pending'),
+(1, 3, CURRENT_DATE + INTERVAL '30 days', '10:00:00', 'Contrôle annuel cardio', false, 'pending')
 ON CONFLICT (appointment_id) DO NOTHING;
 
 -- ============================================================

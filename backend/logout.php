@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once 'helpers/TranslationHelper.php';
 
 // Supprimer toutes les variables de session
 session_unset();
@@ -10,6 +11,6 @@ session_unset();
 session_destroy();
 
 // Rediriger vers la page de connexion
-header("Location: login.php");
+header("Location: " . _route('login'));
 exit;
 ?>

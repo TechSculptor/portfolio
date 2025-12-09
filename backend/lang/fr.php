@@ -21,12 +21,30 @@ return [
     // About
     'about_title' => 'Le Cabinet',
     'about_subtitle' => 'Un environnement moderne et accueillant',
+    'about_history_title' => 'Notre Histoire',
+    'about_history_subtitle' => 'Plus de 20 ans d\'expérience médicale',
+    'about_history_text' => 'Fondé en 2003, notre cabinet médical a toujours eu pour mission d\'offrir des soins de qualité dans un cadre bienveillant. Notre équipe de professionnels dévoués accompagne les patients de tous âges.',
+    'about_commitment_title' => 'Notre Engagement',
+    'about_commitment_subtitle' => 'Votre bien-être est notre priorité absolue',
+    'about_commitment_text' => 'Nous nous engageons à fournir des soins personnalisés, à écouter attentivement vos besoins et à utiliser les technologies les plus modernes pour garantir des diagnostics précis et des traitements efficaces.',
+    'about_quote' => '"Votre santé mérite les meilleurs soins"',
     'about_section1_title' => 'Notre Philosophie',
     'about_section1_text' => 'Nous croyons en une approche humaine de la médecine. Notre cabinet a été conçu pour apaiser et rassurer, avec des espaces lumineux et confortables.',
     'about_section2_title' => 'Équipements de Pointe',
     'about_section2_text' => 'Nous disposons des dernières technologies médicales pour assurer des diagnostics précis et des soins de qualité supérieure pour tous nos patients.',
 
     // Home
+    'home_title' => 'Accueil',
+    'home_hero_title' => 'Cabinet Médical Fictif',
+    'home_hero_subtitle' => 'Des soins de qualité, à votre service',
+    'home_hero_cta' => 'Prendre Rendez-vous',
+    'home_section1_title' => 'Pourquoi Nous Choisir ?',
+    'home_section1_subtitle' => 'Une équipe de professionnels à votre écoute',
+    'home_section1_text' => 'Notre cabinet offre une prise en charge complète et personnalisée. Grâce à des équipements modernes et une équipe médicale expérimentée, nous garantissons des soins de haute qualité dans un environnement rassurant.',
+    'home_section2_title' => 'Notre Équipe',
+    'home_section2_subtitle' => 'Des médecins spécialisés et dévoués',
+    'home_section2_text' => 'Nos médecins sont des experts dans leurs domaines respectifs. De la médecine générale aux spécialités, nous couvrons un large éventail de besoins médicaux pour vous accompagner tout au long de votre vie.',
+    'home_quote' => '"Votre santé, notre priorité"',
     'home_welcome' => 'Bienvenue au Cabinet Médical',
     'home_subtitle' => 'Votre santé, notre priorité',
     'home_desc' => 'Une équipe de professionnels à votre écoute pour tous vos besoins médicaux.',
@@ -93,8 +111,11 @@ return [
 
     // Doctors List
     'doctors_title' => 'Nos Médecins',
+    'doctors_subtitle' => 'Une équipe de spécialistes à votre service',
     'doctors_specialty' => 'Spécialité :',
+    'doctors_view_availability' => 'Voir les disponibilités',
     'doctors_view_avail' => 'Voir les disponibilités',
+    'doctors_none' => 'Aucun médecin n\'est enregistré pour le moment.',
 
     // Availability
     'avail_title' => 'Disponibilités des Médecins',

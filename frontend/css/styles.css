@@ -201,6 +201,50 @@ tr:hover {
   right: 0;
 }
 
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+/* Global Font Settings */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Lato", sans-serif;
+}
+
+.w3-bar,
+h1,
+button {
+  font-family: "Montserrat", sans-serif;
+}
+
+.fa-anchor,
+.fa-coffee {
+  font-size: 200px;
+}
+
+/* W3.CSS Overrides / Custom Utility */
+.w3-red {
+  background-color: #f44336 !important;
+  /* Ensure standard red */
+}
+
+/* Navbar specific */
+.w3-bar .w3-button {
+  padding: 12px 24px;
+  /* Matches w3-padding-large roughly */
+}
+
+body {
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 0;
+}
+
 /* Sidebar header */
 .sidebar-header {
   background-color: #d32f2f;

@@ -63,7 +63,7 @@ if (isset($_GET['token']) && !empty($_GET['token'])) {
                 <h3>Email Vérifié!</h3>
                 <p><?php echo htmlspecialchars($message); ?></p>
                 <br>
-                <p><a href="/login" class="w3-button w3-green w3-large">Se connecter</a></p>
+                <p><a href="<?php echo _route('login'); ?>" class="w3-button w3-green w3-large">Se connecter</a></p>
             </div>
         <?php } else { ?>
             <div class="w3-panel w3-pale-red w3-border w3-border-red">
@@ -72,14 +72,14 @@ if (isset($_GET['token']) && !empty($_GET['token'])) {
                 <p><?php echo htmlspecialchars($message); ?></p>
                 <br>
                 <p>
-                    <a href="/register" class="w3-button w3-blue">S'inscrire</a>
-                    <a href="/login" class="w3-button w3-gray">Se connecter</a>
+                    <a href="<?php echo _route('register'); ?>" class="w3-button w3-blue">S'inscrire</a>
+                    <a href="<?php echo _route('login'); ?>" class="w3-button w3-gray">Se connecter</a>
                 </p>
             </div>
         <?php } ?>
 
         <br><br>
-        <p><a href="/">Retour à l'accueil</a></p>
+        <p><a href="<?php echo _route('home'); ?>">Retour à l'accueil</a></p>
     </div>
 
     <?php include '../frontend/partials/footer.html'; ?>

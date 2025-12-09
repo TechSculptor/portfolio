@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Vérifier si l'utilisateur est connecté, rediriger vers la page de connexion si non connecté
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /login");
+    header("Location: " . _route('login'));
     exit;
 }
 
@@ -58,7 +58,7 @@ if (isset($_POST['cancel_appointment_id'])) {
     }
 
     // Rediriger vers la page de tableau de bord
-    header("Location: dashboard.php");
+    header("Location: " . _route('dashboard'));
     exit;
 }
 
@@ -80,7 +80,7 @@ if ($userType === 'admin') {
                 'username' => $username,
                 'password_hash' => $defaultHash
             ]);
-            header("Location: dashboard.php?msg=doctor_added");
+            header("Location: " . _route('dashboard', ['msg' => 'doctor_added']));
             exit;
         } catch (PDOException $e) {
             // Handle error (ideally show message)
@@ -92,11 +92,11 @@ if ($userType === 'admin') {
         $stmt = $conn->prepare("DELETE FROM DOCTOR WHERE doctor_id = :id");
         try {
             $stmt->execute(['id' => $_POST['doctor_id']]);
-            header("Location: dashboard.php?msg=doctor_deleted");
+            header("Location: " . _route('dashboard', ['msg' => 'doctor_deleted']));
             exit;
         } catch (PDOException $e) {
             // Likely has appointments
-            header("Location: dashboard.php?err=doctor_has_appts");
+            header("Location: " . _route('dashboard', ['err' => 'doctor_has_appts']));
             exit;
         }
     }
@@ -112,7 +112,7 @@ if ($userType === 'admin') {
                 'description' => $_POST['description'],
                 'id' => $_POST['doctor_id']
             ]);
-            header("Location: dashboard.php?msg=doctor_updated");
+            header("Location: " . _route('dashboard', ['msg' => 'doctor_updated']));
             exit;
         } catch (PDOException $e) {
             // Handle error
@@ -188,7 +188,43 @@ if ($userType === 'admin' || $userType === 'doctor') {
     }
 
 } elseif ($userType === 'patient') {
-    // Patient: Logic remains simple list
+    // Patient: Also set up week data for grid view
+    $selectedDate = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
+    $ts = strtotime($selectedDate);
+    $dayOfWeek = date('N', $ts);
+    $mondayTs = strtotime('-' . ($dayOfWeek - 1) . ' days', $ts);
+    $sundayTs = strtotime('+6 days', $mondayTs);
+
+    $startDate = date('Y-m-d', $mondayTs);
+    $endDate = date('Y-m-d', $sundayTs);
+
+    // Fetch appointments for grid (this week)
+    $stmtGrid = $conn->prepare("
+        SELECT 
+            a.appointment_id, 
+            a.appointment_date, 
+            a.appointment_time, 
+            a.reason, 
+            a.status,
+            d.first_name as doctor_first_name,
+            d.last_name as doctor_last_name,
+            a.doctor_id
+        FROM APPOINTMENT a
+        JOIN DOCTOR d ON a.doctor_id = d.doctor_id
+        WHERE a.patient_id = :user_id AND a.appointment_date BETWEEN :start AND :end
+        ORDER BY a.appointment_date, a.appointment_time
+    ");
+    $stmtGrid->execute(['user_id' => $userId, 'start' => $startDate, 'end' => $endDate]);
+    $rawAppointments = $stmtGrid->fetchAll();
+
+    // Restructure for Grid: [Date][Time] = AppointmentData
+    foreach ($rawAppointments as $appt) {
+        $d = $appt['appointment_date'];
+        $t = substr($appt['appointment_time'], 0, 5);
+        $appointmentsGrid[$d][$t] = $appt;
+    }
+
+    // Also keep full list for card view
     $stmt = $conn->prepare("
         SELECT 
             a.appointment_id, 
@@ -216,7 +252,7 @@ if ($userType === 'admin' || $userType === 'doctor') {
 <head>
     <title>Tableau de Bord - Cabinet Médical</title>
     <link rel="icon" type="image/png" href="/frontend/img/favicon.png">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -230,7 +266,13 @@ if ($userType === 'admin' || $userType === 'doctor') {
         h4,
         h5,
         h6 {
-            font-family: "Lato", sans-serif
+            font-family: "Lato", sans-serif;
+        }
+
+        .w3-bar,
+        h1,
+        button {
+            font-family: "Montserrat", sans-serif;
         }
 
         .dashboard-container {
@@ -424,7 +466,7 @@ if ($userType === 'admin' || $userType === 'doctor') {
         <!-- Actions -->
         <div class="w3-center w3-section">
             <?php if ($userType === 'patient') { ?>
-                <a class="w3-button w3-blue w3-round w3-margin-small" href="/book_appointment">
+                <a class="w3-button w3-blue w3-round w3-margin-small" href="<?php echo _route('book_appointment'); ?>">
                     <i class="fa fa-plus"></i> <?php echo __('dashboard_book_appt'); ?>
                 </a>
                 <button class="w3-button w3-blue w3-round w3-margin-small" onclick="openAvailabilitySidebar()">
@@ -444,7 +486,73 @@ if ($userType === 'admin' || $userType === 'doctor') {
         </div>
 
         <?php if ($userType === 'patient') { ?>
-            <!-- PATIENT VIEW (Simple List) -->
+            <!-- PATIENT VIEW (Weekly Grid + List) -->
+
+            <!-- Date Selector -->
+            <div class="w3-container w3-card w3-white w3-padding w3-margin-bottom w3-center">
+                <form method="get" action="<?php echo _route('dashboard'); ?>">
+                    <label><strong><?php echo __('week_label'); ?></strong></label>
+                    <input type="date" name="date" value="<?php echo $selectedDate; ?>" onchange="this.form.submit()">
+                    <noscript><button type="submit">Aller</button></noscript>
+                    <span class="w3-margin-left">
+                        (<?php echo date('d/m', $mondayTs) . ' - ' . date('d/m', $sundayTs); ?>)
+                    </span>
+                    <a href="/dashboard"
+                        class="w3-button w3-small w3-grey w3-round w3-margin-left"><?php echo __('today_btn'); ?></a>
+                </form>
+            </div>
+
+            <!-- Weekly Grid for Patient -->
+            <div id="planning" class="week-grid w3-card" style="display: flex; flex-wrap: wrap;">
+                <?php
+                // Loop 7 days
+                for ($i = 0; $i < 7; $i++) {
+                    $currentDayTs = strtotime('+' . $i . ' days', $mondayTs);
+                    $dateStr = date('Y-m-d', $currentDayTs);
+                    $dayNameEnglish = strtolower(date('l', $currentDayTs));
+                    $dayNameTranslated = __($dayNameEnglish);
+                    $isWeekend = ($i >= 5);
+                    ?>
+                    <div class="day-column <?php echo $isWeekend ? 'weekend' : ''; ?> w3-border-right"
+                        style="width: 14.28%; box-sizing: border-box;">
+                        <div class="day-header">
+                            <?php echo $dayNameTranslated; ?><br>
+                            <?php echo date('d/m', $currentDayTs); ?>
+                        </div>
+
+                        <?php
+                        // Time Slots: 09:00 to 16:30 (30 min intervals)
+                        for ($minutes = 540; $minutes <= 990; $minutes += 30) {
+                            $h = floor($minutes / 60);
+                            $m = $minutes % 60;
+                            $timeStr = sprintf('%02d:%02d', $h, $m);
+
+                            $appt = null;
+                            if (isset($appointmentsGrid[$dateStr][$timeStr])) {
+                                $appt = $appointmentsGrid[$dateStr][$timeStr];
+                            }
+                            ?>
+                            <div class="time-slot" title="<?php echo $timeStr; ?>">
+                                <span class="time-label"><?php echo $timeStr; ?></span>
+                                <?php if ($appt): ?>
+                                    <div class="appt-block <?php echo $appt['status']; ?>"
+                                        onclick="alert('Médecin: Dr. <?php echo htmlspecialchars($appt['doctor_first_name'] . ' ' . $appt['doctor_last_name']) . '\nMotif: ' . htmlspecialchars($appt['reason']); ?>')">
+                                        <strong>Dr. <?php echo htmlspecialchars(substr($appt['doctor_last_name'], 0, 8)); ?></strong>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+            </div>
+
+            <div class="legend w3-margin-top w3-center w3-margin-bottom">
+                <span class="w3-tag w3-blue">En attente</span>
+                <span class="w3-tag w3-green">Confirmé</span>
+                <span class="w3-tag w3-red">Annulé</span>
+                <p class="w3-small w3-text-grey w3-margin-top">Cliquez sur un rendez-vous pour voir les détails.</p>
+            </div>
+
             <div class="w3-container">
                 <h3 class="w3-center w3-text-grey"><?php echo __('dashboard_your_appts'); ?></h3>
                 <?php if (isset($_GET['success']) && $_GET['success'] == 'appointment_added') { ?>
@@ -480,7 +588,7 @@ if ($userType === 'admin' || $userType === 'doctor') {
                             </div>
                             <?php if ($row['status'] !== 'cancelled') { ?>
                                 <footer class="w3-container w3-light-grey w3-padding">
-                                    <form method="post" action="/dashboard"
+                                    <form method="post" action="<?php echo _route('dashboard'); ?>"
                                         onsubmit="return confirm('<?php echo __('dashboard_confirm_cancel'); ?>');">
                                         <input type="hidden" name="cancel_appointment_id" value="<?php echo $row['appointment_id']; ?>">
                                         <button type="submit"
@@ -498,7 +606,7 @@ if ($userType === 'admin' || $userType === 'doctor') {
 
             <!-- Date Selector -->
             <div class="w3-container w3-card w3-white w3-padding w3-margin-bottom w3-center">
-                <form method="get" action="/dashboard">
+                <form method="get" action="<?php echo _route('dashboard'); ?>">
                     <?php if (isset($_GET['view_doctor']))
                         echo '<input type="hidden" name="view_doctor" value="' . htmlspecialchars($_GET['view_doctor']) . '">'; ?>
                     <label><strong><?php echo __('week_label'); ?></strong></label>
@@ -605,7 +713,7 @@ if ($userType === 'admin' || $userType === 'doctor') {
                     <!-- Add/Edit Form -->
                     <div id="doctorForm" class="w3-card w3-padding w3-light-grey w3-margin-bottom" style="display:none;">
                         <h4 id="formTitle">Nouveau Médecin</h4>
-                        <form method="POST" action="/dashboard">
+                        <form method="POST" action="<?php echo _route('dashboard'); ?>">
                             <input type="hidden" name="doctor_id" id="form_doctor_id">
 
                             <label>Prénom</label>
@@ -654,7 +762,7 @@ if ($userType === 'admin' || $userType === 'doctor') {
                                     <i class="fa fa-pencil"></i>
                                 </button>
                                 <!-- Delete -->
-                                <form method="POST" action="/dashboard" style="display:inline;"
+                                <form method="POST" action="<?php echo _route('dashboard'); ?>" style="display:inline;"
                                     onsubmit="return confirm('Supprimer ce médecin ?');">
                                     <input type="hidden" name="delete_doctor" value="1">
                                     <input type="hidden" name="doctor_id" value="<?php echo $doc['doctor_id']; ?>">

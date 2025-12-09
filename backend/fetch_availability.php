@@ -116,7 +116,9 @@ if ($selectedDoctorId && $selectedDate) {
                             $hasMorning = true;
                             $class = $available ? 'w3-green w3-hover-green' : 'w3-red w3-opacity';
                             $disabled = $available ? '' : 'disabled style="cursor:not-allowed"';
-                            $onclick = $available ? "onclick=\"window.location.href='book_appointment.php?doctor_id=$selectedDoctorId&date=$selectedDate&time=$time'\"" : "";
+                            $msg = "Vous avez sélectionné le créneau de $time.\\n\\nVeuillez confirmer pour accéder au formulaire et saisir vos informations.";
+                            $route = _route('book_appointment');
+                            $onclick = $available ? "onclick=\"if(confirm('$msg')) window.location.href='$route?doctor_id=$selectedDoctorId&date=$selectedDate&time=$time'\"" : "";
 
                             echo "<button type='button' class='w3-button w3-round w3-small w3-margin-small $class' $disabled $onclick>$time</button> ";
                         }
@@ -138,7 +140,9 @@ if ($selectedDoctorId && $selectedDate) {
                             $hasAfternoon = true;
                             $class = $available ? 'w3-green w3-hover-green' : 'w3-red w3-opacity';
                             $disabled = $available ? '' : 'disabled style="cursor:not-allowed"';
-                            $onclick = $available ? "onclick=\"window.location.href='book_appointment.php?doctor_id=$selectedDoctorId&date=$selectedDate&time=$time'\"" : "";
+                            $msg = "Vous avez sélectionné le créneau de $time.\\n\\nVeuillez confirmer pour accéder au formulaire et saisir vos informations.";
+                            $route = _route('book_appointment');
+                            $onclick = $available ? "onclick=\"if(confirm('$msg')) window.location.href='$route?doctor_id=$selectedDoctorId&date=$selectedDate&time=$time'\"" : "";
 
                             echo "<button type='button' class='w3-button w3-round w3-small w3-margin-small $class' $disabled $onclick>$time</button> ";
                         }

@@ -21,12 +21,30 @@ return [
     // About
     'about_title' => 'The Office',
     'about_subtitle' => 'A modern and welcoming environment',
+    'about_history_title' => 'Our History',
+    'about_history_subtitle' => 'Over 20 years of medical experience',
+    'about_history_text' => 'Founded in 2003, our medical office has always aimed to provide quality care in a compassionate environment. Our team of dedicated professionals supports patients of all ages.',
+    'about_commitment_title' => 'Our Commitment',
+    'about_commitment_subtitle' => 'Your well-being is our absolute priority',
+    'about_commitment_text' => 'We are committed to providing personalized care, listening carefully to your needs, and using the most modern technologies to ensure accurate diagnoses and effective treatments.',
+    'about_quote' => '"Your health deserves the best care"',
     'about_section1_title' => 'Our Philosophy',
     'about_section1_text' => 'We believe in a human approach to medicine. Our office is designed to soothe and reassure, with bright and comfortable spaces.',
     'about_section2_title' => 'State-of-the-art Equipment',
     'about_section2_text' => 'We have the latest medical technologies to ensure precise diagnostics and superior quality care for all our patients.',
 
     // Home
+    'home_title' => 'Home',
+    'home_hero_title' => 'Fictional Medical Cabinet',
+    'home_hero_subtitle' => 'Quality care, at your service',
+    'home_hero_cta' => 'Book Appointment',
+    'home_section1_title' => 'Why Choose Us?',
+    'home_section1_subtitle' => 'A team of professionals listening to you',
+    'home_section1_text' => 'Our office offers complete and personalized care. With modern equipment and an experienced medical team, we guarantee high-quality care in a reassuring environment.',
+    'home_section2_title' => 'Our Team',
+    'home_section2_subtitle' => 'Specialized and dedicated doctors',
+    'home_section2_text' => 'Our doctors are experts in their respective fields. From general medicine to specialties, we cover a wide range of medical needs to support you throughout your life.',
+    'home_quote' => '"Your health, our priority"',
     'home_welcome' => 'Welcome to the Medical Cabinet',
     'home_subtitle' => 'Your health, our priority',
     'home_desc' => 'A team of professionals listening to all your medical needs.',
@@ -93,8 +111,11 @@ return [
 
     // Doctors List
     'doctors_title' => 'Our Doctors',
+    'doctors_subtitle' => 'A team of specialists at your service',
     'doctors_specialty' => 'Specialty:',
+    'doctors_view_availability' => 'View Availability',
     'doctors_view_avail' => 'View Availability',
+    'doctors_none' => 'No doctors are registered yet.',
 
     // Availability
     'avail_title' => 'Doctor Availability',

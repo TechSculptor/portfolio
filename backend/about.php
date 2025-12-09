@@ -1,19 +1,21 @@
 <?php
 require_once 'helpers/TranslationHelper.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo $_SESSION['lang'] ?? 'fr'; ?>">
+<html lang="<?php echo getLang(); ?>">
 
 <head>
-    <title><?php echo __('about_title'); ?> - Cabinet Fictif Médical</title>
+    <title><?php echo __('about_title'); ?> - Cabinet Médical</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="/frontend/img/favicon.png">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/frontend/css/styles.css">
     <style>
         body,
         h1,
@@ -22,13 +24,13 @@ require_once 'helpers/TranslationHelper.php';
         h4,
         h5,
         h6 {
-            font-family: "Lato", sans-serif
+            font-family: "Lato", sans-serif;
         }
 
         .w3-bar,
         h1,
         button {
-            font-family: "Montserrat", sans-serif
+            font-family: "Montserrat", sans-serif;
         }
     </style>
 </head>
@@ -43,51 +45,52 @@ require_once 'helpers/TranslationHelper.php';
         <p class="w3-xlarge"><?php echo __('about_subtitle'); ?></p>
     </header>
 
-    <!-- First Grid -->
-    <div class="equal-height-section w3-white">
+    <!-- First Grid: Our History -->
+    <div class="w3-row-padding w3-padding-64 w3-container">
         <div class="w3-content">
-            <div class="w3-row-padding">
-                <div class="w3-twothird w3-container content-flex" style="padding-right: 60px;">
-                    <h1><?php echo __('about_section1_title'); ?></h1>
-                    <h5 class="w3-padding-32"><?php echo __('about_section1_text'); ?></h5>
-                    <p class="w3-text-grey">
-                        <?php echo __('about_section2_text'); ?>
-                    </p>
-                </div>
-
-                <div class="w3-third w3-center w3-container content-flex">
-                    <div class="image-card w3-round-large w3-hover-shadow">
-                        <img src="/frontend/img/img2.png" alt="Cabinet Medical" class="w3-image w3-round-large"
-                            style="width:100%; max-width:400px;">
-                    </div>
-                </div>
+            <div class="w3-twothird">
+                <h1><?php echo __('about_history_title'); ?></h1>
+                <h5 class="w3-padding-32"><?php echo __('about_history_subtitle'); ?></h5>
+                <p class="w3-text-grey"><?php echo __('about_history_text'); ?></p>
+            </div>
+            <div class="w3-third w3-center">
+                <img src="/frontend/img/img3.png" alt="Histoire du Cabinet"
+                    style="width:100%; max-width:300px; border-radius:8px;">
             </div>
         </div>
     </div>
 
-    <!-- Second Grid -->
-    <div class="equal-height-section w3-light-grey">
+    <!-- Second Grid: Our Commitment -->
+    <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
         <div class="w3-content">
-            <div class="w3-row-padding">
-                <div class="w3-third w3-center w3-container content-flex">
-                    <div class="image-card w3-round-large w3-hover-shadow">
-                        <img src="/frontend/img/img3.png" alt="Salle d'attente" class="w3-image w3-round-large"
-                            style="width:100%; max-width:400px;">
-                    </div>
-                </div>
-
-                <div class="w3-twothird w3-container content-flex" style="padding-left: 60px;">
-                    <h1><?php echo __('about_section2_title'); ?></h1>
-                    <h5 class="w3-padding-32"><?php echo __('about_section2_text'); ?></h5>
-                    <p class="w3-text-grey">
-                        <?php echo __('about_section1_text'); ?>
-                    </p>
-                </div>
+            <div class="w3-third w3-center">
+                <i class="fa fa-heart w3-padding-64 w3-text-red" style="font-size:150px;"></i>
+            </div>
+            <div class="w3-twothird">
+                <h1><?php echo __('about_commitment_title'); ?></h1>
+                <h5 class="w3-padding-32"><?php echo __('about_commitment_subtitle'); ?></h5>
+                <p class="w3-text-grey"><?php echo __('about_commitment_text'); ?></p>
             </div>
         </div>
+    </div>
+
+    <!-- Quote Section -->
+    <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
+        <h1 class="w3-margin w3-xlarge"><?php echo __('about_quote'); ?></h1>
     </div>
 
     <?php include '../frontend/partials/footer.php'; ?>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+    </script>
 
 </body>
 

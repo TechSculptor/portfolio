@@ -2,10 +2,11 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once 'helpers/TranslationHelper.php';
 
 // Vérifier si l'utilisateur est admin
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-    header("Location: /login");
+    header("Location: " . _route('login'));
     exit;
 }
 
@@ -95,11 +96,27 @@ if (isset($_GET['edit'])) {
 
 <head>
     <title>Gestion des Médecins - Admin</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/frontend/css/styles.css">
     <style>
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Lato", sans-serif;
+        }
+
+        .w3-bar,
+        h1,
+        button {
+            font-family: "Montserrat", sans-serif;
+        }
+
         .doctor-table {
             width: 100%;
             margin-top: 20px;
@@ -143,7 +160,7 @@ if (isset($_GET['edit'])) {
         <!-- Formulaire d'ajout/édition -->
         <div class="form-section">
             <h3><?php echo $editDoctor ? __('admin_doc_edit') : __('admin_doc_add'); ?></h3>
-            <form method="POST" action="admin_doctors.php">
+            <form method="POST" action="<?php echo _route('admin_doctors'); ?>">
                 <?php if ($editDoctor) { ?>
                     <input type="hidden" name="doctor_id" value="<?php echo $editDoctor['doctor_id']; ?>">
                 <?php } ?>
@@ -195,9 +212,9 @@ if (isset($_GET['edit'])) {
                         <td><?php echo htmlspecialchars($doctor['specialty']); ?></td>
                         <td><?php echo htmlspecialchars(substr($doctor['description'], 0, 50)) . '...'; ?></td>
                         <td>
-                            <a href="admin_doctors.php?edit=<?php echo $doctor['doctor_id']; ?>"
+                            <a href="<?php echo _route('admin_doctors', ['edit' => $doctor['doctor_id']]); ?>"
                                 class="w3-button w3-small w3-blue"><?php echo __('admin_btn_modify'); ?></a>
-                            <form method="POST" action="admin_doctors.php" style="display: inline;"
+                            <form method="POST" action="<?php echo _route('admin_doctors'); ?>" style="display: inline;"
                                 onsubmit="return confirm('<?php echo __('admin_confirm_delete'); ?>');">
                                 <input type="hidden" name="doctor_id" value="<?php echo $doctor['doctor_id']; ?>">
                                 <input type="submit" name="delete_doctor" value="<?php echo __('admin_btn_delete'); ?>"

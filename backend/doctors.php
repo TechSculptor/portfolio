@@ -1,86 +1,41 @@
 <?php
+require_once 'helpers/TranslationHelper.php';
+require_once 'config/db.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Connexion à la base de données
-require_once "config/db.php";
-require_once "helpers/TranslationHelper.php";
 
-// Récupérer tous les médecins
-$stmt = $conn->prepare("SELECT * FROM DOCTOR ORDER BY last_name, first_name");
-$stmt->execute();
-$doctors = $stmt->fetchAll();
+// Fetch all doctors
+$stmt = $conn->query("SELECT doctor_id, first_name, last_name, specialty FROM DOCTOR ORDER BY last_name");
+$doctors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo getLang(); ?>">
 
 <head>
-    <title>Nos Médecins - Cabinet Médical</title>
+    <title><?php echo __('doctors_title'); ?> - Cabinet Médical</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="icon" type="image/png" href="/frontend/img/favicon.png">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/frontend/css/styles.css">
     <style>
-        .doctors-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 30px;
-            justify-content: center;
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Lato", sans-serif;
         }
 
-        .doctor-column {
-            flex: 0 0 300px;
-            /* Fixed width base, can grow */
-            max-width: 100%;
-            display: flex;
-            /* Makes the card fill height */
-        }
-
-        .doctor-card {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s;
-        }
-
-        .doctor-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .doctor-card h3 {
-            color: #d32f2f;
-            margin-top: 0;
-            min-height: 2em;
-            /* Ensure title height consistency */
-        }
-
-        .doctor-specialty {
-            color: #666;
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-
-        .doctor-description {
-            flex-grow: 1;
-            /* Pushes button to bottom */
-            margin-bottom: 20px;
-        }
-
-        .doctor-icon {
-            font-size: 60px;
-            color: #d32f2f;
-            margin-bottom: 15px;
+        .w3-bar,
+        h1,
+        button {
+            font-family: "Montserrat", sans-serif;
         }
     </style>
 </head>
@@ -89,40 +44,49 @@ $doctors = $stmt->fetchAll();
 
     <?php include '../frontend/partials/navbar.php'; ?>
 
-    <br><br><br><br><br><br>
+    <!-- Header -->
+    <header class="w3-container w3-red w3-center" style="padding:128px 16px">
+        <h1 class="w3-margin w3-jumbo"><?php echo __('doctors_title'); ?></h1>
+        <p class="w3-xlarge"><?php echo __('doctors_subtitle'); ?></p>
+    </header>
 
-    <div class="w3-container">
-        <h1 class="w3-center"><?php echo __('doctors_title'); ?></h1>
-        <p class="w3-center"><?php echo __('home_subtitle'); ?></p>
-
-        <div class="doctors-grid">
-            <?php foreach ($doctors as $doctor) { ?>
-                <div class="doctor-column">
-                    <div class="doctor-card w3-center">
-                        <i class="fa fa-user-md doctor-icon"></i>
-                        <h3>Dr. <?php echo htmlspecialchars($doctor['first_name'] . ' ' . $doctor['last_name']); ?></h3>
-                        <p class="doctor-specialty"><?php echo htmlspecialchars($doctor['specialty']); ?></p>
-                        <p class="doctor-description"><?php echo htmlspecialchars($doctor['description']); ?></p>
-
-                        <a href="/doctor_availability?doctor_id=<?php echo $doctor['doctor_id']; ?>"
-                            class="w3-button w3-blue w3-round" style="margin-top: auto;">
-                            <?php echo __('doctors_view_avail'); ?>
-                        </a>
-                    </div>
-                </div>
-            <?php } ?>
-        </div>
-
-        <?php if (empty($doctors)) { ?>
-            <div class="w3-panel w3-pale-yellow w3-center">
-                <p>Aucun médecin disponible pour le moment.</p>
+    <!-- Doctors Grid -->
+    <div class="w3-row-padding w3-padding-64 w3-container">
+        <div class="w3-content">
+            <div class="w3-row-padding">
+                <?php if (count($doctors) > 0): ?>
+                    <?php foreach ($doctors as $doc): ?>
+                        <div class="w3-third w3-margin-bottom">
+                            <div class="w3-card-4">
+                                <div class="w3-container w3-center w3-padding-large">
+                                    <i class="fa fa-user-md w3-text-red" style="font-size:80px;"></i>
+                                    <h3>Dr. <?php echo htmlspecialchars($doc['first_name'] . ' ' . $doc['last_name']); ?></h3>
+                                    <p class="w3-text-grey"><?php echo htmlspecialchars($doc['specialty']); ?></p>
+                                    <a href="<?php echo _route('doctor_availability', ['doctor_id' => $doc['doctor_id']]); ?>"
+                                        class="w3-button w3-black w3-margin-top"><?php echo __('doctors_view_availability'); ?></a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="w3-center w3-text-grey"><?php echo __('doctors_none'); ?></p>
+                <?php endif; ?>
             </div>
-        <?php } ?>
+        </div>
     </div>
 
-    <br><br>
-
     <?php include '../frontend/partials/footer.php'; ?>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+    </script>
 
 </body>
 

@@ -2,10 +2,11 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once 'helpers/TranslationHelper.php';
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /login");
+    header("Location: " . _route('login'));
     exit;
 }
 
@@ -15,7 +16,7 @@ require_once "config/db.php";
 // Vérifier si l'ID du rendez-vous est présent dans la requête GET
 if (!isset($_GET['appointment_id'])) {
     // Rediriger vers la page de dashboard si l'ID du rendez-vous est manquant
-    header("Location: /dashboard");
+    header("Location: " . _route('dashboard'));
     exit;
 }
 
@@ -25,7 +26,7 @@ $appointmentId = $_GET['appointment_id'];
 // Vérifier si l'ID du rendez-vous est valide
 if (!is_numeric($appointmentId)) {
     // Rediriger vers la page de dashboard si l'ID du rendez-vous est invalide
-    header("Location: /dashboard");
+    header("Location: " . _route('dashboard'));
     exit;
 }
 
@@ -51,6 +52,6 @@ if ($stmt->rowCount() === 1) {
 }
 
 // Rediriger vers la page de dashboard
-header("Location: /dashboard");
+header("Location: " . _route('dashboard'));
 exit;
 ?>

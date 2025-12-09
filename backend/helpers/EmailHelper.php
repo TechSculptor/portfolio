@@ -10,6 +10,7 @@ class EmailHelper
     private $smtpPort;
     private $fromEmail;
     private $fromName;
+    private $baseUrl;
 
     public function __construct()
     {
@@ -17,6 +18,10 @@ class EmailHelper
         $this->smtpPort = getenv('SMTP_PORT') ?: 1025;
         $this->fromEmail = 'noreply@cabinet-medical.com';
         $this->fromName = 'Cabinet Médical';
+
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'];
+        $this->baseUrl = "{$protocol}://{$host}";
     }
 
     /**
@@ -28,7 +33,10 @@ class EmailHelper
     {
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
         $host = $_SERVER['HTTP_HOST']; // Will capture localhost or custom domain
-        $verificationLink = "{$protocol}://{$host}/verify_email?token=" . urlencode($token);
+        // baseUrl is now set in constructor, but keeping local var logic if needed or just using property.
+        // The original code used $this->baseUrl at line 31 without defining it.
+
+        $verificationLink = $this->baseUrl . _route('verify_email') . "?token=" . $token;
 
         $subject = "Vérifiez votre adresse email - Cabinet Médical";
 
@@ -82,6 +90,78 @@ Pour activer votre compte, veuillez cliquer sur le lien suivant:
 Ce lien est valide pendant 24 heures.
 
 Si vous n'avez pas créé de compte, veuillez ignorer cet email.
+
+© 2025 Cabinet Médical
+        ";
+
+        return $this->sendEmail($toEmail, $subject, $htmlBody, $textBody);
+    }
+
+    /**
+     * Send password reset email
+     * 
+     * @return bool
+     */
+    public function sendPasswordResetEmail($toEmail, $fullName, $token): bool
+    {
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'];
+
+        $resetLink = $this->baseUrl . _route('reset_password') . "?token=" . $token;
+
+        $subject = "Réinitialisation de votre mot de passe - Cabinet Médical";
+
+        $htmlBody = "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background-color: #d32f2f; color: white; padding: 20px; text-align: center; }
+                .content { padding: 30px 20px; background-color: #f9f9f9; }
+                .button { display: inline-block; padding: 12px 30px; background-color: #1976d2; 
+                          color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+                .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1>Cabinet Médical</h1>
+                </div>
+                <div class='content'>
+                    <h2>Réinitialisation de mot de passe</h2>
+                    <p>Bonjour {$fullName},</p>
+                    <p>Vous avez demandé à réinitialiser votre mot de passe.</p>
+                    <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe:</p>
+                    <p style='text-align: center;'>
+                        <a href='{$resetLink}' class='button'>Réinitialiser mon mot de passe</a>
+                    </p>
+                    <p>Ou copiez ce lien dans votre navigateur:</p>
+                    <p style='word-break: break-all; font-size: 12px;'>{$resetLink}</p>
+                    <p>Ce lien est valide pendant <strong>1 heure</strong>.</p>
+                    <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                </div>
+                <div class='footer'>
+                    <p>© 2025 Cabinet Médical - Tous droits réservés</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
+
+        $textBody = "
+Bonjour {$fullName},
+
+Vous avez demandé à réinitialiser votre mot de passe.
+
+Cliquez sur le lien suivant pour créer un nouveau mot de passe:
+{$resetLink}
+
+Ce lien est valide pendant 1 heure.
+
+Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.
 
 © 2025 Cabinet Médical
         ";

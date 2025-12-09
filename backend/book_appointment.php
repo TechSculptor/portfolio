@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Vérifier si l'utilisateur est connecté, rediriger vers la page de connexion si ce n'est pas le cas
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'patient') {
-    header("Location: login.php");
+    header("Location: " . _route('login'));
     exit;
 }
 
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $selectedDay = date('N', strtotime($date));
         if ($selectedDay === '6' || $selectedDay === '7') {
             // Rediriger avec un message d'erreur si la date est un samedi ou dimanche
-            header("Location: book_appointment.php?error=invalid_date");
+            header("Location: " . _route('book_appointment', ['error' => 'invalid_date']));
             exit;
         }
 
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // Rediriger vers le tableau de bord avec un message de succès
-            header("Location: /dashboard?success=appointment_added");
+            header("Location: " . _route('dashboard', ['success' => 'appointment_added']));
             exit;
         } catch (PDOException $e) {
             if ($e->getCode() == 23505) { // Unique violation
@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     onclick="openAvailabilitySidebar()"><?php echo __('avail_title'); ?></button></p>
             <br>
 
-            <form method="POST" action="book_appointment.php">
+            <form method="POST" action="<?php echo _route('book_appointment'); ?>">
                 <label for="doctor_id"><?php echo __('book_select_doctor'); ?></label>
                 <select id="doctor_id" name="doctor_id" required onchange="this.form.submit()">
                     <option value=""><?php echo __('book_select_default'); ?></option>
@@ -190,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <label for="time"><?php echo __('book_time'); ?></label>
                 <select id="time" name="time" required>
-                    <option value=""><?php echo __('book_select_default'); // Reusing default select text or generic ?>
+                    <option value="">Sélectionner un créneau
                     </option>
                     <?php foreach ($slots as $slot) {
                         $isBooked = in_array($slot . ':00', $bookedSlots);

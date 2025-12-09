@@ -132,7 +132,7 @@ if ($selectedDoctorId && $selectedDate) {
         <h2><?php echo __('avail_title'); ?></h2>
         <p><?php echo __('avail_desc'); ?></p>
 
-        <form method="GET" action="/doctor_availability">
+        <form method="GET" action="<?php echo _route('doctor_availability'); ?>">
             <label for="doctor_id"><?php echo __('book_select_doctor'); ?></label>
             <select id="doctor_id" name="doctor_id" required onchange="this.form.submit()">
                 <option value=""><?php echo __('book_select_default'); ?></option>
@@ -169,8 +169,11 @@ if ($selectedDoctorId && $selectedDate) {
                             $class = $available ? 'available' : 'booked';
                             $text = $available ? $time . ' ✓' : $time . ' ✗';
                             if ($available && isset($_SESSION['user_id']) && $_SESSION['user_type'] === 'patient') {
-                                echo '<a href="/book_appointment?doctor_id=' . $selectedDoctorId .
-                                    '&date=' . $selectedDate . '&time=' . $time . '" class="time-slot ' . $class . '">' .
+                                $msg = "Vous avez sélectionné le créneau de $time.\\n\\nVeuillez confirmer pour accéder au formulaire et saisir vos informations.";
+                                echo '<a href="' . _route('book_appointment') . '?doctor_id=' . $selectedDoctorId .
+                                    '&date=' . $selectedDate . '&time=' . $time . '" 
+                                    onclick="return confirm(\'' . $msg . '\');" 
+                                    class="time-slot ' . $class . '">' .
                                     $text . '</a>';
                             } else {
                                 echo '<span class="time-slot ' . $class . '">' . $text . '</span>';
@@ -189,8 +192,11 @@ if ($selectedDoctorId && $selectedDate) {
                             $class = $available ? 'available' : 'booked';
                             $text = $available ? $time . ' ✓' : $time . ' ✗';
                             if ($available && isset($_SESSION['user_id']) && $_SESSION['user_type'] === 'patient') {
-                                echo '<a href="/book_appointment?doctor_id=' . $selectedDoctorId .
-                                    '&date=' . $selectedDate . '&time=' . $time . '" class="time-slot ' . $class . '">' .
+                                $msg = "Vous avez sélectionné le créneau de $time.\\n\\nVeuillez confirmer pour accéder au formulaire et saisir vos informations.";
+                                echo '<a href="' . _route('book_appointment') . '?doctor_id=' . $selectedDoctorId .
+                                    '&date=' . $selectedDate . '&time=' . $time . '" 
+                                    onclick="return confirm(\'' . $msg . '\');" 
+                                    class="time-slot ' . $class . '">' .
                                     $text . '</a>';
                             } else {
                                 echo '<span class="time-slot ' . $class . '">' . $text . '</span>';
@@ -216,7 +222,8 @@ if ($selectedDoctorId && $selectedDate) {
             <?php if (!isset($_SESSION['user_id'])) { ?>
                 <div class="w3-panel w3-pale-red">
                     <p><strong>Note:</strong> <?php echo __('avail_login_note'); ?></p>
-                    <p><a href="/login" class="w3-button w3-blue"><?php echo __('avail_login_btn'); ?></a></p>
+                    <p><a href="<?php echo _route('login'); ?>"
+                            class="w3-button w3-blue"><?php echo __('avail_login_btn'); ?></a></p>
                 </div>
             <?php } ?>
         <?php } else { ?>
