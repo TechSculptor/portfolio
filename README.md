@@ -1,8 +1,8 @@
 # 🚀 Portfolio Technique | TechSculptor
 
-**Développeur Junior Back-End(React/PHP/PostgreSQL) et Front-End (ReactJS/JavaScript/HTML5/CSS3) spécialisé en architecture Docker.**
+**Développeur Junior Back-End (React/PHP/PostgreSQL) et Front-End (ReactJS/JavaScript/HTML5/CSS3) spécialisé en architecture Docker.**
 
-Ce répertoire démontre ma capacité à concevoir, développer, et déployer des solutions sécurisées et évolutives.
+Ce répertoire démontre ma capacité à concevoir, développer et déployer des solutions sécurisées et évolutives.
 
 ## 🛠️ Compétences Techniques Clés
 

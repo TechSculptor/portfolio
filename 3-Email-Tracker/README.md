@@ -13,7 +13,7 @@ Un service sécurisé, minimaliste et conteneurisé pour suivre les ouvertures d
 2.  **Intégration :** Une balise `<img src="...">` est insérée dans le code HTML de l'email.
 3.  **Ouverture :** Lorsque l'utilisateur ouvre l'email, le client charge l'image depuis notre point de terminaison de suivi.
 4.  **Enregistrement :** Le serveur enregistre l'événement (ID, Horodatage, IP, User Agent) de manière sécurisée dans PostgreSQL.
-5.  **Réponse :** Un GIF transparent 1x1 est renvoyé au client (invisible pour l'utilisateur).
+5.  **Réponse :** Un pixel transparent 1x1 est renvoyé au client (invisible pour l'utilisateur).
 
 ## Démarrage Rapide
 
@@ -53,7 +53,7 @@ Un service sécurisé, minimaliste et conteneurisé pour suivre les ouvertures d
     docker exec -it email-tracker-db psql -U tracker_user -d email_tracker -c "SELECT * FROM email_opens;"
     ```
 
-## Connexion aux Outils BI (Looker Studio)
+## Connexion àLooker Studio
 
 La base de données PostgreSQL est exposée sur le port **5432**. Vous pouvez connecter Looker Studio ou d'autres outils BI en utilisant les identifiants suivants :
 

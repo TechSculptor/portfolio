@@ -1,6 +1,6 @@
 # Cabinet Médical Fictif 🏥
 
-🇫🇷 *Ce projet démontre des compétences en développement PHP/PostgreSQL/Docker.*
+Un projet démontrant des compétences en développement **PHP**, **PostgreSQL** et **Docker**.
 
 ---
 
