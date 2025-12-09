@@ -1,7 +1,9 @@
 🚀 Portfolio Technique | TechSculptor
+
 Bienvenue sur mon portfolio de projets de développement Full-Stack et d'architecture. Ce répertoire démontre ma capacité à concevoir, développer, et déployer des solutions sécurisées en utilisant une stack moderne.
 
 🛠️ Compétences Techniques Clés
+
 Backend & API : PHP, Architecture RESTful, Sécurité (PDO, Hachage), Docker, n8n (Workflows).
 
 Frontend & UX : ReactJS, JavaScript, HTML5/CSS3 (W3.CSS), Responsivité.
@@ -34,4 +36,5 @@ Déploiement : Docker & Docker Compose, Variables d'environnement.
 - **Points Forts** : Haute performance, données prêtes pour la BI, conformité privacy.
 
 🔒 Note sur la Confidentialité
+
 Le code source de ces projets a été entièrement anonymisé. Tous les noms d'entreprise, la logique métier propriétaire, et les identifiants de sécurité ont été retirés pour des raisons de confidentialité. Les projets présentés ici sont des versions génériques destinées à démontrer mes compétences techniques à des fins de recrutement.
