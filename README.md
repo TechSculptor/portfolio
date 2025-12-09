@@ -23,6 +23,8 @@ Un système de gestion de rendez-vous complet simulant un environnement médical
 * **Stack :** PHP, PostgreSQL, Docker, W3.CSS.
 * **Points Forts :** Authentification sécurisée, rôles utilisateurs, planning dynamique.
 
+[**📂 Voir le code du projet**](1-Cabinet-Medical/)
+
 ### 2️⃣ [2-Collecteur-Besoins : Interface Client & API](2-Collecteur-Besoins/)
 
 Une application moderne pour structurer la collecte de besoins clients.
@@ -31,6 +33,8 @@ Une application moderne pour structurer la collecte de besoins clients.
 * **Stack :** ReactJS, PHP API, PostgreSQL, Docker.
 * **Points Forts :** UX réactive, architecture API REST.
 
+[**📂 Voir le code du projet**](2-Collecteur-Besoins/)
+
 ### 3️⃣ [3-Email-Tracker : Analytics & BI](3-Email-Tracker/)
 
 Un service backend conçu pour suivre l'engagement utilisateur dans des campagnes d'emailing.
@@ -38,6 +42,8 @@ Un service backend conçu pour suivre l'engagement utilisateur dans des campagne
 * **Dossier :** **[3-Email-Tracker/](3-Email-Tracker/)**
 * **Stack :** NodeJSTracking Pixel, PostgreSQL, Looker Studio.
 * **Points Forts :** Haute performance, données prêtes pour la BI, conformité privacy.
+
+[**📂 Voir le code du projet**](3-Email-Tracker/)
 
 ---
 
