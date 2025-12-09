@@ -15,31 +15,31 @@ Ce répertoire démontre ma capacité à concevoir, développer et déployer des
 
 ## 📂 Projets Clés
 
-### 1️⃣ [1-Cabinet-Medical : Gestion de Cabinet Médical](1-Cabinet-Medical/)
+### 1️⃣ [1-Cabinet-Medical : Gestion de Cabinet Médical](https://github.com/TechSculptor/techsculptor.github.io/tree/main/1-Cabinet-Medical)
 
 Un système de gestion de rendez-vous complet simulant un environnement médical réel.
 * **Objectif :** Une plateforme sécurisée pour patients, médecins et administrateurs.
-* **Dossier :** **[1-Cabinet-Medical/](1-Cabinet-Medical/)**
+* **Dossier :** **[1-Cabinet-Medical/](https://github.com/TechSculptor/techsculptor.github.io/tree/main/1-Cabinet-Medical)**
 * **Stack :** PHP, PostgreSQL, Docker, W3.CSS.
 * **Points Forts :** Authentification sécurisée, rôles utilisateurs, planning dynamique.
 
 [**📂 Voir le code du projet**](https://github.com/TechSculptor/techsculptor.github.io/tree/main/1-Cabinet-Medical)
 
-### 2️⃣ [2-Collecteur-Besoins : Interface Client & API](2-Collecteur-Besoins/)
+### 2️⃣ [2-Collecteur-Besoins : Interface Client & API](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Collecteur-Besoins)
 
 Une application moderne pour structurer la collecte de besoins clients.
 * **Objectif :** Découpler le frontend du backend pour une architecture flexible.
-* **Dossier :** **[2-Collecteur-Besoins/](2-Collecteur-Besoins/)**
+* **Dossier :** **[2-Collecteur-Besoins/](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Collecteur-Besoins)**
 * **Stack :** ReactJS, PHP API, PostgreSQL, Docker.
 * **Points Forts :** UX réactive, architecture API REST.
 
 [**📂 Voir le code du projet**](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Collecteur-Besoins)
 
-### 3️⃣ [3-Email-Tracker : Analytics & BI](3-Email-Tracker/)
+### 3️⃣ [3-Email-Tracker : Analytics & BI](https://github.com/TechSculptor/techsculptor.github.io/tree/main/3-Email-Tracker)
 
 Un service backend conçu pour suivre l'engagement utilisateur dans des campagnes d'emailing.
 * **Objectif :** Collecter et visualiser les données d'engagement en temps réel.
-* **Dossier :** **[3-Email-Tracker/](3-Email-Tracker/)**
+* **Dossier :** **[3-Email-Tracker/](https://github.com/TechSculptor/techsculptor.github.io/tree/main/3-Email-Tracker)**
 * **Stack :** NodeJSTracking Pixel, PostgreSQL, Looker Studio.
 * **Points Forts :** Haute performance, données prêtes pour la BI, conformité privacy.
 
