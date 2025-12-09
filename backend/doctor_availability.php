@@ -5,6 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Connexion à la base de données
 require_once "config/db.php";
+require_once "helpers/TranslationHelper.php";
 
 // Récupérer tous les médecins
 $stmtDoctors = $conn->prepare("SELECT doctor_id, first_name, last_name, specialty FROM DOCTOR ORDER BY last_name, first_name");

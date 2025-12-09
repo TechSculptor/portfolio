@@ -29,48 +29,56 @@ if (session_status() === PHP_SESSION_NONE) {
 
   <!-- Header -->
   <header class="w3-container w3-red w3-center" style="padding:128px 16px">
-    <h1 class="w3-margin w3-jumbo"><?php echo __('home_welcome'); ?></h1>
-    <p class="w3-xlarge"><?php echo __('home_subtitle'); ?></p>
-    <h2><?php echo __('home_desc'); ?></h2>
+    <div class="w3-content">
+      <h1 class="w3-margin w3-jumbo"><?php echo __('home_welcome'); ?></h1>
+      <p class="w3-xlarge"><?php echo __('home_subtitle'); ?></p>
+      <h2><?php echo __('home_desc'); ?></h2>
 
-    <a href="/login" class="w3-button w3-blue w3-round-large"><?php echo __('home_cta'); ?></a>
+      <a href="/login" class="w3-button w3-blue w3-round-large"><?php echo __('home_cta'); ?></a>
+    </div>
   </header>
 
   <!-- First Grid -->
-  <div class="w3-content">
-    <div class="w3-twothird">
-      <h2><?php echo __('home_hours'); ?></h2>
-      <h5 class="w3-padding-32"><?php echo __('home_hours_text'); ?></h5>
+  <div class="equal-height-section w3-white">
+    <div class="w3-content">
+      <div class="w3-row-padding">
+        <div class="w3-twothird w3-container content-flex" style="padding-right: 60px;">
+          <h2><?php echo __('home_hours'); ?></h2>
+          <h5 class="w3-padding-32"><?php echo __('home_hours_text'); ?></h5>
+          <p class="w3-text-grey"><?php echo __('home_desc'); ?></p>
+        </div>
 
-      <p class="w3-text-grey"><?php echo __('home_desc'); ?></p>
+        <div class="w3-third w3-center w3-container content-flex">
+          <div class="image-card w3-round-large w3-hover-shadow">
+            <img src="/frontend/img/img1.png" alt="Medical Care" class="w3-image w3-round-large"
+              style="width:100%; max-width:400px;">
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="w3-third w3-center">
-      <!-- Replaced Icon with Image -->
-      <img src="/frontend/img/img1.png" alt="Medical Care"
-        style="width:100%; max-width:400px; border-radius: 8px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
-    </div>
-  </div>
   </div>
 
   <!-- Second Grid -->
-  <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+  <div class="equal-height-section w3-light-grey">
     <div class="w3-content">
-      <div class="w3-third w3-center">
-        <i class="fa fa-ambulance w3-padding-64 w3-text-red w3-margin-right" style="font-size:200px"></i>
-      </div>
+      <div class="w3-row-padding">
+        <div class="w3-third w3-center w3-container content-flex">
+          <i class="fa fa-ambulance w3-text-red" style="font-size:150px; padding: 20px;"></i>
+        </div>
 
-      <div class="w3-twothird w3-padding-64" style="padding-left: 80px;">
-        <h1><?php echo __('home_emergency'); ?></h1>
-        <h5 class="w3-padding-32"><?php echo __('home_emergency_text'); ?></h5>
-
-        <p class="w3-text-grey"><?php echo __('home_desc'); ?></p>
+        <div class="w3-twothird w3-container content-flex" style="padding-left: 80px;">
+          <h1><?php echo __('home_emergency'); ?></h1>
+          <h5 class="w3-padding-32"><?php echo __('home_emergency_text'); ?></h5>
+          <p class="w3-text-grey"><?php echo __('home_desc'); ?></p>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
-    <h3 class="w3-margin w3-xlarge">Citation du jour : Vivez votre vie</h3>
+    <div class="w3-content">
+      <h3 class="w3-margin w3-xlarge">Citation du jour : Vivez votre vie</h3>
+    </div>
   </div>
 
   <!-- Include le pied de page -->

@@ -4,42 +4,34 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Vérifier si l'utilisateur est déjà connecté, rediriger vers une page sécurisée si c'est le cas
+// Vérifier si l'utilisateur est déjà connecté
 if (isset($_SESSION['user_id'])) {
     header("Location: /dashboard");
     exit;
 }
 
-
 // Vérifier si le formulaire de connexion a été soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les valeurs du formulaire
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $inputUsername = trim($_POST['username']);
+    $inputPassword = $_POST['password'];
 
     // Connexion à la base de donnée
     require_once 'config/db.php';
 
-    // Try to login as PATIENT first
-    $stmt = $conn->prepare("SELECT patient_id, email, username, password_hash, first_name, last_name, email_verified FROM PATIENT WHERE username = :username OR email = :username");
-    $stmt->execute(['username' => $username]);
+    // 1. Check PATIENT
+    $stmt = $conn->prepare("SELECT patient_id, email, username, password_hash, first_name, last_name, email_verified FROM PATIENT WHERE username = :u OR email = :u");
+    $stmt->execute(['u' => $inputUsername]);
+    $row = $stmt->fetch();
 
-    if ($stmt->rowCount() === 1) {
-        // Patient found
-        $row = $stmt->fetch();
-        $hashedPassword = $row['password_hash'];
-
-        // Vérifier si le mot de passe est ok
-        if (password_verify($password, $hashedPassword)) {
-
+    if ($row) {
+        if (password_verify($inputPassword, $row['password_hash'])) {
             // ⭐ CHECK EMAIL VERIFICATION ⭐
             if (!$row['email_verified']) {
                 $error = "Veuillez vérifier votre adresse email avant de vous connecter.";
             } else {
-                // Authentification réussie
                 $_SESSION['user_id'] = $row['patient_id'];
                 $_SESSION['user_type'] = 'patient';
-                // Store full name if available, otherwise username
                 $_SESSION['username'] = $row['first_name'] . ' ' . $row['last_name'];
                 header("Location: dashboard.php");
                 exit;
@@ -48,37 +40,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Mot de passe incorrect";
         }
     } else {
-        // Try to login as DOCTOR
-        $stmt = $conn->prepare("SELECT doctor_id, email, username, password_hash, first_name, last_name FROM DOCTOR WHERE username = :username OR email = :username");
-        $stmt->execute(['username' => $username]);
+        // 2. Check DOCTOR
+        $stmt = $conn->prepare("SELECT doctor_id, email, username, password_hash, first_name, last_name FROM DOCTOR WHERE username = :u OR email = :u");
+        $stmt->execute(['u' => $inputUsername]);
+        $row = $stmt->fetch();
 
-        if ($stmt->rowCount() === 1) {
-            // Doctor found
-            $row = $stmt->fetch();
-            $hashedPassword = $row['password_hash'];
-
-            if (password_verify($password, $hashedPassword)) {
-                // Authentification réussie
+        if ($row) {
+            if (password_verify($inputPassword, $row['password_hash'])) {
                 $_SESSION['user_id'] = $row['doctor_id'];
                 $_SESSION['user_type'] = 'doctor';
-                $_SESSION['username'] = 'Dr. ' . $row['first_name'] . ' ' . $row['last_name']; // Prefix Dr.
+                $_SESSION['username'] = 'Dr. ' . $row['first_name'] . ' ' . $row['last_name'];
                 header("Location: dashboard.php");
                 exit;
             } else {
                 $error = "Mot de passe incorrect";
             }
         } else {
-            // Try to login as ADMIN
-            $stmt = $conn->prepare("SELECT admin_id, email, username, password_hash FROM ADMIN WHERE username = :username OR email = :username");
-            $stmt->execute(['username' => $username]);
+            // 3. Check ADMIN
+            $stmt = $conn->prepare("SELECT admin_id, email, username, password_hash FROM ADMIN WHERE username = :u OR email = :u");
+            $stmt->execute(['u' => $inputUsername]);
+            $row = $stmt->fetch();
 
-            if ($stmt->rowCount() === 1) {
-                // Admin found
-                $row = $stmt->fetch();
-                $hashedPassword = $row['password_hash'];
-
-                if (password_verify($password, $hashedPassword)) {
-                    // Authentification réussie
+            if ($row) {
+                if (password_verify($inputPassword, $row['password_hash'])) {
                     $_SESSION['user_id'] = $row['admin_id'];
                     $_SESSION['user_type'] = 'admin';
                     $_SESSION['username'] = $row['username'];
@@ -95,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 
@@ -113,8 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include '../frontend/partials/navbar.php'; ?>
 
     <div class="main-content-wrapper">
-
-
         <div class="centered-box w3-card-4 w3-round w3-white">
             <header class="w3-container w3-red w3-round-large">
                 <h3><?php echo __('login_title'); ?></h3>

@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once "config/db.php";
+require_once "helpers/TranslationHelper.php";
 
 // 1. Fetch Doctors for dropdown
 $stmtDoctors = $conn->prepare("SELECT doctor_id, first_name, last_name, specialty FROM DOCTOR ORDER BY last_name, first_name");
@@ -70,10 +71,10 @@ if ($selectedDoctorId && $selectedDate) {
 <!-- Output HTML Content (No Head/Body) -->
 <div class="availability-form-container">
     <form id="availabilityForm" onsubmit="submitAvailabilityForm(); return false;">
-        <label for="sidebar_doctor_id">Médecin:</label>
+        <label for="sidebar_doctor_id"><?php echo __('book_select_doctor'); ?>:</label>
         <select id="sidebar_doctor_id" name="doctor_id" class="w3-select w3-border" onchange="submitAvailabilityForm()"
             required>
-            <option value="">-- Sélectionner un médecin --</option>
+            <option value=""><?php echo __('book_select_default'); ?></option>
             <?php foreach ($doctors as $doctor) { ?>
                 <option value="<?php echo $doctor['doctor_id']; ?>" <?php echo ($selectedDoctorId == $doctor['doctor_id']) ? 'selected' : ''; ?>>
                     Dr. <?php echo htmlspecialchars($doctor['first_name'] . ' ' . $doctor['last_name']); ?>
@@ -84,7 +85,7 @@ if ($selectedDoctorId && $selectedDate) {
 
         <br><br>
 
-        <label for="sidebar_date">Date:</label>
+        <label for="sidebar_date"><?php echo __('book_date'); ?>:</label>
         <input type="date" id="sidebar_date" name="date" class="w3-input w3-border"
             value="<?php echo htmlspecialchars($selectedDate); ?>" min="<?php echo date('Y-m-d'); ?>"
             onchange="submitAvailabilityForm()" required>
@@ -99,13 +100,13 @@ if ($selectedDoctorId && $selectedDate) {
             <strong>Dr.
                 <?php echo htmlspecialchars($selectedDoctor['first_name'] . ' ' . $selectedDoctor['last_name']); ?></strong><br>
             <small><?php echo htmlspecialchars($selectedDoctor['specialty']); ?></small><br>
-            <small>Date: <?php echo date('d/m/Y', strtotime($selectedDate)); ?></small>
+            <small><?php echo __('book_date'); ?>: <?php echo date('d/m/Y', strtotime($selectedDate)); ?></small>
         </div>
 
         <div class="slots-container w3-margin-top">
 
             <div class="slot-group">
-                <h5>Matin (9h-12h)</h5>
+                <h5><?php echo __('avail_morning'); ?></h5>
                 <div class="slots-flex">
                     <?php
                     $hasMorning = false;
@@ -121,13 +122,13 @@ if ($selectedDoctorId && $selectedDate) {
                         }
                     }
                     if (!$hasMorning)
-                        echo "<p>Aucun créneau.</p>";
+                        echo "<p>" . __('dashboard_no_appts') . "</p>";
                     ?>
                 </div>
             </div>
 
             <div class="slot-group w3-margin-top">
-                <h5>Après-midi (13h-16h)</h5>
+                <h5><?php echo __('avail_afternoon'); ?></h5>
                 <div class="slots-flex">
                     <?php
                     $hasAfternoon = false;
@@ -143,7 +144,7 @@ if ($selectedDoctorId && $selectedDate) {
                         }
                     }
                     if (!$hasAfternoon)
-                        echo "<p>Aucun créneau.</p>";
+                        echo "<p>" . __('dashboard_no_appts') . "</p>";
                     ?>
                 </div>
             </div>
@@ -151,7 +152,7 @@ if ($selectedDoctorId && $selectedDate) {
 
     <?php } else { ?>
         <div class="w3-panel w3-yellow w3-padding">
-            <p>Veuillez sélectionner un médecin et une date.</p>
+            <p><?php echo __('avail_desc'); ?></p>
         </div>
     <?php } ?>
 </div>

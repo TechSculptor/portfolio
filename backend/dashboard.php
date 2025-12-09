@@ -62,6 +62,64 @@ if (isset($_POST['cancel_appointment_id'])) {
     exit;
 }
 
+// ADMIN ACTION HANDLERS
+if ($userType === 'admin') {
+    // 1. Add Doctor
+    if (isset($_POST['add_doctor'])) {
+        $stmt = $conn->prepare("INSERT INTO DOCTOR (first_name, last_name, specialty, description, username, password_hash) VALUES (:first_name, :last_name, :specialty, :description, :username, :password_hash)");
+        try {
+            // Default password for new docs: doctor123
+            $defaultHash = password_hash('doctor123', PASSWORD_BCRYPT);
+            $username = 'dr.' . strtolower($_POST['last_name']);
+
+            $stmt->execute([
+                'first_name' => $_POST['first_name'],
+                'last_name' => $_POST['last_name'],
+                'specialty' => $_POST['specialty'],
+                'description' => $_POST['description'],
+                'username' => $username,
+                'password_hash' => $defaultHash
+            ]);
+            header("Location: dashboard.php?msg=doctor_added");
+            exit;
+        } catch (PDOException $e) {
+            // Handle error (ideally show message)
+        }
+    }
+
+    // 2. Delete Doctor
+    if (isset($_POST['delete_doctor'])) {
+        $stmt = $conn->prepare("DELETE FROM DOCTOR WHERE doctor_id = :id");
+        try {
+            $stmt->execute(['id' => $_POST['doctor_id']]);
+            header("Location: dashboard.php?msg=doctor_deleted");
+            exit;
+        } catch (PDOException $e) {
+            // Likely has appointments
+            header("Location: dashboard.php?err=doctor_has_appts");
+            exit;
+        }
+    }
+
+    // 3. Update Doctor
+    if (isset($_POST['update_doctor'])) {
+        $stmt = $conn->prepare("UPDATE DOCTOR SET first_name = :first_name, last_name = :last_name, specialty = :specialty, description = :description WHERE doctor_id = :id");
+        try {
+            $stmt->execute([
+                'first_name' => $_POST['first_name'],
+                'last_name' => $_POST['last_name'],
+                'specialty' => $_POST['specialty'],
+                'description' => $_POST['description'],
+                'id' => $_POST['doctor_id']
+            ]);
+            header("Location: dashboard.php?msg=doctor_updated");
+            exit;
+        } catch (PDOException $e) {
+            // Handle error
+        }
+    }
+}
+
 
 // LOGIC: Filter and Data Fetching
 $appointments = []; // For Patient List
@@ -374,15 +432,20 @@ if ($userType === 'admin' || $userType === 'doctor') {
                 </button>
             <?php } elseif ($userType === 'admin') { ?>
                 <!-- Admin Actions: Manage Doctors -->
-                <a class="w3-button w3-green w3-round w3-margin-small" href="/admin_doctors">
-                    <i class="fa fa-user-md"></i> <?php echo __('dashboard_manage_docs'); ?>
+                <button class="w3-button w3-green w3-round w3-margin-small" onclick="openAdminSidebar()">
+                    <i class="fa fa-user-md"></i> Gérer les médecins
+                </button>
+            <?php } elseif ($userType === 'doctor') { ?>
+                <!-- Doctor Actions: View Planning -->
+                <a class="w3-button w3-blue w3-round w3-margin-small" href="#planning">
+                    <i class="fa fa-calendar"></i> Mon Planning
                 </a>
             <?php } ?>
         </div>
 
         <?php if ($userType === 'patient') { ?>
             <!-- PATIENT VIEW (Simple List) -->
-            <div class="w3-container" style="max-width: 800px; margin: auto;">
+            <div class="w3-container">
                 <h3 class="w3-center w3-text-grey"><?php echo __('dashboard_your_appts'); ?></h3>
                 <?php if (isset($_GET['success']) && $_GET['success'] == 'appointment_added') { ?>
                     <div class="w3-panel w3-green w3-display-container w3-round">
@@ -449,7 +512,7 @@ if ($userType === 'admin' || $userType === 'doctor') {
                 </form>
             </div>
 
-            <div class="week-grid w3-card">
+            <div id="planning" class="week-grid w3-card" style="display: flex; flex-wrap: wrap;">
                 <?php
                 // Loop 7 days
                 for ($i = 0; $i < 7; $i++) {
@@ -462,20 +525,34 @@ if ($userType === 'admin' || $userType === 'doctor') {
 
                     $isWeekend = ($i >= 5); // Sat (5) Sun (6)
                     ?>
-                    <div class="day-column <?php echo $isWeekend ? 'weekend' : ''; ?>">
+                    <div class="day-column <?php echo $isWeekend ? 'weekend' : ''; ?> w3-border-right"
+                        style="width: 14.28%; box-sizing: border-box;">
                         <div class="day-header">
                             <?php echo $dayNameTranslated; ?><br>
                             <?php echo date('d/m', $currentDayTs); ?>
                         </div>
 
                         <?php
-                        // Time Slots: 09:00 to 16:00
-                        for ($h = 9; $h <= 16; $h++) {
-                            $timeStr = sprintf('%02d:00', $h);
-                            $appt = isset($appointmentsGrid[$dateStr][$timeStr]) ? $appointmentsGrid[$dateStr][$timeStr] : null;
+                        // Time Slots: 09:00 to 16:30 (30 min intervals)
+                        // 9 * 60 = 540 min
+                        // 16 * 60 + 30 = 990 min
+                        for ($minutes = 540; $minutes <= 990; $minutes += 30) {
+                            $h = floor($minutes / 60);
+                            $m = $minutes % 60;
+                            $timeStr = sprintf('%02d:%02d', $h, $m);
+
+                            // Check if appointment matches this time slot (approximate)
+                            // The DB stores seconds, so we match HH:MM
+                            $appt = null;
+                            if (isset($appointmentsGrid[$dateStr])) {
+                                // We need to check exact match or within range if we wanted duration, but prompt assumes slot match
+                                // Database stores '09:00:00'. We match '09:00'.
+                                // Using array key check from before might need adjustment if logic was rough
+                                $appt = isset($appointmentsGrid[$dateStr][$timeStr]) ? $appointmentsGrid[$dateStr][$timeStr] : null;
+                            }
                             ?>
                             <div class="time-slot" title="<?php echo $timeStr; ?>">
-                                <!-- <span class="time-label"><?php echo $timeStr; ?></span> -->
+                                <span class="time-label"><?php echo $timeStr; ?></span>
                                 <?php if ($appt): ?>
                                     <div class="appt-block <?php echo $appt['status']; ?>"
                                         onclick="alert('Patient: <?php echo htmlspecialchars($appt['patient_first_name'] . ' ' . $appt['patient_last_name']) . '\nMotif: ' . htmlspecialchars($appt['reason']); ?>')">
@@ -520,31 +597,75 @@ if ($userType === 'admin' || $userType === 'doctor') {
             <div class="sidebar-content w3-container">
                 <!-- Main Options -->
                 <div id="adminMenu">
-                    <div class="admin-option" onclick="location.href='/admin_doctors'">
-                        <i class="fa fa-user-plus"></i>
-                        <div>
-                            <strong><?php echo __('admin_doc_add'); ?> / <?php echo __('admin_btn_delete'); ?></strong>
-                            <div class="w3-small w3-text-grey"><?php echo __('dashboard_manage_docs'); ?></div>
-                        </div>
+                    <!-- Toggle Add Form -->
+                    <button class="w3-button w3-blue w3-block w3-margin-bottom" onclick="toggleAddForm()">
+                        <i class="fa fa-plus"></i> Ajouter un médecin
+                    </button>
+
+                    <!-- Add/Edit Form -->
+                    <div id="doctorForm" class="w3-card w3-padding w3-light-grey w3-margin-bottom" style="display:none;">
+                        <h4 id="formTitle">Nouveau Médecin</h4>
+                        <form method="POST" action="/dashboard">
+                            <input type="hidden" name="doctor_id" id="form_doctor_id">
+
+                            <label>Prénom</label>
+                            <input type="text" name="first_name" id="form_first_name" class="w3-input w3-border" required>
+
+                            <label>Nom</label>
+                            <input type="text" name="last_name" id="form_last_name" class="w3-input w3-border" required>
+
+                            <label>Spécialité</label>
+                            <input type="text" name="specialty" id="form_specialty" class="w3-input w3-border" required>
+
+                            <label>Description</label>
+                            <input type="text" name="description" id="form_description" class="w3-input w3-border">
+
+                            <div class="w3-section">
+                                <button type="submit" name="add_doctor" id="btnRunAction"
+                                    class="w3-button w3-green w3-block">Ajouter</button>
+                                <button type="submit" name="update_doctor" id="btnUpdateAction"
+                                    class="w3-button w3-blue w3-block" style="display:none;">Modifier</button>
+                            </div>
+                        </form>
                     </div>
 
                     <div class="w3-padding-small w3-text-grey w3-small w3-margin-top">
-                        <?php echo __('doctors_title'); ?> (<?php echo __('doctors_view_avail'); ?>)
+                        Liste des médecins
                     </div>
 
                     <?php
                     // Fetch doctors list for sidebar
-                    $stmtDoc = $conn->prepare("SELECT doctor_id, first_name, last_name, specialty FROM DOCTOR ORDER BY last_name");
+                    $stmtDoc = $conn->prepare("SELECT doctor_id, first_name, last_name, specialty, description FROM DOCTOR ORDER BY last_name");
                     $stmtDoc->execute();
                     $sidebarDoctors = $stmtDoc->fetchAll();
 
                     foreach ($sidebarDoctors as $doc) {
                         ?>
-                        <div class="admin-option" onclick="filterAppointments(<?php echo $doc['doctor_id']; ?>)">
-                            <i class="fa fa-user-md"></i>
+                        <div class="w3-card w3-white w3-margin-bottom w3-padding-small w3-display-container">
                             <div>
                                 <strong>Dr. <?php echo htmlspecialchars($doc['last_name']); ?></strong>
                                 <div class="w3-small w3-text-grey"><?php echo htmlspecialchars($doc['specialty']); ?></div>
+                            </div>
+
+                            <div class="w3-display-topright">
+                                <!-- Edit -->
+                                <button class="w3-button w3-small w3-text-blue"
+                                    onclick='editDoctor(<?php echo json_encode($doc); ?>)'>
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <!-- Delete -->
+                                <form method="POST" action="/dashboard" style="display:inline;"
+                                    onsubmit="return confirm('Supprimer ce médecin ?');">
+                                    <input type="hidden" name="delete_doctor" value="1">
+                                    <input type="hidden" name="doctor_id" value="<?php echo $doc['doctor_id']; ?>">
+                                    <button class="w3-button w3-small w3-text-red"><i class="fa fa-trash"></i></button>
+                                </form>
+                            </div>
+
+                            <div class="w3-small w3-text-grey"
+                                style="margin-top:5px; border-top:1px solid #eee; padding-top:4px; cursor:pointer;"
+                                onclick="filterAppointments(<?php echo $doc['doctor_id']; ?>)">
+                                <i class="fa fa-eye"></i> Voir planning
                             </div>
                         </div>
                     <?php } ?>
@@ -565,6 +686,39 @@ if ($userType === 'admin' || $userType === 'doctor') {
             // Filter logic
             function filterAppointments(doctorId) {
                 window.location.href = '/dashboard?view_doctor=' + doctorId;
+            }
+
+            function toggleAddForm() {
+                var form = document.getElementById('doctorForm');
+                // Reset form for "Add"
+                document.getElementById('formTitle').innerText = 'Nouveau Médecin';
+                document.getElementById('btnRunAction').style.display = 'block';
+                document.getElementById('btnUpdateAction').style.display = 'none';
+                document.getElementById('form_doctor_id').value = '';
+                document.getElementById('form_first_name').value = '';
+                document.getElementById('form_last_name').value = '';
+                document.getElementById('form_specialty').value = '';
+                document.getElementById('form_description').value = '';
+
+                if (form.style.display === 'none') {
+                    form.style.display = 'block';
+                } else {
+                    form.style.display = 'none';
+                }
+            }
+
+            function editDoctor(doc) {
+                var form = document.getElementById('doctorForm');
+                form.style.display = 'block';
+                document.getElementById('formTitle').innerText = 'Modifier Médecin';
+                document.getElementById('btnRunAction').style.display = 'none';
+                document.getElementById('btnUpdateAction').style.display = 'block';
+
+                document.getElementById('form_doctor_id').value = doc.doctor_id;
+                document.getElementById('form_first_name').value = doc.first_name;
+                document.getElementById('form_last_name').value = doc.last_name;
+                document.getElementById('form_specialty').value = doc.specialty;
+                document.getElementById('form_description').value = doc.description || '';
             }
         </script>
     <?php } ?>

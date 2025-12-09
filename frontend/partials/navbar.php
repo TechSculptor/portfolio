@@ -76,10 +76,10 @@ function activeClass($path)
         <?php } ?>
 
         <!-- Language Switcher -->
-        <a href="<?php echo getLangUrl('fr'); ?>"
-            class="w3-bar-item w3-button w3-hide-small w3-padding-large lang-btn">FR</a>
         <a href="<?php echo getLangUrl('en'); ?>"
-            class="w3-bar-item w3-button w3-hide-small w3-padding-large lang-btn">EN</a>
+            class="w3-bar-item w3-button w3-hide-small w3-padding-large lang-btn w3-right">EN</a>
+        <a href="<?php echo getLangUrl('fr'); ?>"
+            class="w3-bar-item w3-button w3-hide-small w3-padding-large lang-btn w3-right">FR</a>
     </div>
 
     <!-- Mobile menu -->

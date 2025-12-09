@@ -31,9 +31,9 @@ Une application web simple pour la prise de rendez-vous médicaux, développée 
 | Rôle | Nom d'utilisateur / Email | Mot de passe |
 | :--- | :--- | :--- |
 | **Admin** | `admin` | `admin123` |
-| **Docteur** | `dr.dubois` (Dr. Dubois) | `admin123` |
-| **Docteur** | `dr.martin` (Dr. Martin) | `admin123` |
-| **Docteur** | `dr.bernard` (Dr. Bernard) | `admin123` |
+| **Docteur** | `dr.dubois` (Dr. Dubois) | `doctor1` |
+| **Docteur** | `dr.martin` (Dr. Martin) | `doctor2` |
+| **Docteur** | `dr.bernard` (Dr. Bernard) | `doctor3` |
 | **Patient** | Créez un compte sur la page d'inscription | (Votre choix) |
 
 ### Guide Admin
@@ -74,9 +74,9 @@ A simple web application for medical appointment booking, developed to demonstra
 | Role | Username / Email | Password |
 | :--- | :--- | :--- |
 | **Admin** | `admin` | `admin123` |
-| **Doctor** | `dr.dubois` (Dr. Dubois) | `admin123` |
-| **Doctor** | `dr.martin` (Dr. Martin) | `admin123` |
-| **Doctor** | `dr.bernard` (Dr. Bernard) | `admin123` |
+| **Doctor** | `dr.dubois` (Dr. Dubois) | `doctor1` |
+| **Doctor** | `dr.martin` (Dr. Martin) | `doctor2` |
+| **Doctor** | `dr.bernard` (Dr. Bernard) | `doctor3` |
 | **Patient** | Create an account on the register page | (Your choice) |
 
 ### Admin Guide

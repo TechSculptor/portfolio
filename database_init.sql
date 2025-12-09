@@ -97,9 +97,9 @@ VALUES (
 -- Insert sample doctors (Passwords are 'doctor1', 'doctor2', 'doctor3')
 -- Hashes generated via PHP password_hash()
 INSERT INTO DOCTOR (doctor_id, first_name, last_name, specialty, description, email, username, password_hash) VALUES
-(1, 'Marie', 'Dubois', 'Médecin généraliste', 'Spécialiste en médecine générale avec 15 ans d''expérience', 'marie.dubois@cabinet.com', 'dr.dubois', '$2y$10$tM/F1.aQz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz'),
-(2, 'Jean', 'Martin', 'Pédiatre', 'Expert en pédiatrie, spécialisé dans le suivi des enfants', 'jean.martin@cabinet.com', 'dr.martin', '$2y$10$tM/F1.aQz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz'),
-(3, 'Sophie', 'Bernard', 'Cardiologue', 'Cardiologue expérimentée, consultations et examens cardiovasculaires', 'sophie.bernard@cabinet.com', 'dr.bernard', '$2y$10$tM/F1.aQz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz.Qz')
+(1, 'Marie', 'Dubois', 'Médecin généraliste', 'Spécialiste en médecine générale avec 15 ans d''expérience', 'marie.dubois@cabinet.com', 'dr.dubois', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+(2, 'Jean', 'Martin', 'Pédiatre', 'Expert en pédiatrie, spécialisé dans le suivi des enfants', 'jean.martin@cabinet.com', 'dr.martin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+(3, 'Sophie', 'Bernard', 'Cardiologue', 'Cardiologue expérimentée, consultations et examens cardiovasculaires', 'sophie.bernard@cabinet.com', 'dr.bernard', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
 ON CONFLICT (doctor_id) DO UPDATE SET 
     email = EXCLUDED.email, 
     username = EXCLUDED.username, 
