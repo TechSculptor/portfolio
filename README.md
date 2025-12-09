@@ -1,12 +1,14 @@
 # 🚀 Portfolio Technique | TechSculptor
 
-Bienvenue sur mon portfolio de projets de développement Full-Stack et d'architecture. Ce répertoire démontre ma capacité à concevoir, développer, et déployer des solutions sécurisées en utilisant une stack moderne.
+**Développeur Junior Back-End(React/PHP/PostgreSQL) et Front-End (ReactJS/JavaScript/HTML5/CSS3) spécialisé en architecture Docker.**
+
+Ce répertoire démontre ma capacité à concevoir, développer, et déployer des solutions sécurisées et évolutives.
 
 ## 🛠️ Compétences Techniques Clés
 
-* **Backend & API :** PHP, Architecture RESTful, Sécurité (PDO, Hachage), Docker, n8n (Workflows).
-* **Frontend & UX :** ReactJS, JavaScript, HTML5/CSS3 (W3.CSS), Responsivité.
-* **Base de Données & BI :** PostgreSQL, Modélisation SQL, Looker Studio (Data Visualization).
+* **Backend & API :** PHP, Sécurité (PDO, Hachage), Docker, n8n (Workflows).
+* **Frontend & UX :** ReactJS, JavaScript, HTML5/CSS3 (W3.CSS), Responsive.
+* **Base de Données & BI :** PostgreSQL, Modélisation SQL, Looker Studio (pour la visualisation des données).
 * **Déploiement :** Docker & Docker Compose, Variables d'environnement.
 
 ---
@@ -27,14 +29,14 @@ Une application moderne pour structurer la collecte de besoins clients.
 * **Objectif :** Découpler le frontend du backend pour une architecture flexible.
 * **Dossier :** **[2-Collecteur-Besoins/](2-Collecteur-Besoins/)**
 * **Stack :** ReactJS, PHP API, PostgreSQL, Docker.
-* **Points Forts :** UX réactive, architecture API REST, stockage JSONB.
+* **Points Forts :** UX réactive, architecture API REST.
 
 ### 3️⃣ [3-Email-Tracker : Analytics & BI](3-Email-Tracker/)
 
 Un service backend conçu pour suivre l'engagement utilisateur dans des campagnes d'emailing.
 * **Objectif :** Collecter et visualiser les données d'engagement en temps réel.
 * **Dossier :** **[3-Email-Tracker/](3-Email-Tracker/)**
-* **Stack :** PHP Tracking Pixel, PostgreSQL, Looker Studio.
+* **Stack :** NodeJSTracking Pixel, PostgreSQL, Looker Studio.
 * **Points Forts :** Haute performance, données prêtes pour la BI, conformité privacy.
 
 ---
@@ -42,3 +44,11 @@ Un service backend conçu pour suivre l'engagement utilisateur dans des campagne
 ### 🔒 Note sur la Confidentialité
 
 Le code source de ces projets a été entièrement anonymisé. Tous les noms d'entreprise, la logique métier propriétaire, et les identifiants de sécurité ont été retirés pour des raisons de confidentialité. Les projets présentés ici sont des versions génériques destinées à démontrer mes compétences techniques à des fins de recrutement.
+
+---
+
+## ⭐ Recommandation Professionnelle
+
+> "Thomas a montré une **bonne motivation** et une réelle curiosité pour le métier de développeur informatique. Il s’est investi dans les missions confiées et a su **s’adapter progressivement à notre environnement de travail**. Son attitude a été **respectueuse, sérieuse** et il a manifesté un réel intérêt pour comprendre les outils, les méthodes et les enjeux liés au développement web et à l’organisation d’un projet technique. Cette immersion s’est déroulée dans de bonnes conditions et a été globalement positive."
+>
+> **— Quin Axel, Chef de projet, Easy Tech**

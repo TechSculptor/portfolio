@@ -1,7 +1,6 @@
-# Portfolio: Cabinet Médical Fictif 🏥
+# Cabinet Médical Fictif 🏥
 
-🇬🇧 *This project demonstrates full-stack PHP/PostgreSQL/Docker skills.*  
-🇫🇷 *Ce projet démontre des compétences full-stack PHP/PostgreSQL/Docker.*
+🇫🇷 *Ce projet démontre des compétences en développement PHP/PostgreSQL/Docker.*
 
 ---
 
@@ -78,5 +77,3 @@ docker-compose up --build -d
 | **Email** | MailHog (SMTP local pour tests) |
 
 ---
-
-*Projet réalisé par Thomas pour démonstration technique.*

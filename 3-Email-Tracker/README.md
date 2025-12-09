@@ -1,6 +1,6 @@
-# Suivi d'Intervention Email (Email Interaction Tracker)
+# Suivi d'Intervention Email
 
-Un service sécurisé, minimaliste et conteneurisé pour suivre les ouvertures d'emails via un pixel 1x1. Construit avec **Node.js (Express)** et **PostgreSQL**, conçu pour s'intégrer facilement avec des outils de Business Intelligence comme Looker Studio.
+Un service sécurisé, minimaliste et conteneurisé pour suivre les ouvertures d'emails via un pixel 1x1. Construit avec **Node.js (Express)** et **PostgreSQL**, conçu pour s'intégrer facilement avec des outils comme Looker Studio.
 
 ## Stack Technique
 - **Backend :** Node.js v18 (Express.js)
