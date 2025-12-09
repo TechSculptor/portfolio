@@ -1,4 +1,0 @@
-admin123: $2y$10$E7sgNf1.copJfUVFgJhjceTGLtFiHmYPhYkhJzgNa3.63nop9Qqou
-doctor1: $2y$10$0LvH0z55jz1VpLNraYWVme/hNR1yF.owdBoIhlQqmqeVb.Gg4SiPa
-doctor2: $2y$10$0UEW0vUfYSPXHhW0gqM8O.ZTymCGFGk8ZRffUZpwNuo8SWMX.GskO
-doctor3: $2y$10$h7EyN5gnTl6gZV3apWY7.O5WAp6JoFFHCld0pOv0q8Sa/GzO0V5KK
