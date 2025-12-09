@@ -65,7 +65,7 @@ La base de données PostgreSQL est exposée sur le port **5432**. Vous pouvez co
 
 ### 📊 Visualisation des Données
 
-Ce projet est structuré pour permettre la connexion d'un outil de Business Intelligence (comme Looker Studio).
+Ce projet a pour objectif de visualiser les données liées à l'ouverture de mail à l'aide d'un tableau de bord Looker Studio.
 
 #### 1. Mesures et Taux Généraux
 * **Total Emails :** Nombre total d'emails envoyés.
@@ -76,12 +76,12 @@ Ce projet est structuré pour permettre la connexion d'un outil de Business Inte
 
 #### 2. Analyse Temporelle
 * **Emails ouverts dans la semaine :** Distribution des ouvertures par jour.
-* **Total de clics dans la journée :** Engagement par heure de la journée.
+* **Total de clics dans la journée :** Ouvertures par heure dans la journée en cours.
 
 ![Analyse Temporelle](visuals/dashboard2.jpg)
 
 #### 3. Rapports Détaillés
-* **Les clients fidèles :** Utilisateurs les plus actifs.
+* **Les clients fidèles :** Clients les plus actifs.
 * **Les liens consultés :** Liens les plus cliqués.
 
 ![Rapports Détaillés](visuals/dashboard3.jpg)
