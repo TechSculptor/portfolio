@@ -1,98 +1,98 @@
-# Email Interaction Tracker
+# Suivi d'Intervention Email (Email Interaction Tracker)
 
-A secure, minimal, and dockerized service for tracking email interactions via a 1x1 pixel. Built with **Node.js (Express)** and **PostgreSQL**, designed for easy integration with Business Intelligence tools like Looker Studio.
+Un service sécurisé, minimaliste et conteneurisé pour suivre les ouvertures d'emails via un pixel 1x1. Construit avec **Node.js (Express)** et **PostgreSQL**, conçu pour s'intégrer facilement avec des outils de Business Intelligence comme Looker Studio.
 
-## Stack
-- **Backend:** Node.js v18 (Express.js)
-- **Database:** PostgreSQL 15
-- **Infrastructure:** Docker & Docker Compose
-- **Security:** Environment variable configuration, Parameterized Queries
+## Stack Technique
+- **Backend :** Node.js v18 (Express.js)
+- **Base de Données :** PostgreSQL 15
+- **Infrastructure :** Docker & Docker Compose
+- **Sécurité :** Configuration via variables d'environnement, requêtes paramétrées
 
-## Data Flow
-1.  **Generation:** A unique tracking ID is generated for an email.
-2.  **Embedding:** An `<img src="...">` tag is embedded in the email HTML.
-3.  **Opening:** When the user opens the email, the client requests the image from the Tracking Endpoint.
-4.  **Logging:** The endpoint securely logs the event (ID, Timestamp, IP, User Agent) to PostgreSQL.
-5.  **Response:** A transparent 1x1 GIF is returned to the client (invisible to the user).
+## Flux de Données
+1.  **Génération :** Un identifiant de suivi unique est généré pour un email.
+2.  **Intégration :** Une balise `<img src="...">` est insérée dans le code HTML de l'email.
+3.  **Ouverture :** Lorsque l'utilisateur ouvre l'email, le client charge l'image depuis notre point de terminaison de suivi.
+4.  **Enregistrement :** Le serveur enregistre l'événement (ID, Horodatage, IP, User Agent) de manière sécurisée dans PostgreSQL.
+5.  **Réponse :** Un GIF transparent 1x1 est renvoyé au client (invisible pour l'utilisateur).
 
-## Getting Started
+## Démarrage Rapide
 
-### Prerequisites
+### Prérequis
 - Docker & Docker Compose
 
-### Installation & Usage
+### Installation et Utilisation
 
-1.  **Start the Service:**
+1.  **Démarrer le Service :**
     ```bash
     docker-compose up -d --build
     ```
-    The application will start on `http://localhost:3000`.
+    L'application sera accessible sur `http://localhost:3000`.
 
-2.  **Generate a Tracking Link:**
-    Run the utility script to generate a unique ID and ready-to-use HTML tag:
+2.  **Générer un Lien de Suivi :**
+    Exécutez le script utilitaire pour obtenir un ID unique et la balise HTML prête à l'emploi :
     ```bash
-    # Run inside the container
+    # Exécuter à l'intérieur du conteneur
     docker exec -it email-tracker-app npm run generate
     
-    # Or locally if you have Node.js installed
+    # Ou localement si vous avez Node.js installé
     node src/utils/generate_link.js
     ```
-    *Output Example:*
+    *Exemple de Sortie :*
     ```text
     Unique Tracking ID: 8f4a2...
     Tracking URL:       http://localhost:3000/track?id=8f4a2...
     HTML Embed Code:    <img src="..." ... />
     ```
 
-3.  **Test Tracking:**
-    Copy the generated URL and open it in your browser. You should see a blank page (the transparent pixel).
+3.  **Tester le Suivi :**
+    Copiez l'URL générée et ouvrez-la dans votre navigateur. Vous devriez voir une page blanche (le pixel transparent).
 
-4.  **Verify Data:**
-    Check the database to see the recorded event:
+4.  **Vérifier les Données :**
+    Consultez la base de données pour voir l'événement enregistré :
     ```bash
     docker exec -it email-tracker-db psql -U tracker_user -d email_tracker -c "SELECT * FROM email_opens;"
     ```
 
-## Connecting to BI Tools (Looker Studio)
+## Connexion aux Outils BI (Looker Studio)
 
-The PostgreSQL database is exposed on port **5432**. You can connect Looker Studio or other BI tools using the following credentials:
+La base de données PostgreSQL est exposée sur le port **5432**. Vous pouvez connecter Looker Studio ou d'autres outils BI en utilisant les identifiants suivants :
 
-- **Host:** `localhost` (or your server IP)
-- **Port:** `5432`
-- **Database:** `email_tracker`
-- **Username:** `tracker_user`
-- **Password:** `secure_tracker_pass` (or see `docker-compose.yml` env vars)
+- **Hôte :** `localhost` (ou l'IP de votre serveur)
+- **Port :** `5432`
+- **Base de données :** `email_tracker`
+- **Nom d'utilisateur :** `tracker_user`
+- **Mot de passe :** `secure_tracker_pass` (ou voir les variables d'environnement dans `docker-compose.yml`)
 
-### 📊 Data Visualization
+### 📊 Visualisation des Données
 
-This project is structured to enable connection with Business Intelligence tools (like Looker Studio).
+Ce projet est structuré pour permettre la connexion d'un outil de Business Intelligence (comme Looker Studio).
 
 #### 1. Mesures et Taux Généraux
-* **Total Emails**: Total sent.
-* **Emails Ouverts**: Total opened.
-* **Taux d'Ouverture**: Open rate.
+* **Total Emails :** Nombre total d'emails envoyés.
+* **Emails Ouverts :** Nombre d'emails ouverts.
+* **Taux d'Ouverture :** Pourcentage d'ouverture par rapport aux envois.
 
 ![KPIs du Tableau de Bord](visuals/dashboard1.jpg)
 
 #### 2. Analyse Temporelle
-* **Emails ouverts dans la semaine**: Distribution by day.
-* **Total de clics dans la journée**: Engagement by hour.
+* **Emails ouverts dans la semaine :** Distribution des ouvertures par jour.
+* **Total de clics dans la journée :** Engagement par heure de la journée.
 
 ![Analyse Temporelle](visuals/dashboard2.jpg)
 
 #### 3. Rapports Détaillés
-* **Les clients fidèles**: Top users.
-* **Les liens consultés**: Top links.
+* **Les clients fidèles :** Utilisateurs les plus actifs.
+* **Les liens consultés :** Liens les plus cliqués.
 
 ![Rapports Détaillés](visuals/dashboard3.jpg)
 
 #### 4. Analyse Géographique
-* **Ouverture de mails par localisation**: Map of opens.
+* **Ouverture de mails par localisation :** Carte des ouvertures par région/pays.
 
 ![Analyse Géographique](visuals/dashboard4.jpg)
 
 #### 5. Segmentation Technique
-* **Appareil**: Device type.
-* **Navigateur**: Browser/Client.
+* **Appareil :** Type d'appareil (Mobile, Desktop).
+* **Navigateur :** Navigateur ou client email utilisé.
 
 ![Analyse Technique](visuals/dashboard5.jpg)
