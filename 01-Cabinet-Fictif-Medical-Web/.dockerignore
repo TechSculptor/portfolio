@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+
+# Archives and documentation
+*.zip
+*.tar.gz
+*.pdf
+*.odt
+*.doc
+*.docx
+
+# Temporary and cache files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+
+# Extracted files
+extracted/
+
+# Node modules (if any)
+node_modules/
+
+# Environment files
+.env.local
+.env.*.local
