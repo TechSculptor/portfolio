@@ -3,6 +3,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Include TranslationHelper for _route() function
+require_once __DIR__ . '/helpers/TranslationHelper.php';
+
 // Vérifier si l'utilisateur est connecté, rediriger vers la page de connexion si non connecté
 if (!isset($_SESSION['user_id'])) {
     header("Location: " . _route('login'));
@@ -61,6 +64,37 @@ if (isset($_POST['cancel_appointment_id'])) {
     header("Location: " . _route('dashboard'));
     exit;
 }
+
+// DOCTOR: Confirm appointment
+if (isset($_POST['confirm_appointment_id']) && $userType === 'doctor') {
+    $appointmentId = $_POST['confirm_appointment_id'];
+    // Verify this appointment belongs to this doctor
+    $sqlCheck = $conn->prepare("SELECT * FROM APPOINTMENT WHERE appointment_id = :appt_id AND doctor_id = :doc_id");
+    $sqlCheck->execute(['appt_id' => $appointmentId, 'doc_id' => $userId]);
+
+    if ($sqlCheck->rowCount() === 1) {
+        $sqlUpdate = $conn->prepare("UPDATE APPOINTMENT SET status = 'confirmed' WHERE appointment_id = :appt_id");
+        $sqlUpdate->execute(['appt_id' => $appointmentId]);
+    }
+    header("Location: " . _route('dashboard'));
+    exit;
+}
+
+// DOCTOR: Reject appointment
+if (isset($_POST['reject_appointment_id']) && $userType === 'doctor') {
+    $appointmentId = $_POST['reject_appointment_id'];
+    // Verify this appointment belongs to this doctor
+    $sqlCheck = $conn->prepare("SELECT * FROM APPOINTMENT WHERE appointment_id = :appt_id AND doctor_id = :doc_id");
+    $sqlCheck->execute(['appt_id' => $appointmentId, 'doc_id' => $userId]);
+
+    if ($sqlCheck->rowCount() === 1) {
+        $sqlUpdate = $conn->prepare("UPDATE APPOINTMENT SET status = 'cancelled' WHERE appointment_id = :appt_id");
+        $sqlUpdate->execute(['appt_id' => $appointmentId]);
+    }
+    header("Location: " . _route('dashboard'));
+    exit;
+}
+
 
 // ADMIN ACTION HANDLERS
 if ($userType === 'admin') {
@@ -251,6 +285,8 @@ if ($userType === 'admin' || $userType === 'doctor') {
 
 <head>
     <title>Tableau de Bord - Cabinet Médical</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="/frontend/img/favicon.png">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
@@ -587,12 +623,12 @@ if ($userType === 'admin' || $userType === 'doctor') {
                                     <?php echo __("status_" . $row['status']) ?? $row['status']; ?></p>
                             </div>
                             <?php if ($row['status'] !== 'cancelled') { ?>
-                                <footer class="w3-container w3-light-grey w3-padding">
+                                <footer class="w3-container w3-light-grey w3-padding w3-center">
                                     <form method="post" action="<?php echo _route('dashboard'); ?>"
                                         onsubmit="return confirm('<?php echo __('dashboard_confirm_cancel'); ?>');">
                                         <input type="hidden" name="cancel_appointment_id" value="<?php echo $row['appointment_id']; ?>">
                                         <button type="submit"
-                                            class="w3-button w3-red w3-round w3-small w3-right"><?php echo __('dashboard_cancel'); ?></button>
+                                            class="w3-button w3-red w3-round w3-small"><?php echo __('dashboard_cancel'); ?></button>
                                     </form>
                                 </footer>
                             <?php } ?>
@@ -663,8 +699,24 @@ if ($userType === 'admin' || $userType === 'doctor') {
                                 <span class="time-label"><?php echo $timeStr; ?></span>
                                 <?php if ($appt): ?>
                                     <div class="appt-block <?php echo $appt['status']; ?>"
-                                        onclick="alert('Patient: <?php echo htmlspecialchars($appt['patient_first_name'] . ' ' . $appt['patient_last_name']) . '\nMotif: ' . htmlspecialchars($appt['reason']); ?>')">
+                                        onclick="showApptDetails(<?php echo htmlspecialchars(json_encode($appt)); ?>)">
                                         <strong><?php echo htmlspecialchars(substr($appt['patient_first_name'], 0, 1) . '. ' . $appt['patient_last_name']); ?></strong>
+                                        <?php if ($userType === 'doctor' && $appt['status'] === 'pending'): ?>
+                                            <div class="appt-actions" style="margin-top: 4px;">
+                                                <form method="POST" action="<?php echo _route('dashboard'); ?>" style="display: inline;">
+                                                    <input type="hidden" name="confirm_appointment_id"
+                                                        value="<?php echo $appt['appointment_id']; ?>">
+                                                    <button type="submit" class="w3-button w3-tiny w3-green w3-round" title="Confirmer"
+                                                        onclick="event.stopPropagation();">✓</button>
+                                                </form>
+                                                <form method="POST" action="<?php echo _route('dashboard'); ?>" style="display: inline;">
+                                                    <input type="hidden" name="reject_appointment_id"
+                                                        value="<?php echo $appt['appointment_id']; ?>">
+                                                    <button type="submit" class="w3-button w3-tiny w3-red w3-round" title="Refuser"
+                                                        onclick="event.stopPropagation();">✗</button>
+                                                </form>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -828,8 +880,28 @@ if ($userType === 'admin' || $userType === 'doctor') {
                 document.getElementById('form_specialty').value = doc.specialty;
                 document.getElementById('form_description').value = doc.description || '';
             }
+
+            // Show appointment details
+            function showApptDetails(appt) {
+                var msg = "Patient: " + appt.patient_first_name + " " + appt.patient_last_name + "\n";
+                msg += "Motif: " + appt.reason + "\n";
+                msg += "Statut: " + appt.status;
+                alert(msg);
+            }
         </script>
     <?php } ?>
+
+    <!-- Mobile Menu Toggle (for all users) -->
+    <script>
+        function myFunction() {
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+    </script>
 
     <?php include '../frontend/partials/footer.php'; ?>
 

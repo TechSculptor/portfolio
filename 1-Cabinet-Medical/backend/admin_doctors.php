@@ -139,6 +139,20 @@ if (isset($_GET['edit'])) {
             border-radius: 5px;
             margin-bottom: 30px;
         }
+
+        #doctorForm input[type="text"],
+        #doctorForm textarea {
+            width: 85%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #doctorForm label {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -149,7 +163,7 @@ if (isset($_GET['edit'])) {
     <br><br><br><br><br><br>
 
     <div class="w3-container">
-        <h2><?php echo __('admin_doc_title'); ?></h2>
+        <h2><?php echo __('admin_doc_title'); ?> (DEBUG)</h2>
 
         <?php if ($message) { ?>
             <div class="w3-panel w3-<?php echo ($messageType === 'success') ? 'pale-green' : 'pale-red'; ?> w3-border">
@@ -160,35 +174,38 @@ if (isset($_GET['edit'])) {
         <!-- Formulaire d'ajout/édition -->
         <div class="form-section">
             <h3><?php echo $editDoctor ? __('admin_doc_edit') : __('admin_doc_add'); ?></h3>
-            <form method="POST" action="<?php echo _route('admin_doctors'); ?>">
+            <form method="POST" action="<?php echo _route('admin_doctors'); ?>" id="doctorForm">
                 <?php if ($editDoctor) { ?>
                     <input type="hidden" name="doctor_id" value="<?php echo $editDoctor['doctor_id']; ?>">
                 <?php } ?>
 
                 <label for="first_name"><?php echo __('admin_sf_firstname'); ?></label>
-                <input type="text" name="first_name" required
-                    value="<?php echo $editDoctor ? htmlspecialchars($editDoctor['first_name']) : ''; ?>"><br><br>
+                <input type="text" name="first_name" class="w3-input w3-border w3-round" required
+                    value="<?php echo $editDoctor ? htmlspecialchars($editDoctor['first_name']) : ''; ?>">
 
                 <label for="last_name"><?php echo __('admin_sf_lastname'); ?></label>
-                <input type="text" name="last_name" required
-                    value="<?php echo $editDoctor ? htmlspecialchars($editDoctor['last_name']) : ''; ?>"><br><br>
+                <input type="text" name="last_name" class="w3-input w3-border w3-round" required
+                    value="<?php echo $editDoctor ? htmlspecialchars($editDoctor['last_name']) : ''; ?>">
 
                 <label for="specialty"><?php echo __('admin_sf_specialty'); ?></label>
-                <input type="text" name="specialty" required
-                    value="<?php echo $editDoctor ? htmlspecialchars($editDoctor['specialty']) : ''; ?>"><br><br>
+                <input type="text" name="specialty" class="w3-input w3-border w3-round" required
+                    value="<?php echo $editDoctor ? htmlspecialchars($editDoctor['specialty']) : ''; ?>">
 
                 <label for="description"><?php echo __('admin_sf_desc'); ?></label>
-                <textarea name="description" rows="3"
-                    cols="50"><?php echo $editDoctor ? htmlspecialchars($editDoctor['description']) : ''; ?></textarea><br><br>
+                <textarea name="description" rows="3" class="w3-input w3-border w3-round"
+                    cols="50"><?php echo $editDoctor ? htmlspecialchars($editDoctor['description']) : ''; ?></textarea>
 
-                <?php if ($editDoctor) { ?>
-                    <input type="submit" name="update_doctor" value="<?php echo __('admin_btn_update'); ?>"
-                        class="w3-button w3-blue">
-                    <a href="admin_doctors.php" class="w3-button w3-gray"><?php echo __('admin_btn_cancel'); ?></a>
-                <?php } else { ?>
-                    <input type="submit" name="add_doctor" value="<?php echo __('admin_btn_add'); ?>"
-                        class="w3-button w3-green">
-                <?php } ?>
+                <div class="w3-center w3-margin-top">
+                    <?php if ($editDoctor) { ?>
+                        <input type="submit" name="update_doctor" value="<?php echo __('admin_btn_update'); ?>"
+                            class="w3-button w3-blue w3-block w3-round" style="width: 75%; margin: auto;">
+                        <a href="admin_doctors.php"
+                            class="w3-button w3-gray w3-margin-top"><?php echo __('admin_btn_cancel'); ?></a>
+                    <?php } else { ?>
+                        <button type="submit" name="add_doctor" id="btnRunAction" class="w3-button w3-green w3-round"
+                            style="display: block; width: 75%; margin: 20px auto 0 auto;">Ajouter</button>
+                    <?php } ?>
+                </div>
             </form>
         </div>
 

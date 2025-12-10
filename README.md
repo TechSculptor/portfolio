@@ -23,29 +23,30 @@ Un système de gestion de rendez-vous complet simulant un environnement médical
 * **Stack :** PHP, PostgreSQL, Docker, W3.CSS.
 * **Points Forts :** Authentification sécurisée, rôles utilisateurs, planning dynamique.
 
+**🚀 Comment tester ce projet :**
+1. `cd 1-Cabinet-Medical`
+2. `docker-compose up -d`
+3. Accédez à `http://localhost:80`
+4. Emails de test (inscriptions, réservations) sont visibles sur `http://localhost:8025` (MailHog).
+
 [**📂 Voir le code du projet**](https://github.com/TechSculptor/techsculptor.github.io/tree/main/1-Cabinet-Medical)
 
-### 2️⃣ [2-Collecteur-Besoins : Interface Client & API](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Collecteur-Besoins)
-
-Une application moderne pour structurer la collecte de besoins clients.
-* **Objectif :** Découpler le frontend du backend pour une architecture flexible.
-* **Dossier :** **[2-Collecteur-Besoins/](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Collecteur-Besoins)**
-* **Stack :** ReactJS, PHP API, PostgreSQL, Docker.
-* **Points Forts :** UX réactive, architecture API REST.
-
-[**📂 Voir le code du projet**](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Collecteur-Besoins)
-
-### 3️⃣ [3-Email-Tracker : Analytics & BI](https://github.com/TechSculptor/techsculptor.github.io/tree/main/3-Email-Tracker)
+### 2️⃣ [2-Email-Tracker : Analytics & BI](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Email-Tracker)
 
 Un service backend conçu pour suivre l'engagement utilisateur dans des campagnes d'emailing.
 * **Objectif :** Collecter et visualiser les données d'engagement en temps réel.
-* **Dossier :** **[3-Email-Tracker/](https://github.com/TechSculptor/techsculptor.github.io/tree/main/3-Email-Tracker)**
-* **Stack :** NodeJSTracking Pixel, PostgreSQL, Looker Studio.
-* **Points Forts :** Haute performance, données prêtes pour la BI, conformité privacy.
+* **Dossier :** **[2-Email-Tracker/](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Email-Tracker)**
+* **Stack :** Node.js API, Docker, Google Sheets API.
+* **Nouvelle Fonctionnalité :** Interface de démo pour envoyer des emails de test.
+* **Demo Live :** [Voir les résultats Google Sheet](https://docs.google.com/spreadsheets/d/1nrTaYbgPlQ6pkQJciesmsbNWtLIxSX1mYTfJ8tflIUY/edit?usp=sharing)
 
-[**📂 Voir le code du projet**](https://github.com/TechSculptor/techsculptor.github.io/tree/main/3-Email-Tracker)
+**🚀 Comment tester ce projet :**
+1. `cd 2-Email-Tracker`
+2. `docker-compose up -d`
+3. Accédez à `http://localhost:3000` pour l'interface de démo.
+4. Envoyez un email et vérifiez sa réception sur `http://localhost:8026` (MailHog).
 
----
+[**📂 Voir le code du projet**](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Email-Tracker)
 
 ### 🔒 Note sur la Confidentialité
 

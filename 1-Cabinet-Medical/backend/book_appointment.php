@@ -54,74 +54,100 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Récupérer l'ID du patient à partir de la session
         $patientId = $_SESSION['user_id'];
 
-        // Insérer le rendez-vous dans la base de données
-        $stmt = $conn->prepare("
-        INSERT INTO APPOINTMENT 
-        (patient_id, doctor_id, appointment_date, appointment_time, reason, is_first_appointment, status) 
-        VALUES 
-        (:patient_id, :doctor_id, :appointment_date, :appointment_time, :reason, :is_first_appointment, 'pending')
-    ");
+        // Vérifier si le patient a déjà un rendez-vous en attente avec ce médecin
+        $stmtPending = $conn->prepare("SELECT COUNT(*) FROM APPOINTMENT WHERE patient_id = :patient_id AND doctor_id = :doctor_id AND status = 'pending'");
+        $stmtPending->execute(['patient_id' => $patientId, 'doctor_id' => $doctor_id]);
+        $pendingCount = $stmtPending->fetchColumn();
 
-        try {
-            $stmt->execute([
-                'patient_id' => $patientId,
-                'doctor_id' => $doctor_id,
-                'appointment_date' => $date,
-                'appointment_time' => $time,
-                'reason' => $reason,
-                'is_first_appointment' => $isFirstAppointment
-            ]);
+        $canInsert = false;
 
-            // Récupérer les informations complètes pour l'email
-            require_once 'helpers/EmailHelper.php';
+        if ($pendingCount > 0) {
+            $errorMessage = "Vous avez déjà un rendez-vous en attente avec ce médecin. Veuillez attendre la validation ou annuler votre rendez-vous actuel.";
+        } elseif ($isFirstAppointment) {
+            // Vérifier si le patient a déjà eu un premier rendez-vous avec ce médecin
+            $stmtFirst = $conn->prepare("SELECT COUNT(*) FROM APPOINTMENT WHERE patient_id = :patient_id AND doctor_id = :doctor_id AND is_first_appointment = true");
+            $stmtFirst->execute(['patient_id' => $patientId, 'doctor_id' => $doctor_id]);
+            $firstCount = $stmtFirst->fetchColumn();
 
-            // Infos patient
-            $stmtPatient = $conn->prepare("SELECT * FROM PATIENT WHERE patient_id = :id");
-            $stmtPatient->execute(['id' => $patientId]);
-            $patient = $stmtPatient->fetch();
+            if ($firstCount > 0) {
+                $errorMessage = "Vous avez déjà eu un premier rendez-vous avec ce médecin. Veuillez décocher l'option 'Première visite'.";
+            } else {
+                $canInsert = true;
+            }
+        } else {
+            $canInsert = true;
+        }
 
-            // Infos médecin
-            $stmtDoc = $conn->prepare("SELECT * FROM DOCTOR WHERE doctor_id = :id");
-            $stmtDoc->execute(['id' => $doctor_id]);
-            $doctorInfo = $stmtDoc->fetch();
+        if ($canInsert) {
+            // Insérer le rendez-vous dans la base de données
+            $stmt = $conn->prepare("
+            INSERT INTO APPOINTMENT 
+            (patient_id, doctor_id, appointment_date, appointment_time, reason, is_first_appointment, status) 
+            VALUES 
+            (:patient_id, :doctor_id, :appointment_date, :appointment_time, :reason, :is_first_appointment, 'pending')
+        ");
 
-            if ($patient && $doctorInfo) {
-                $emailHelper = new EmailHelper();
-
-                // Préparer les données pour l'email
-                $appointmentData = [
+            try {
+                $stmt->execute([
+                    'patient_id' => $patientId,
+                    'doctor_id' => $doctor_id,
                     'appointment_date' => $date,
                     'appointment_time' => $time,
                     'reason' => $reason,
-                    'doctor_first_name' => $doctorInfo['first_name'],
-                    'doctor_last_name' => $doctorInfo['last_name'],
-                    'specialty' => $doctorInfo['specialty'],
-                    'is_first_appointment' => $isFirstAppointment
-                ];
+                    'is_first_appointment' => $isFirstAppointment ? 't' : 'f'
+                ]);
 
-                // Envoyer l'email
-                try {
-                    $emailHelper->sendAppointmentConfirmation(
-                        $patient['email'],
-                        $patient['first_name'] . ' ' . $patient['last_name'],
-                        $appointmentData
-                    );
-                } catch (Exception $e) {
-                    // Log l'erreur mais ne pas bloquer la redirection
-                    error_log("Erreur envoi email: " . $e->getMessage());
+                // Récupérer les informations complètes pour l'email
+                require_once 'helpers/EmailHelper.php';
+
+                // Infos patient
+                $stmtPatient = $conn->prepare("SELECT * FROM PATIENT WHERE patient_id = :id");
+                $stmtPatient->execute(['id' => $patientId]);
+                $patient = $stmtPatient->fetch();
+
+                // Infos médecin
+                $stmtDoc = $conn->prepare("SELECT * FROM DOCTOR WHERE doctor_id = :id");
+                $stmtDoc->execute(['id' => $doctor_id]);
+                $doctorInfo = $stmtDoc->fetch();
+
+                if ($patient && $doctorInfo) {
+                    $emailHelper = new EmailHelper();
+
+                    // Préparer les données pour l'email
+                    $appointmentData = [
+                        'appointment_date' => $date,
+                        'appointment_time' => $time,
+                        'reason' => $reason,
+                        'doctor_first_name' => $doctorInfo['first_name'],
+                        'doctor_last_name' => $doctorInfo['last_name'],
+                        'specialty' => $doctorInfo['specialty'],
+                        'is_first_appointment' => $isFirstAppointment
+                    ];
+
+                    // Envoyer l'email
+                    try {
+                        $emailHelper->sendAppointmentConfirmation(
+                            $patient['email'],
+                            $patient['first_name'] . ' ' . $patient['last_name'],
+                            $appointmentData
+                        );
+                    } catch (Exception $e) {
+                        // Log l'erreur mais ne pas bloquer la redirection
+                        error_log("Erreur envoi email: " . $e->getMessage());
+                    }
+                }
+
+                // Rediriger vers le tableau de bord avec un message de succès
+                header("Location: " . _route('dashboard', ['success' => 'appointment_added']));
+                exit;
+            } catch (PDOException $e) {
+                if ($e->getCode() == 23505) { // Unique violation
+                    $errorMessage = "Créneau déjà pris. Veuillez choisir une autre heure.";
+                } else {
+                    $errorMessage = "Erreur lors de la création du rendez-vous: " . $e->getMessage();
                 }
             }
-
-            // Rediriger vers le tableau de bord avec un message de succès
-            header("Location: " . _route('dashboard', ['success' => 'appointment_added']));
-            exit;
-        } catch (PDOException $e) {
-            if ($e->getCode() == 23505) { // Unique violation
-                $errorMessage = "Créneau déjà pris. Veuillez choisir une autre heure.";
-            } else {
-                $errorMessage = "Erreur lors de la création du rendez-vous: " . $e->getMessage();
-            }
-        }
+        } // End of if ($canInsert)
     }
 }
 ?>
@@ -131,6 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <title><?php echo __('book_title'); ?></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="/frontend/img/favicon.png">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
@@ -213,7 +241,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php echo __('book_first_visit'); ?>
                 </label><br><br>
 
-                <input type="submit" value="<?php echo __('book_btn'); ?>">
+                <input type="submit" value="<?php echo __('book_btn'); ?>"
+                    style="width: 75%; display: block; margin: 0 auto;">
             </form>
         </div>
     </div>
@@ -230,6 +259,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div id="sidebar-overlay" onclick="closeAvailabilitySidebar()"></div>
 
     <script src="../frontend/js/availability.js"></script>
+
+    <!-- Mobile Menu Toggle -->
+    <script>
+        function myFunction() {
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+    </script>
+
     <?php include '../frontend/partials/footer.php'; ?>
 </body>
 

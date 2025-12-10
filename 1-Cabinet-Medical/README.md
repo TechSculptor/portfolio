@@ -4,7 +4,7 @@ Un projet démontrant des compétences en développement **PHP**, **PostgreSQL**
 
 ---
 
-## 🎯 Guide du Recruteur / Reviewer Guide
+127.0.0.1cabinet_medical## 🎯 Guide du Recruteur / Reviewer Guide
 
 Ce projet a été conçu pour répondre à **12 critères fonctionnels** précis (6 minimaux, 6 optionnels).  
 Voici comment tester chacun d'eux étape par étape.

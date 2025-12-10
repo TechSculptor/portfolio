@@ -25,15 +25,11 @@ function isActive($page)
             href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i
                 class="fa fa-bars"></i></a>
         <a href="<?php echo _route('home'); ?>"
-            class="w3-bar-item w3-button w3-padding-large <?php echo isActive('index.php'); ?>"><?php echo __('nav_home'); ?></a>
+            class="w3-bar-item w3-button w3-hide-small w3-padding-large <?php echo isActive('index.php'); ?>"><?php echo __('nav_home'); ?></a>
         <a href="<?php echo _route('about'); ?>"
             class="w3-bar-item w3-button w3-hide-small w3-padding-large <?php echo isActive('about.php'); ?>"><?php echo __('nav_about'); ?></a>
         <a href="<?php echo _route('doctors'); ?>"
             class="w3-bar-item w3-button w3-hide-small w3-padding-large <?php echo isActive('doctors.php'); ?>"><?php echo __('nav_doctors'); ?></a>
-        <!-- Language Switcher -->
-        <a href="?lang=en" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right">EN</a>
-        <a href="?lang=fr" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right">FR</a>
-
         <?php if (isset($_SESSION['user_id'])): ?>
             <a href="<?php echo _route('dashboard'); ?>"
                 class="w3-bar-item w3-button w3-hide-small w3-padding-large <?php echo isActive('dashboard.php'); ?>"><?php echo __('nav_dashboard'); ?></a>
@@ -44,10 +40,18 @@ function isActive($page)
             <a href="<?php echo _route('register'); ?>"
                 class="w3-bar-item w3-button w3-hide-small w3-padding-large <?php echo isActive('register.php'); ?>"><?php echo __('nav_register'); ?></a>
         <?php endif; ?>
+
+        <!-- Language Switcher (desktop only) -->
+        <div class="w3-hide-small" style="position: absolute; right: 0;">
+            <a href="?lang=en" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">EN</a>
+            <a href="?lang=fr" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">FR</a>
+        </div>
     </div>
 
     <!-- Navbar on small screens -->
-    <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+    <div id="navDemo" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium w3-large">
+        <a href="<?php echo _route('home'); ?>"
+            class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_home'); ?></a>
         <a href="<?php echo _route('about'); ?>"
             class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_about'); ?></a>
         <a href="<?php echo _route('doctors'); ?>"
@@ -63,21 +67,26 @@ function isActive($page)
             <a href="<?php echo _route('register'); ?>"
                 class="w3-bar-item w3-button w3-padding-large"><?php echo __('nav_register'); ?></a>
         <?php endif; ?>
+        <div class="w3-bar-item lang-container">
+            <span style="font-weight: bold; margin-right: 10px;">Langue :</span>
+            <a href="?lang=en" class="lang-btn">EN</a>
+            <a href="?lang=fr" class="lang-btn">FR</a>
+        </div>
     </div>
 </div>
 
 <?php if (isset($_SESSION['user_id'])): ?>
-    <div class="w3-hide-small" style="position: fixed; top: 60px; right: 16px; z-index: 1000;">
-        <div class="w3-card w3-white w3-padding-small w3-round-large w3-border">
-            <span class="w3-small w3-text-dark-grey" style="font-weight:bold;">
-                <i class="fa fa-user-circle w3-text-blue"></i>
-                <?php echo htmlspecialchars($_SESSION['username'] ?? 'Utilisateur'); ?>
-            </span>
-            <a href="<?php echo _route('logout'); ?>"
-                class="w3-button w3-red w3-tiny w3-round w3-margin-left w3-hover-dark-red"
-                title="<?php echo __('nav_logout'); ?>">
-                <i class="fa fa-sign-out"></i>
-            </a>
+    <div style="position: fixed; top: 10px; right: 10px; z-index: 1001;">
+            <div class="w3-card w3-white w3-padding-small w3-round-large w3-border">
+                <span class="w3-small w3-text-dark-grey" style="font-weight:bold;">
+                    <i class="fa fa-user-circle w3-text-blue"></i>
+                    <?php echo htmlspecialchars($_SESSION['username'] ?? 'Utilisateur'); ?>
+                </span>
+                <a href="<?php echo _route('logout'); ?>"
+                    class="w3-button w3-red w3-tiny w3-round w3-margin-left w3-hover-dark-red"
+                    title="<?php echo __('nav_logout'); ?>">
+                    <i class="fa fa-sign-out"></i>
+                </a>
+            </div>
         </div>
-    </div>
 <?php endif; ?>

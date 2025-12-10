@@ -141,7 +141,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $validToken) {
                         </div>
                     <?php endif; ?>
 
-                    <form method="POST" action="<?php echo _route('reset_password'); ?>">
+                    <form method="POST"
+                        action="<?php echo _route('reset_password'); ?>?token=<?php echo htmlspecialchars($token); ?>">
                         <label class="w3-text-grey"><b>Nouveau mot de passe</b></label>
                         <input class="w3-input w3-border w3-round w3-margin-bottom" type="password" name="password" required
                             placeholder="Min. 12 caractères, 1 majuscule, 1 chiffre">
