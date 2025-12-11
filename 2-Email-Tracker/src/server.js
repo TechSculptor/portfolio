@@ -137,7 +137,7 @@ app.post('/send-test', async (req, res) => {
 
     // Configure Transport
     let transporter;
-    let isSimulated = false;
+    let isSimulated = true; // FORCE SIMULATION to prevent Render Crash due to Gmail block
 
     console.log(`[DEBUG] Handling /send-test. GMAIL_USER present: ${!!GMAIL_USER}, SMTP_HOST: ${SMTP_HOST}`);
 
