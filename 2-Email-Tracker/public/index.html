@@ -105,6 +105,14 @@
                     <p>Email envoyé à <b>${email}</b>.</p>
                     <p>Vérifiez votre boîte de réception (ou MailHog sur le port 8025).</p>
                     <p>ID de tracking: <code>${data.trackingId}</code></p>
+                    ${data.demoUrls ? `
+                        <div class="w3-panel w3-yellow w3-leftbar w3-border-orange w3-padding">
+                            <p><b><i class="fas fa-robot"></i> Mode Simulation (Pas de SMTP)</b></p>
+                            <p>Utilisez ces liens pour simuler l'action :</p>
+                            <a href="${data.demoUrls.pixel}" target="_blank" class="w3-button w3-small w3-border w3-border-blue w3-round">Simuler Ouverture</a>
+                            <a href="${data.demoUrls.click}" target="_blank" class="w3-button w3-small w3-border w3-border-green w3-round">Simuler Clic</a>
+                        </div>
+                    ` : ''}
                 `;
                 } else {
                     throw new Error(data.message || 'Erreur inconnue');

@@ -194,7 +194,15 @@ app.post('/send-test', async (req, res) => {
         });
 
         if (isSimulated) {
-            res.json({ success: true, trackingId, message: "Simulation (Pas d'identifiants SMTP configurés)" });
+            res.json({
+                success: true,
+                trackingId,
+                message: "Simulation (Pas d'identifiants SMTP configurés)",
+                demoUrls: {
+                    pixel: trackingPixelUrl,
+                    click: clickUrl
+                }
+            });
         } else {
             res.json({ success: true, trackingId });
         }
