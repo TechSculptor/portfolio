@@ -172,18 +172,24 @@ app.post('/send-test', async (req, res) => {
     `;
 
     try {
-        const info = await transporter.sendMail({
-            from: '"TechSculptor Demo" <demo@techsculptor.com>',
-            to: email,
-            subject: `Demo Tracking: ${trackingId}`,
-            html: htmlContent
-        });
+        let info;
+        // ONLY try to send if NOT simulated.
+        // If simulated, we skip the network call entirely to prevent Render crashes/hangs.
+        if (!isSimulated) {
+            info = await transporter.sendMail({
+                from: '"TechSculptor Demo" <demo@techsculptor.com>',
+                to: email,
+                subject: `Demo Tracking: ${trackingId}`,
+                html: htmlContent
+            });
+        }
 
         if (isSimulated) {
+            // Mock response immediately without network call
             res.json({
                 success: true,
                 trackingId,
-                message: "Simulation (Pas d'identifiants SMTP configurés)",
+                message: "Simulation (Mode demo sécurisé - Pas d'envoi réel)",
                 demoUrls: {
                     pixel: trackingPixelUrl,
                     click: clickUrl
