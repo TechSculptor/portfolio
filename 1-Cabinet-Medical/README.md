@@ -55,6 +55,24 @@ docker-compose up --build -d
 
 ---
 
+### 📐 Conception & Modélisation
+
+Voici les diagrammes de conception qui ont servi de base au développement de l'application.
+
+#### 1. Diagramme de Cas d'Utilisation (Use Case)
+![Diagramme de Cas d'Utilisation](modeling/User%20diagram%20-%20UML.png)
+
+#### 2. Modèle Conceptuel de Données (MCD)
+![MCD](modeling/MCD.png)
+
+#### 3. Modèle Logique de Données (MLD)
+![MLD](modeling/MLD.png)
+
+#### 4. Maquette Initiale
+![Maquette Initiale](modeling/Init.png)
+
+---
+
 ### 🔑 Identifiants de Démonstration
 
 | Rôle | Utilisateur | Mot de passe |
