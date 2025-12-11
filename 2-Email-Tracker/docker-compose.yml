@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: email-tracker-app
+    ports:
+      - "3000:3000"
+    environment:
+      - GOOGLE_SHEET_ID=${GOOGLE_SHEET_ID}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials.json
+      - PORT=3000
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+    volumes:
+      - ./credentials.json:/app/credentials.json
+    depends_on:
+      - mailhog
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: email_tracker_mail
+    ports:
+      - "8026:8025" # Web UI (Updated to avoid conflict)
+      - "1026:1025" # SMTP (Updated to avoid conflict)

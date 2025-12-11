@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Tracker Demo - Portfolio</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header i {
+            font-size: 3em;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-envelope-open-text"></i>
+            <h2>Email Tracker Demo</h2>
+            <p class="w3-text-grey">Testez le pixel de suivi en temps réel</p>
+        </div>
+
+        <div class="w3-panel w3-blue w3-round-large w3-display-container">
+            <span onclick="this.parentElement.style.display='none'"
+                class="w3-button w3-large w3-display-topright">&times;</span>
+            <h3><i class="fas fa-info-circle"></i> Comment ça marche ?</h3>
+            <p>1. Entrez votre email ci-dessous.<br>
+                2. Nous vous envoyons un email "fictif".<br>
+                3. Ouvrez l'email (dans MailHog si local, ou votre boîte si live).<br>
+                4. Le pixel enregistrera l'ouverture dans Google Sheets.</p>
+        </div>
+
+        <form id="emailForm" class="w3-container">
+            <label><b>Votre adresse Email</b></label>
+            <input class="w3-input w3-border w3-round w3-margin-bottom" type="email" id="email"
+                placeholder="exemple@test.com" required>
+
+            <button type="submit" class="w3-button w3-green w3-block w3-round w3-padding-large">
+                <i class="fas fa-paper-plane"></i> Envoyer le Test
+            </button>
+        </form>
+
+        <div id="status" class="w3-panel w3-round w3-margin-top" style="display:none;"></div>
+
+        <div class="w3-center w3-margin-top">
+            <a href="https://docs.google.com/spreadsheets/d/1nrTaYbgPlQ6pkQJciesmsbNWtLIxSX1mYTfJ8tflIUY/edit?usp=sharing"
+                target="_blank" class="w3-button w3-white w3-border w3-border-green w3-text-green w3-round w3-small">
+                <i class="fas fa-table"></i> Voir les résultats (Google Sheet)
+            </a>
+        </div>
+
+        <div class="w3-center w3-margin-top w3-small w3-text-grey">
+            <p>Envoyé via <b>MailHog</b> (Local) ou <b>SMTP</b> (Prod)</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('emailForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const statusDiv = document.getElementById('status');
+            const btn = e.target.querySelector('button');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
+            statusDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/send-test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+
+                statusDiv.style.display = 'block';
+                if (response.ok) {
+                    statusDiv.className = 'w3-panel w3-pale-green w3-leftbar w3-border-green w3-round';
+                    statusDiv.innerHTML = `
+                    <h4><i class="fas fa-check-circle w3-text-green"></i> Succès !</h4>
+                    <p>Email envoyé à <b>${email}</b>.</p>
+                    <p>Vérifiez votre boîte de réception (ou MailHog sur le port 8025).</p>
+                    <p>ID de tracking: <code>${data.trackingId}</code></p>
+                `;
+                } else {
+                    throw new Error(data.message || 'Erreur inconnue');
+                }
+            } catch (error) {
+                statusDiv.className = 'w3-panel w3-pale-red w3-leftbar w3-border-red w3-round';
+                statusDiv.innerHTML = `<h4><i class="fas fa-exclamation-triangle w3-text-red"></i> Erreur</h4><p>${error.message}</p>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer le Test';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

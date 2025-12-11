@@ -1,0 +1,19 @@
+{
+    "name": "email-interaction-tracker",
+    "version": "1.0.0",
+    "description": "Secure email open tracking service",
+    "main": "src/server.js",
+    "scripts": {
+        "start": "node src/server.js",
+        "generate": "node src/utils/generate_link.js",
+        "send-email": "node src/utils/send_email.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "googleapis": "^126.0.1",
+        "nodemailer": "^7.0.11",
+        "ua-parser-js": "^1.0.35"
+    },
+    "author": "Anonymized",
+    "license": "MIT"
+}
