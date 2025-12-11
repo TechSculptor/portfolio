@@ -15,11 +15,11 @@ Ce répertoire démontre ma capacité à concevoir, développer et déployer des
 
 ## 📂 Projets Clés
 
-### 1️⃣ [1-Cabinet-Medical : Gestion de Cabinet Médical](https://github.com/TechSculptor/techsculptor.github.io/tree/main/1-Cabinet-Medical)
+### 1️⃣ [1-Cabinet-Medical : Gestion de Cabinet Médical]
 
 Un système de gestion de rendez-vous complet simulant un environnement médical réel.
 * **Objectif :** Une plateforme sécurisée pour patients, médecins et administrateurs.
-* **Dossier :** **[1-Cabinet-Medical/](https://github.com/TechSculptor/techsculptor.github.io/tree/main/1-Cabinet-Medical)**
+* **Dossier :** **[1-Cabinet-Medical/]
 * **Stack :** PHP, PostgreSQL, Docker, W3.CSS.
 * **Points Forts :** Authentification sécurisée, rôles utilisateurs, planning dynamique.
 
@@ -29,7 +29,7 @@ Un système de gestion de rendez-vous complet simulant un environnement médical
 3. Accédez à `http://localhost:80`
 4. Emails de test (inscriptions, réservations) sont visibles sur `http://localhost:8025` (MailHog).
 
-[**📂 Voir le code du projet**](https://github.com/TechSculptor/techsculptor.github.io/tree/main/1-Cabinet-Medical)
+[**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/1-Cabinet-Medical)
 
 ### 2️⃣ [2-Email-Tracker : Analytics & BI](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Email-Tracker)
 
@@ -46,7 +46,7 @@ Un service backend conçu pour suivre l'engagement utilisateur dans des campagne
 3. Accédez à `http://localhost:3000` pour l'interface de démo.
 4. Envoyez un email et vérifiez sa réception sur `http://localhost:8026` (MailHog).
 
-[**📂 Voir le code du projet**](https://github.com/TechSculptor/techsculptor.github.io/tree/main/2-Email-Tracker)
+[**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/2-Email-Tracker)
 
 ### 🔒 Note sur la Confidentialité
 
