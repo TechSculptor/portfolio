@@ -1,8 +1,0 @@
-Debugging Auth for: [jean.dupont@test.com]
-Password to test: [d=9gyHG6@]*8fRWv] (Length: 16)
-User found: postgres (ID: 2)
-Stored Hash: [$2y$10$LJSJ.6SECZDWbfJ.ICJG4Ool7xwSRDwuEFNhkgqFXACk8eZSlIxDi]
-Hash Length: 60
-Email Verified: Yes
-password_verify() Result: FAILURE
-fresh hash len: 60
