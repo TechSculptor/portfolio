@@ -17,7 +17,7 @@ class EmailHelper
         $this->smtpHost = getenv('SMTP_HOST') ?: 'mailhog';
         $this->smtpPort = getenv('SMTP_PORT') ?: 1025;
         $this->fromEmail = 'noreply@cabinet-medical.com';
-        $this->fromName = 'Cabinet Médical';
+        $this->fromName = 'Cabinet Medical';
 
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
         $host = $_SERVER['HTTP_HOST'];

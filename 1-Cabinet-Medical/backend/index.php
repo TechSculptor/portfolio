@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <html lang="<?php echo getLang(); ?>">
 
 <head>
-  <title><?php echo __('home_title'); ?> - Cabinet Médical</title>
+  <title>Cabinet TEST</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="/frontend/img/favicon.png">
