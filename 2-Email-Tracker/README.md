@@ -50,6 +50,12 @@ Carte interactive des ouvertures par région/pays.
 
 ### 🚀 **[Voir les données en temps réel sur Google Sheets](https://docs.google.com/spreadsheets/d/1nrTaYbgPlQ6pkQJciesmsbNWtLIxSX1mYTfJ8tflIUY/edit?usp=sharing)**
 
+> **👨‍💻 Testez-le vous-même !**
+> 1. Ouvrez l'application live (lien hébergé sur Render).
+> 2. Entrez votre adresse email dans le champ prévu.
+> 3. Allez sur votre boîte mail et cliquez sur/ouvrez le mail reçu.
+> 4. **Observez l'ajout d'une nouvelle ligne en temps réel** sur le lien Google Sheet ci-dessus !
+
 ---
 
 ## 🏗️ Architecture du Système
