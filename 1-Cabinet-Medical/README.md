@@ -78,8 +78,9 @@ Voici les diagrammes de conception qui ont servi de base au développement de l'
 | Rôle | Utilisateur | Mot de passe |
 |------|-------------|--------------|
 | **Administrateur** | `admin` | `admin123` |
-| **Docteur** | `dr.dubois` | `doctor1` |
-| **Docteur** | `dr.martin` | `doctor2` |
+| **Docteur** (Généraliste) | `dr.dubois` | `doctor1` |
+| **Docteur** (Pédiatre) | `dr.martin` | `doctor2` |
+| **Docteur** (Cardiologue) | `dr.bernard` | `doctor3` |
 | **Patient** | *(À créer via Inscription)* | - |
 
 ---

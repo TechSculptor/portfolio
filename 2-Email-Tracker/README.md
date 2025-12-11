@@ -1,14 +1,3 @@
-# 📧 Email Tracker - Pixel de Suivi Sécurisé
-
-![Node.js](https://img.shields.io/badge/Node.js-18-green?logo=node.js)
-![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker)
-![Google Sheets](https://img.shields.io/badge/Google%20Sheets-API-34A853?logo=google-sheets)
-![Express](https://img.shields.io/badge/Express.js-4.x-000000?logo=express)
-
-> Un micro-service conteneurisé pour tracker les ouvertures d'emails via un pixel invisible 1x1, avec visualisation en temps réel sur Looker Studio.
-
----
-
 ## Vos Statistiques d'Emailing en un coup d'œil avec Looker Studio
 
 Le tableau de bord Looker Studio garantit un accès clair à des statistiques rapides de campagne d'Emailing, permettant ainsi d'optimiser et de rendre plus efficaces les futures stratégies d'envoi.
@@ -49,6 +38,20 @@ Carte interactive des ouvertures par région/pays.
 
 ---
 
+# 📧 Email Tracker - Pixel de Suivi Sécurisé
+
+![Node.js](https://img.shields.io/badge/Node.js-18-green?logo=node.js)
+![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker)
+![Google Sheets](https://img.shields.io/badge/Google%20Sheets-API-34A853?logo=google-sheets)
+![Express](https://img.shields.io/badge/Express.js-4.x-000000?logo=express)
+![Render](https://img.shields.io/badge/Render-Hosted-black?logo=render)
+
+> Un micro-service conteneurisé pour tracker les ouvertures d'emails via un pixel invisible 1x1, avec visualisation en temps réel sur Looker Studio.
+
+### 🚀 **[Voir les données en temps réel sur Google Sheets](https://docs.google.com/spreadsheets/d/1nrTaYbgPlQ6pkQJciesmsbNWtLIxSX1mYTfJ8tflIUY/edit?usp=sharing)**
+
+---
+
 ## 🏗️ Architecture du Système
 
 ```mermaid
@@ -71,7 +74,7 @@ flowchart LR
 
 | Composant | Technologie |
 |-----------|-------------|
-| **Backend** | Node.js v18 (Express.js) |
+| **Backend** | Node.js v18 (Express.js) et Render |
 | **Base de Données** | Google Sheets (via API) |
 | **Infrastructure** | Docker & Docker Compose |
 | **Sécurité** | Service Account Google Cloud |
