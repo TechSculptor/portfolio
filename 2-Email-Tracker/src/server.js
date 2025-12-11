@@ -139,8 +139,11 @@ app.post('/send-test', async (req, res) => {
     let transporter;
     let isSimulated = false;
 
+    console.log(`[DEBUG] Handling /send-test. GMAIL_USER present: ${!!GMAIL_USER}, SMTP_HOST: ${SMTP_HOST}`);
+
     if (GMAIL_USER && GMAIL_APP_PASSWORD) {
         // Production (Gmail)
+        console.log('[DEBUG] Configuration detected: Gmail');
         transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: { user: GMAIL_USER, pass: GMAIL_APP_PASSWORD }
