@@ -22,6 +22,12 @@ Un système de gestion de rendez-vous complet simulant un environnement médical
 * **Stack :** PHP, PostgreSQL, Docker, W3.CSS.
 * **Points Forts :** Authentification sécurisée, rôles utilisateurs, planning dynamique.
 
+**🚀 Comment tester ce projet :**
+1. `cd 1-Cabinet-Medical`
+2. `docker-compose up -d`
+3. Accédez à `http://localhost:80`
+4. Emails de test (inscriptions, réservations) sont visibles sur `http://localhost:8025` (MailHog).
+
 [**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/1-Cabinet-Medical)
 
 ### 2️⃣ 2-Email-Tracker : Analytics & BI
@@ -31,6 +37,12 @@ Un service backend conçu pour suivre l'engagement utilisateur dans des campagne
 * **Stack :** Node.js API, Docker, Google Sheets API.
 * **Nouvelle Fonctionnalité :** Interface de démo pour envoyer des emails de test.
 * **Demo Live :** [Voir les résultats Google Sheet](https://docs.google.com/spreadsheets/d/1nrTaYbgPlQ6pkQJciesmsbNWtLIxSX1mYTfJ8tflIUY/edit?usp=sharing)
+
+**🚀 Comment tester ce projet (Local) :**
+1. `cd 2-Email-Tracker`
+2. `docker-compose up -d`
+3. Accédez à `http://localhost:3000` pour l'interface de démo.
+4. Envoyez un email et vérifiez sa réception sur `http://localhost:8026` (MailHog).
 
 [**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/2-Email-Tracker)
 
