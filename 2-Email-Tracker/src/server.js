@@ -14,8 +14,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 // Configuration SMTP
 const SMTP_HOST = process.env.SMTP_HOST || 'mailhog';
 const SMTP_PORT = process.env.SMTP_PORT || 1025;
-const GMAIL_USER = process.env.GMAIL_USER;
-const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
+const GMAIL_USER = 'thomasdaloz9799@gmail.com';
+const GMAIL_APP_PASSWORD = 'vjnl ywvs syxw opht';
 
 // Transparent 1x1 GIF Buffer
 const PIXEL = Buffer.from(
