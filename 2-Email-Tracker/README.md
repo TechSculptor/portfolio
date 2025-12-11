@@ -48,13 +48,15 @@ Carte interactive des ouvertures par région/pays.
 
 > Un micro-service conteneurisé pour tracker les ouvertures d'emails via un pixel invisible 1x1, avec visualisation en temps réel sur Looker Studio.
 
-### 🚀 **[Voir les données en temps réel sur Google Sheets](https://docs.google.com/spreadsheets/d/1nrTaYbgPlQ6pkQJciesmsbNWtLIxSX1mYTfJ8tflIUY/edit?usp=sharing)**
+### 🚀 **[Voir les données en temps réel sur Google Sheets](https://docs.google.com/spreadsheets/d/1nrTaYbgPlQ6pkQJciesmsbNWtLIxSX1mYTfJ8tflIUY/edit?usp=sharing)** | **[📊 Voir le Dashboard Looker Studio](https://lookerstudio.google.com/reporting/d4218795-26ec-4770-bd6d-1634ff8426f5)**
+
+
 
 > **👨‍💻 Testez-le vous-même !**
 > 1. Ouvrez l'application live (lien hébergé sur Render).
 > 2. Entrez votre adresse email dans le champ prévu.
 > 3. Allez sur votre boîte mail et cliquez sur/ouvrez le mail reçu.
-> 4. **Observez l'ajout d'une nouvelle ligne en temps réel** sur le lien Google Sheet ci-dessus !
+> 4. **Observez l'ajout d'une nouvelle ligne en temps réel** sur le lien Google Sheet ci-dessus.
 
 ---
 
@@ -95,56 +97,6 @@ flowchart LR
 - ✅ Sécurisation via **Service Account**
 - ✅ Analyse de données et visualisation (**Looker Studio**)
 - ✅ Conception de systèmes de tracking respectueux de la vie privée
-
----
-
-## 🚀 Démarrage Rapide
-
-### Prérequis
-- Docker & Docker Compose
-- Compte de Service Google Cloud :
-  1. Créez un projet sur [Google Cloud Console](https://console.cloud.google.com/)
-  2. Activez l'API **Google Sheets API**
-  3. Créez un Service Account et téléchargez la clé JSON → `credentials.json`
-  4. Créez un Google Sheet et partagez-le avec l'email du Service Account (droits éditeur)
-
-### Installation
-
-```bash
-# 1. Cloner le repository
-git clone https://github.com/votre-username/email-tracker.git
-cd email-tracker
-
-# 2. Configurer les variables d'environnement (Optionnel en local)
-# Pour une utilisation locale avec Docker, aucune configuration n'est requise (MailHog capture les emails).
-# Pour utiliser Google Sheets, ajoutez credentials.json à la racine.
-
-# 3. Démarrer le service
-docker-compose up -d --build
-```
-
-L'application sera accessible sur `http://localhost:3000`
-
-### Utilisation
-
-1.  **Interface de Démo** : Allez sur `http://localhost:3000`.
-2.  **Test d'Envoi** : Entrez une adresse email (réelle ou fictive) et cliquez sur "Envoyer".
-3.  **Vérification (Local)** : Ouvrez **MailHog** sur `http://localhost:8026` pour voir l'email envoyé.
-4.  **Tracking** : Ouvrez l'email dans MailHog. Le pixel sera chargé.
-5.  **Analytics** : Si vous avez connecté Google Sheets, une nouvelle ligne apparaîtra. [Voir les résultats en direct](https://docs.google.com/spreadsheets/d/1nrTaYbgPlQ6pkQJciesmsbNWtLIxSX1mYTfJ8tflIUY/edit?usp=sharing)
-
-### Générer un Lien Manuellement
-
-```bash
-# Via Docker
-docker exec -it email-tracker-app npm run generate
-
-# Ou localement
-node src/utils/generate_link.js
-```
-
-### Visualiser les Données
-Ouvrez votre Google Sheet — chaque ouverture d'email ajoutera automatiquement une ligne avec les détails de l'événement.
 
 ---
 
