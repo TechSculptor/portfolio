@@ -145,31 +145,14 @@ app.post('/send-test', async (req, res) => {
             service: 'gmail',
             auth: { user: GMAIL_USER, pass: GMAIL_APP_PASSWORD }
         });
-    } else if (SMTP_HOST === 'mailhog') {
-        // Development detected (MailHog)
-        // Check if we are actually able to reach mailhog?
-        // Safest is to rely on env vars. 
-        // If we are in 'production' (Render) and SMTP_HOST is still 'mailhog' (default), 
-        // it means user forgot to set GMAIL keys. We should mock it to prevent crash.
-
-        if (process.env.NODE_ENV === 'production') {
-            console.warn("⚠️ Production environment detected but no Email Credentials found. Simulating email send.");
-            isSimulated = true;
-            transporter = nodemailer.createTransport({
-                jsonTransport: true
-            });
-        } else {
-            // Local Docker with MailHog
-            transporter = nodemailer.createTransport({
-                host: SMTP_HOST,
-                port: SMTP_PORT,
-                ignoreTLS: true
-            });
-        }
     } else {
-        // Fallback
+        // Default to Simulation Mode (Safety fallback for Render/Demo)
+        // This prevents trying to connect to a non-existent MailHog host and crashing
+        console.log("ℹ️ No Email Credentials found (or MailHog not reachable). Using Simulation Mode.");
         isSimulated = true;
-        transporter = nodemailer.createTransport({ jsonTransport: true });
+        transporter = nodemailer.createTransport({
+            jsonTransport: true
+        });
     }
 
     const htmlContent = `
