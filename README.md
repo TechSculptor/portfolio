@@ -51,7 +51,7 @@ Un service backend conçu pour suivre l'engagement utilisateur dans des campagne
 
 Automatisation de la création de pages HTML pour un annuaire de grossistes.
 * **Stack :** Python (Pandas), HTML/CSS, JSON.
-* **Points forts :**
+* **Méthodologie :**
     - 🔄 Pipeline optimisé en 4 étapes (Fusion -> Images -> HTML -> JSON).
     - 🎨 Génération dynamique de 40 pages web avec design responsive.
     - ☁️ Gestion hybride des images (Cloudinary ou local).
