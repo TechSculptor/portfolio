@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Portfolio Grossistes</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .w3-sidebar a {
+            font-family: "Roboto", sans-serif
+        }
+
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .w3-wide {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .card-image-container {
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body class="w3-content" style="max-width:1200px">
+
+    <!-- Sidebar/menu -->
+    <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
+        <div class="w3-container w3-display-container w3-padding-16">
+            <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
+            <h3 class="w3-wide"><b>PORTFOLIO</b></h3>
+        </div>
+        <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
+            <a href="#" class="w3-bar-item w3-button" onclick="filterGallery('all')">Tout voir</a>
+
+            <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align"
+                id="myBtn">
+                Catégories <i class="fa fa-caret-down"></i>
+            </a>
+            <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+                <a href="#" class="w3-bar-item w3-button" onclick="filterGallery('vetements')"><i
+                        class="fa fa-caret-right w3-margin-right"></i>Vêtements</a>
+                <a href="#" class="w3-bar-item w3-button" onclick="filterGallery('chaussures')"><i
+                        class="fa fa-caret-right w3-margin-right"></i>Chaussures</a>
+                <a href="#" class="w3-bar-item w3-button" onclick="filterGallery('accessoires')"><i
+                        class="fa fa-caret-right w3-margin-right"></i>Accessoires</a>
+                <a href="#" class="w3-bar-item w3-button" onclick="filterGallery('bijoux')"><i
+                        class="fa fa-caret-right w3-margin-right"></i>Bijoux</a>
+                <a href="#" class="w3-bar-item w3-button" onclick="filterGallery('sacs')"><i
+                        class="fa fa-caret-right w3-margin-right"></i>Maroquinerie</a>
+            </div>
+
+            <a href="#footer" class="w3-bar-item w3-button w3-padding">Contact</a>
+            <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding"
+                onclick="document.getElementById('newsletter').style.display='block'">Newsletter</a>
+        </div>
+    </nav>
+
+    <!-- Top menu on small screens -->
+    <header class="w3-bar w3-top w3-hide-large w3-black w3-xlarge">
+        <div class="w3-bar-item w3-padding-24 w3-wide">PORTFOLIO</div>
+        <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-24 w3-right" onclick="w3_open()"><i
+                class="fa fa-bars"></i></a>
+    </header>
+
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
+        id="myOverlay"></div>
+
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main" style="margin-left:250px">
+
+        <!-- Push down content on small screens -->
+        <div class="w3-hide-large" style="margin-top:83px"></div>
+
+        <!-- Top header -->
+        <header class="w3-container w3-xlarge">
+            <p class="w3-left">Nos Grossistes</p>
+            <p class="w3-right">
+                <i class="fa fa-shopping-cart w3-margin-right"></i>
+                <i class="fa fa-search"></i>
+            </p>
+        </header>
+
+        <!-- Image header removed as requested -->
+
+        <div class="w3-container w3-text-grey" id="grid-anchor">
+            <p id="count-display">Chargement...</p>
+        </div>
+
+        <!-- Product grid -->
+        <div class="w3-row w3-grayscale" id="product-grid">
+            <!-- Dynamic Content -->
+        </div>
+
+        <!-- Subscribe section -->
+        <div class="w3-container w3-black w3-padding-32">
+            <h1>Newsletter</h1>
+            <p>Pour recevoir nos dernières offres :</p>
+            <p><input class="w3-input w3-border" type="text" placeholder="Entrez votre e-mail" style="width:100%"></p>
+            <button type="button" class="w3-button w3-red w3-margin-bottom">S'inscrire</button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="w3-padding-64 w3-light-grey w3-small w3-center" id="footer">
+            <div class="w3-row-padding">
+                <div class="w3-col s4">
+                    <h4>Contact</h4>
+                    <p>Des questions ?</p>
+                    <form>
+                        <p><input class="w3-input w3-border" type="text" placeholder="Nom" name="Name" required></p>
+                        <p><input class="w3-input w3-border" type="text" placeholder="Email" name="Email" required></p>
+                        <button type="button" class="w3-button w3-block w3-black">Envoyer</button>
+                    </form>
+                </div>
+
+                <div class="w3-col s4">
+                    <h4>À propos</h4>
+                    <p><a href="#">Nous sommes</a></p>
+                    <p><a href="#">Support</a></p>
+                    <p><a href="#">Boutiques</a></p>
+                    <p><a href="#">Aide</a></p>
+                </div>
+
+                <div class="w3-col s4 w3-justify">
+                    <h4>Info</h4>
+                    <p><i class="fa fa-fw fa-map-marker"></i> Aubervilliers</p>
+                    <p><i class="fa fa-fw fa-phone"></i> 01.00.00.00.00</p>
+                    <p><i class="fa fa-fw fa-envelope"></i> contact@grossistes.com</p>
+                </div>
+            </div>
+        </footer>
+
+        <div class="w3-black w3-center w3-padding-24">Powered by <a href="https://www.w3schools.com/w3css/default.asp"
+                title="W3.CSS" target="_blank" class="w3-hover-opacity">w3.css</a></div>
+
+        <!-- End page content -->
+    </div>
+
+    <!-- Newsletter Modal -->
+    <div id="newsletter" class="w3-modal">
+        <div class="w3-modal-content w3-animate-zoom" style="padding:32px">
+            <div class="w3-container w3-white w3-center">
+                <i onclick="document.getElementById('newsletter').style.display='none'"
+                    class="fa fa-remove w3-right w3-button w3-transparent w3-xxlarge"></i>
+                <h2 class="w3-wide">NEWSLETTER</h2>
+                <p>Rejoignez notre liste de diffusion.</p>
+                <p><input class="w3-input w3-border" type="text" placeholder="Votre email"></p>
+                <button type="button" class="w3-button w3-padding-large w3-red w3-margin-bottom"
+                    onclick="document.getElementById('newsletter').style.display='none'">S'inscrire</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Accordion 
+        function myAccFunc() {
+            var x = document.getElementById("demoAcc");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+
+        // Click on the "Jeans" link on page load to open the accordion for demo purposes
+        document.getElementById("myBtn").click();
+
+
+        // Open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+            document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+            document.getElementById("myOverlay").style.display = "none";
+        }
+
+        // === LOGIC DYNAMIQUE ===
+        let allData = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('catalogue.json')
+                .then(res => res.json())
+                .then(data => {
+                    allData = data;
+                    renderGrid(data);
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('product-grid').innerHTML = `<div class="w3-container w3-text-red"><h3>Erreur de chargement</h3><p>Détail technique : <b>${err.message}</b></p><p>Vérifiez que catalogue.json est bien accessible.</p></div>`;
+                });
+        });
+
+        function renderGrid(data) {
+            const grid = document.getElementById('product-grid');
+            const countDisplay = document.getElementById('count-display');
+
+            countDisplay.textContent = `${data.length} boutiques`;
+            grid.innerHTML = '';
+
+            data.forEach((item, index) => {
+                // Filename fix
+                const filename = item.link.split('/').pop();
+                const localLink = `pages/${filename}`;
+
+                // Capitalize category
+                const cat = item.category.charAt(0).toUpperCase() + item.category.slice(1);
+
+                const div = document.createElement('div');
+                div.className = 'w3-col l3 s6';
+
+                div.innerHTML = `
+                  <div class="w3-container w3-margin-bottom">
+                    <div class="w3-display-container">
+                      <img src="${item.image || item.logo}" style="width:100%" alt="${item.name}">
+                      <span class="w3-tag w3-display-topleft">${cat}</span>
+                      <div class="w3-display-middle w3-display-hover">
+                        <a href="${localLink}" target="_blank" class="w3-button w3-black">Voir la boutique <i class="fa fa-shopping-cart"></i></a>
+                      </div>
+                    </div>
+                    <p>${item.name}<br><b>Local ${item.zone}</b></p>
+                  </div>
+                `;
+
+                grid.appendChild(div);
+            });
+        }
+
+        function filterGallery(category) {
+            if (category === 'all') {
+                renderGrid(allData);
+            } else {
+                const filtered = allData.filter(item => item.category.toLowerCase() === category.toLowerCase());
+                renderGrid(filtered);
+            }
+            // Mobile : fermer menu
+            w3_close();
+        }
+
+    </script>
+
+</body>
+
+</html>

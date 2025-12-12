@@ -1,8 +1,8 @@
 # 🚀 Portfolio Technique | TechSculptor
 
-**Développeur Junior Back-End (React/PHP/PostgreSQL) et Front-End (ReactJS/JavaScript/HTML5/CSS3) spécialisé en architecture Docker.**
+**Développeur Junior Back-End (PHP/PostgreSQL) et Front-End (ReactJS/JavaScript/HTML5/CSS3).**
 
-Ce répertoire démontre ma capacité à concevoir, développer et déployer des solutions sécurisées et évolutives.
+Ce répertoire démontre ma capacité à concevoir, développer et déployer des solutions simples et évolutives.
 
 ## 🛠️ Compétences Techniques Clés
 
@@ -45,6 +45,24 @@ Un service backend conçu pour suivre l'engagement utilisateur dans des campagne
 4. Envoyez un email et vérifiez sa réception sur `http://localhost:8026` (MailHog).
 
 [**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/2-Email-Tracker)
+
+
+### 3️⃣ 3-Generate-Html : Génération de Site Statique
+
+Automatisation de la création de pages HTML pour un annuaire de grossistes.
+* **Stack :** Python (Pandas), HTML/CSS, JSON.
+* **Points forts :**
+    - 🔄 Pipeline optimisé en 4 étapes (Fusion -> Images -> HTML -> JSON).
+    - 🎨 Génération dynamique de 40 pages web avec design responsive.
+    - ☁️ Gestion hybride des images (Cloudinary ou local).
+    - 📊 Export des données structurées pour API.
+
+[**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/3-Generate-Html) | [**✨ Voir le rendu final (40 pages)**](3-Generate-Html/index.html)
+
+**🚀 Comment tester ce projet :**
+1. `cd 3-Generate-Html`
+2. `python -m http.server`
+3. Accédez à `http://localhost:8000/index.html` pour voir le tableau de bord complet.
 
 ### 🔒 Note sur la Confidentialité
 
