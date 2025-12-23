@@ -57,7 +57,9 @@ Automatisation de la création de pages HTML pour un annuaire de grossistes.
     - ☁️ Gestion hybride des images (Cloudinary ou local).
     - 📊 Export des données structurées pour API.
 
-[**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/3-Generate-Html) | [**✨ Voir le rendu final (40 pages)**](3-Generate-Html/index.html)
+[**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/3-Generate-Html)
+
+[**✨ Voir le rendu final (40 pages)**](3-Generate-Html/index.html)
 
 **🚀 Comment tester ce projet :**
 1. `cd 3-Generate-Html`
