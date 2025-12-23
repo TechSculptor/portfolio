@@ -74,4 +74,26 @@ Le code source de ces projets a été entièrement anonymisé. Tous les noms d'e
 
 > "Thomas a montré une **bonne motivation** et une réelle curiosité pour le métier de développeur informatique. Il s’est investi dans les missions confiées et a su **s’adapter progressivement à notre environnement de travail**. Son attitude a été **respectueuse, sérieuse** et il a manifesté un réel intérêt pour comprendre les outils, les méthodes et les enjeux liés au développement web et à l’organisation d’un projet technique. Cette immersion s’est déroulée dans de bonnes conditions et a été globalement positive."
 >
+
 > **— Quin Axel, Chef de projet, Easy Tech**
+
+---
+
+## 📸 Aperçu Visuel
+
+Quelques captures des projets réalisés :
+
+![Portfolio Overview 1](Screen/Portfolio1.png)
+*Vue d'ensemble et accueil*
+
+![Portfolio Overview 2](Screen/Portfolio2.png)
+*Code des fonctionnalités médicales*
+
+![Portfolio Overview 3](Screen/Portfolio3.png)
+*Code de gestion et tracking*
+
+![Portfolio Overview 4](Screen/Portfolio4.png)
+*Génération automatique de catalogue*
+
+![Portfolio Overview 5](Screen/Portfolio5.png)
+*Back-office et administration*
