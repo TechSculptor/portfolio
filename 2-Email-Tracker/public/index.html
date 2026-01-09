@@ -72,6 +72,11 @@
                 target="_blank" class="w3-button w3-white w3-border w3-border-green w3-text-green w3-round w3-small">
                 <i class="fas fa-table"></i> Voir les résultats (Google Sheet)
             </a>
+            <a href="https://lookerstudio.google.com/reporting/d4218795-26ec-4770-bd6d-1634ff8426f5/page/3uXiF"
+                target="_blank"
+                class="w3-button w3-white w3-border w3-border-blue w3-text-blue w3-round w3-small w3-margin-left">
+                <i class="fas fa-chart-pie"></i> Tableau de bord (Looker Studio)
+            </a>
         </div>
 
         <div class="w3-center w3-margin-top w3-small w3-text-grey">
@@ -105,7 +110,7 @@
                     statusDiv.innerHTML = `
                     <h4><i class="fas fa-check-circle w3-text-green"></i> Succès !</h4>
                     <p>Email envoyé à <b>${email}</b>.</p>
-                    <p>Vérifiez votre boîte de réception (ou MailHog sur le port 8025).</p>
+                    <p>Vérifiez votre boîte de réception (ou MailHog sur le port 8026).</p>
                     <p>ID de tracking: <code>${data.trackingId}</code></p>
                     ${data.demoUrls ? `
                         <div class="w3-panel w3-yellow w3-leftbar w3-border-orange w3-padding">
