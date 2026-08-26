@@ -7,7 +7,7 @@ Ce répertoire démontre ma capacité à concevoir, développer et déployer des
 ## 🛠️ Compétences Techniques Clés
 
 * **Backend & API :** PHP, Sécurité (PDO, Hachage), Docker, n8n (Workflows).
-* **Frontend & UX :** ReactJS, JavaScript, HTML5/CSS3 (W3.CSS), Responsive.
+* **Frontend & UX :** Angular (Signals, Standalone Components), ReactJS, TypeScript, JavaScript, HTML5/CSS3 (W3.CSS), Responsive.
 * **Base de Données & BI :** PostgreSQL, Modélisation SQL, Looker Studio (pour la visualisation des données).
 * **Déploiement :** Docker & Docker Compose, Variables d'environnement.
 
@@ -65,6 +65,28 @@ Automatisation de la création de pages HTML pour un annuaire de grossistes.
 1. `cd 3-Generate-Html`
 2. `python -m http.server`
 3. Accédez à `http://localhost:8000/index.html` pour voir le tableau de bord complet.
+
+### 4️⃣ 4-Todo-List-Dev : Todo List Angular pour Développeurs
+
+Une todo-list conçue spécifiquement pour l'organisation quotidienne d'un développeur, construite avec Angular 21 (Signals, composants standalone, nouvelle syntaxe de contrôle de flux).
+* **Objectif :** Aller au-delà du CRUD basique pour explorer un vrai cas d'usage produit (priorités, catégorisation, suivi de sous-tâches, rappels adaptatifs).
+* **Stack :** Angular 21, TypeScript, Signals (`signal`/`computed`/`effect`), `localStorage`.
+* **Points Forts :**
+    - 🏗️ Code organisé par responsabilité (types, utilitaires de dates, données/persistance, statistiques, composant) plutôt qu'un fichier unique.
+    - 🔁 État 100% réactif via Signals, sans RxJS, avec immutabilité systématique des mises à jour.
+    - 🔔 Rappels dont la fréquence s'adapte à la proximité de l'échéance.
+    - 🤖 Suggestion de documentation façon agent IA (mockée côté client par design, pour ne jamais exposer de clé API dans le navigateur).
+    - 💾 Persistance `localStorage` avec migration de schéma pour les anciennes données sauvegardées.
+
+**🚀 Comment tester ce projet :**
+1. `cd 4-Todo-List-Dev`
+2. `npm install`
+3. `npm start`
+4. Accédez à `http://localhost:4200`
+
+[**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/4-Todo-List-Dev)
+
+[**✨ Voir la démo live**](4-Todo-List-Dev/demo/index.html)
 
 ### 🔒 Note sur la Confidentialité
 

@@ -1,0 +1,286 @@
+<div class="todo-card">
+  <header class="todo-header">
+    <h2>Ma Liste de Tâches</h2>
+    <span class="karma-badge">🔥 {{ karma() }} karma</span>
+  </header>
+
+  @if (remindersDue().length > 0) {
+    <div class="reminder-banner">
+      <div class="reminder-banner-title">⏰ {{ remindersDue().length }} tâche(s) à relancer</div>
+      <ul class="reminder-list">
+        @for (todo of remindersDue(); track todo) {
+          <li class="reminder-item">
+            <span class="reminder-text">{{ todo.text }}</span>
+            <button type="button" class="reminder-dismiss" (click)="dismissReminder(todo)">Vu, RAS</button>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+
+  <div class="priority-legend">
+    <span class="legend-item"><span class="priority-dot priority-low"></span>Basse</span>
+    <span class="legend-item"><span class="priority-dot priority-medium"></span>Moyenne</span>
+    <span class="legend-item"><span class="priority-dot priority-high"></span>Haute</span>
+  </div>
+
+  <div class="sort-row">
+    <label for="sort-select">Trier par</label>
+    <select
+      id="sort-select"
+      [ngModel]="sortBy()"
+      (ngModelChange)="sortBy.set($event)"
+      class="todo-priority-select"
+      aria-label="Trier les tâches"
+    >
+      @for (option of sortOptions; track option.value) {
+        <option [value]="option.value">{{ option.label }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="focus-row">
+    <button
+      type="button"
+      class="focus-btn"
+      [class.active]="showTodayOnly()"
+      (click)="toggleTodayView()"
+    >
+      📅 Vue du jour
+    </button>
+  </div>
+
+  <div class="tag-filter-row">
+    @for (tag of allTags; track tag) {
+      <button
+        type="button"
+        class="tag-chip"
+        [class.active]="activeTagFilter() === tag"
+        [style.--tag-color]="tagMeta[tag].color"
+        (click)="toggleTagFilter(tag)"
+      >
+        {{ tagMeta[tag].label }}
+      </button>
+    }
+  </div>
+
+  <div class="add-task-trigger">
+    <button type="button" class="add-task-btn" (click)="openAddForm()">+ Nouvelle tâche</button>
+  </div>
+
+  <ul class="todo-list">
+    @for (todo of filteredTodos(); track todo) {
+      <li class="todo-item-wrapper">
+        <div class="todo-item" [class.done]="todo.done">
+          <button
+            type="button"
+            class="todo-check"
+            [class.checked]="todo.done"
+            (click)="toggleTodo(todo)"
+            aria-label="Marquer comme terminée"
+          ></button>
+          <button
+            type="button"
+            class="priority-dot"
+            [class]="'priority-' + todo.priority"
+            (click)="cyclePriority(todo)"
+            [attr.title]="'Priorité : ' + todo.priority + ' (cliquer pour changer)'"
+          ></button>
+          <span class="todo-text">{{ todo.text }}</span>
+          @for (tag of todo.tags; track tag) {
+            <span class="tag-badge" [style.--tag-color]="tagMeta[tag].color">{{ tagMeta[tag].label }}</span>
+          }
+          @if (todo.link) {
+            <a class="todo-link" [href]="todo.link" target="_blank" rel="noopener" title="Ouvrir le lien">🔗</a>
+          }
+          @if (todo.dueDate) {
+            <span
+              class="due-badge"
+              [class.overdue]="isOverdue(todo)"
+              [class.due-today]="isDueToday(todo)"
+            >📅 {{ formatDate(todo.dueDate) }}</span>
+          }
+          @if (todo.subtasks.length > 0) {
+            <span class="subtask-progress">{{ subtaskProgress(todo) }}</span>
+          }
+          <button
+            type="button"
+            class="expand-btn"
+            [class.open]="todo.expanded"
+            (click)="toggleExpand(todo)"
+            aria-label="Afficher les sous-tâches"
+            title="Sous-tâches"
+          >▾</button>
+          <button type="button" class="todo-remove" (click)="removeTodo(todo)" aria-label="Supprimer">
+            ✕
+          </button>
+        </div>
+
+        @if (todo.expanded) {
+          <ul class="subtask-list">
+            @for (subtask of todo.subtasks; track subtask) {
+              <li class="subtask-item" [class.done]="subtask.done">
+                <button
+                  type="button"
+                  class="subtask-check"
+                  [class.checked]="subtask.done"
+                  (click)="toggleSubtask(todo, subtask)"
+                  aria-label="Marquer la sous-tâche comme terminée"
+                ></button>
+                <span class="subtask-text">{{ subtask.text }}</span>
+                <button
+                  type="button"
+                  class="subtask-remove"
+                  (click)="removeSubtask(todo, subtask)"
+                  aria-label="Supprimer la sous-tâche"
+                >✕</button>
+              </li>
+            } @empty {
+              <li class="subtask-empty">Aucune sous-tâche.</li>
+            }
+            <li class="subtask-add-row">
+              <input
+                #subtaskInput
+                type="text"
+                placeholder="Ajouter une sous-tâche..."
+                class="subtask-input"
+                (keyup.enter)="addSubtask(todo, subtaskInput.value); subtaskInput.value = ''"
+              />
+              <button
+                type="button"
+                class="subtask-add-btn"
+                (click)="addSubtask(todo, subtaskInput.value); subtaskInput.value = ''"
+                aria-label="Ajouter la sous-tâche"
+              >+</button>
+            </li>
+          </ul>
+        }
+      </li>
+    } @empty {
+      <li class="todo-empty">Aucune tâche pour ce filtre.</li>
+    }
+  </ul>
+</div>
+
+@if (showAddForm()) {
+  <div class="popup-backdrop" (click)="closeAddForm()">
+    <div class="popup-panel" (click)="$event.stopPropagation()">
+      <h3>Nouvelle tâche</h3>
+
+      <div class="input-help-row">
+        <input
+          type="text"
+          [ngModel]="newTodo()"
+          (ngModelChange)="newTodo.set($event)"
+          (keyup.enter)="addTodo()"
+          placeholder="Nouvelle tâche..."
+          class="todo-input"
+          autofocus
+        />
+
+        <button
+          type="button"
+          class="help-icon"
+          (click)="toggleHelp()"
+          aria-label="Aide sur la suggestion de documentation"
+          title="Aide"
+        >?</button>
+
+        @if (showHelp()) {
+          <div class="help-popover" (click)="$event.stopPropagation()">
+            <p class="help-popover-title">Exemples de tâches à essayer</p>
+            <ul class="help-example-list">
+              @for (example of taskExamples; track example) {
+                <li>
+                  <button type="button" class="help-example" (click)="useExample(example)">{{ example }}</button>
+                </li>
+              }
+            </ul>
+
+            <p class="help-popover-title">Mots-clés reconnus par l'agent</p>
+            <ul class="help-keyword-list">
+              @for (entry of docKnowledgeBase; track entry.label) {
+                <li><strong>{{ entry.label }}</strong> : {{ entry.keywords.join(', ') }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="doc-search-btn"
+        [disabled]="!newTodo().trim() || searchingDocs()"
+        (click)="suggestDocs()"
+      >
+        @if (searchingDocs()) {
+          🔎 Recherche en cours...
+        } @else {
+          🔎 Suggérer de la documentation
+        }
+      </button>
+
+      @if (docSuggestions().length > 0) {
+        <ul class="doc-suggestions">
+          @for (suggestion of docSuggestions(); track suggestion.url) {
+            <li class="doc-suggestion">
+              <a [href]="suggestion.url" target="_blank" rel="noopener">{{ suggestion.label }}</a>
+              <button type="button" class="doc-use-btn" (click)="useSuggestion(suggestion.url)">
+                Utiliser comme lien
+              </button>
+            </li>
+          }
+        </ul>
+      }
+
+      <div class="popup-row">
+        <select
+          [ngModel]="newPriority()"
+          (ngModelChange)="newPriority.set($event)"
+          class="todo-priority-select"
+          aria-label="Priorité de la nouvelle tâche"
+        >
+          <option value="low">Basse</option>
+          <option value="medium">Moyenne</option>
+          <option value="high">Haute</option>
+        </select>
+
+        <select
+          multiple
+          [ngModel]="newTags()"
+          (ngModelChange)="newTags.set($event)"
+          class="todo-tag-select"
+          aria-label="Tags de la nouvelle tâche"
+        >
+          @for (tag of allTags; track tag) {
+            <option [value]="tag">{{ tagMeta[tag].label }}</option>
+          }
+        </select>
+
+      </div>
+
+      <input
+        type="url"
+        [ngModel]="newLink()"
+        (ngModelChange)="newLink.set($event)"
+        placeholder="Lien PR / issue / branche (optionnel)"
+        class="todo-input"
+      />
+
+      <label class="due-date-field">
+        Échéance (optionnel)
+        <input
+          type="date"
+          [ngModel]="newDueDate()"
+          (ngModelChange)="newDueDate.set($event)"
+          class="todo-input"
+        />
+      </label>
+
+      <div class="popup-actions">
+        <button type="button" class="btn-cancel" (click)="closeAddForm()">Annuler</button>
+        <button type="button" class="todo-add-btn" (click)="addTodo()">Ajouter</button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,407 @@
+/*
+  Styles for the Todo List component — vue principale (carte, header, rappels,
+  filtres, liste des tâches). Les styles du popup d'ajout sont dans
+  todo-list-popup.css, ceux des sous-tâches dans todo-list-subtasks.css.
+*/
+
+:host {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Conteneur principal */
+
+.todo-card {
+  width: min(80%, 720px);
+  margin: 3rem auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* En-tête */
+
+.todo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  background: #e44332;
+  color: #fff;
+}
+
+.todo-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.karma-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Bandeau de rappels */
+
+.reminder-banner {
+  background: #fff8e6;
+  border-bottom: 1px solid #f2c94c;
+  padding: 0.75rem 1.5rem;
+}
+
+.reminder-banner-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #8a6d00;
+  margin-bottom: 0.4rem;
+}
+
+.reminder-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #5c4a00;
+}
+
+.reminder-dismiss {
+  flex-shrink: 0;
+  border: 1px solid #f2c94c;
+  background: transparent;
+  color: #8a6d00;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.reminder-dismiss:hover {
+  background: rgba(242, 201, 76, 0.25);
+}
+
+/* Légende des priorités */
+
+.priority-legend {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.9rem;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.75rem;
+  color: #999;
+  border-bottom: 1px solid #eee;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.legend-item .priority-dot {
+  cursor: default;
+}
+
+/* Tri */
+
+.sort-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.sort-row .todo-priority-select {
+  flex: 1;
+}
+
+/* Filtre "vue du jour" */
+
+.focus-row {
+  padding: 0.75rem 1.5rem 0;
+}
+
+.focus-btn {
+  border: 1px solid #ddd;
+  background: transparent;
+  color: #666;
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.focus-btn:hover {
+  border-color: #e44332;
+  color: #e44332;
+}
+
+.focus-btn.active {
+  background: #e44332;
+  border-color: #e44332;
+  color: #fff;
+}
+
+/* Filtres et badges de tags */
+
+.tag-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.tag-chip {
+  --tag-color: #999;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--tag-color);
+  background: transparent;
+  color: var(--tag-color);
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tag-chip:hover {
+  background: color-mix(in srgb, var(--tag-color) 12%, transparent);
+}
+
+.tag-chip.active {
+  background: var(--tag-color);
+  color: #fff;
+}
+
+.tag-badge {
+  --tag-color: #999;
+  flex-shrink: 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--tag-color);
+  background: color-mix(in srgb, var(--tag-color) 12%, transparent);
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  white-space: nowrap;
+}
+
+/* Bouton d'ouverture du formulaire d'ajout */
+
+.add-task-trigger {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.add-task-btn {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background: transparent;
+  color: #e44332;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.add-task-btn:hover {
+  border-color: #e44332;
+  background: rgba(228, 67, 50, 0.05);
+}
+
+/* Liste des tâches — structure et checkbox/priorité */
+
+.todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.5rem;
+  transition: background 0.15s ease;
+}
+
+.todo-item:hover {
+  background: #fafafa;
+}
+
+.todo-check {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #e44332;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+
+.todo-check.checked {
+  background: #e44332;
+}
+
+.priority-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.priority-dot.priority-low {
+  background: #00ff0d;
+}
+
+.priority-dot.priority-low:hover {
+  background: #00cc0a;
+}
+
+.priority-dot.priority-medium {
+  background: #ff9900;
+}
+
+.priority-dot.priority-medium:hover {
+  background: #cc7a00;
+}
+
+.priority-dot.priority-high {
+  background: #ff1900;
+}
+
+.priority-dot.priority-high:hover {
+  background: #cc1400;
+}
+
+/* Contenu et actions d'une tâche */
+
+.todo-text {
+  flex: 1;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.todo-item.done .todo-text {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.todo-link {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.todo-link:hover {
+  opacity: 1;
+}
+
+.due-badge {
+  flex-shrink: 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #828282;
+  background: #f2f2f2;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  white-space: nowrap;
+}
+
+.due-badge.due-today {
+  color: #2f80ed;
+  background: rgba(47, 128, 237, 0.12);
+}
+
+.due-badge.overdue {
+  color: #e44332;
+  background: rgba(228, 67, 50, 0.12);
+}
+
+.subtask-progress {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #999;
+  background: #f2f2f2;
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+}
+
+.expand-btn {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: #bbb;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.expand-btn:hover {
+  color: #e44332;
+  font-size: 1.5rem;
+}
+
+.expand-btn.open {
+  transform: rotate(180deg);
+  color: #e44332;
+  font-size: 1.5rem;
+}
+
+.todo-remove {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: #ccc;
+  font-size: 0.9rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.todo-item:hover .todo-remove {
+  opacity: 1;
+}
+
+.todo-remove:hover {
+  color: #e44332;
+}
+
+.todo-empty {
+  padding: 1.5rem;
+  text-align: center;
+  color: #999;
+  font-size: 0.9rem;
+}

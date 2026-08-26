@@ -1,0 +1,101 @@
+/* Styles du panneau de sous-tâches dépliable sur chaque tâche. */
+
+.subtask-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem 1.5rem 0.75rem 3.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: #fafafa;
+}
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.subtask-check {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #aaa;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.subtask-check.checked {
+  background: #aaa;
+  border-color: #aaa;
+}
+
+.subtask-text {
+  flex: 1;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.subtask-item.done .subtask-text {
+  text-decoration: line-through;
+  color: #bbb;
+}
+
+.subtask-remove {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: #ccc;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.subtask-remove:hover {
+  color: #e44332;
+}
+
+.subtask-empty {
+  font-size: 0.8rem;
+  color: #bbb;
+  font-style: italic;
+}
+
+.subtask-add-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.1rem;
+}
+
+.subtask-input {
+  flex: 1;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.subtask-input:focus {
+  border-color: #e44332;
+}
+
+.subtask-add-btn {
+  flex-shrink: 0;
+  width: 26px;
+  border: none;
+  border-radius: 6px;
+  background: #e44332;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.subtask-add-btn:hover {
+  background: #c8351f;
+}
