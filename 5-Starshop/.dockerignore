@@ -1,0 +1,23 @@
+.git
+.github
+.claude
+.idea
+.vscode
+
+# Régénérés dans l'image
+vendor
+var
+public/assets
+assets/vendor
+.phpunit.cache
+.php-cs-fixer.cache
+
+# Configuration locale : l'image utilise .env.example + les variables d'environnement
+.env
+.env.local
+.env.*.local
+.env.dev
+.env.test
+
+compose.yaml
+compose.override.yaml
