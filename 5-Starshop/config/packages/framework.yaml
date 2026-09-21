@@ -10,8 +10,8 @@ framework:
 
 when@prod:
     framework:
-        # Derrière le proxy HTTPS de l'hébergeur (Render) : sans ça, Symfony ne voit
-        # que du HTTP et génère des URLs / cookies CSRF incorrects.
+        # Behind the host's HTTPS proxy (Render): without this, Symfony only sees
+        # plain HTTP and generates wrong URLs / CSRF cookies.
         trusted_proxies: 'private_ranges'
         trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
 

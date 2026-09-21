@@ -1,9 +1,9 @@
-# Blueprint Render : démo en ligne du projet 5-Starshop (Symfony + PostgreSQL).
-# Les autres projets du portfolio ne sont pas déployés ici.
+# Render blueprint: live demo of the 5-Starshop project (Symfony + PostgreSQL).
+# The other projects of the portfolio are not deployed here.
 #
-# Offre gratuite : le service s'endort après 15 min d'inactivité (réveil ~1 min)
-# et la base PostgreSQL gratuite expire 30 jours après sa création.
-# Les données de démonstration sont recréées à chaque démarrage du service.
+# Free plan: the service goes to sleep after 15 min of inactivity (~1 min to wake up)
+# and the free PostgreSQL database expires 30 days after its creation.
+# The demo data is recreated every time the service starts.
 
 databases:
   - name: starshop-db
@@ -21,7 +21,7 @@ services:
     dockerfilePath: ./5-Starshop/Dockerfile
     dockerContext: ./5-Starshop
     healthCheckPath: /login
-    # Ne redéploie que si le projet Starshop change (pas pour un simple changement de README)
+    # Only redeploys when the Starshop project changes (not for a simple README change)
     buildFilter:
       paths:
         - 5-Starshop/**
@@ -38,13 +38,13 @@ services:
           property: connectionString
       - key: MERCURE_JWT_SECRET
         generateValue: true
-      # Compte de démonstration en lecture seule (mot de passe public, indiqué dans le README)
+      # Read-only demo account (public password, documented in the README)
       - key: DEMO_EMAIL
         value: demo@starshop.dev
       - key: DEMO_PASSWORD
         value: starshop-demo
-      # Compte administrateur : à renseigner dans le dashboard Render (jamais dans le dépôt).
-      # S'il est vide, aucun compte admin n'est créé.
+      # Administrator account: set it in the Render dashboard (never in the repository).
+      # If it is empty, no admin account is created.
       - key: ADMIN_EMAIL
         value: admin@starshop.dev
       - key: ADMIN_PASSWORD

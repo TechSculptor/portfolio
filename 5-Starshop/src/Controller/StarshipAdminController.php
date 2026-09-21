@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin/starship')]
 final class StarshipAdminController extends AbstractController
 {
-    // The index method retrieves all starships 
+    // The index method retrieves all starships
     // from the repository and renders them in the index template.
     #[Route('', name: 'app_starship_admin_index', methods: ['GET'])]
     public function index(StarshipRepository $starshipRepository): Response
@@ -24,7 +24,7 @@ final class StarshipAdminController extends AbstractController
         ]);
     }
 
-    // The new method creates a new starship 
+    // The new method creates a new starship
     // and handles the form submission.
     #[Route('/new', name: 'app_starship_admin_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -47,7 +47,7 @@ final class StarshipAdminController extends AbstractController
         ]);
     }
 
-    // The show method retrieves a single starship 
+    // The show method retrieves a single starship
     // from the repository and renders it in the show template.
     #[Route('/{id}', name: 'app_starship_admin_show', methods: ['GET'])]
     public function show(Starship $starship): Response

@@ -10,7 +10,7 @@ use App\Model\StarshipStatusEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-// The AppFixtures class is responsible 
+// The AppFixtures class is responsible
 // for loading initial data into the database.
 class AppFixtures extends Fixture
 {
@@ -46,7 +46,7 @@ class AppFixtures extends Fixture
         // Flush the changes to the database
         $manager->flush();
 
-        // Create specific starships using the StarshipFactory 
+        // Create specific starships using the StarshipFactory
         // with predefined attributes
         StarshipFactory::createOne([
             'name' => 'USS LeafyCruiser (NCC-0001)',
@@ -72,7 +72,7 @@ class AppFixtures extends Fixture
             'droids' => DroidFactory::randomRange(1, 5),
         ]);
 
-        // Create 100 random starship parts 
+        // Create 100 random starship parts
         // using the StarshipPartFactory
         StarshipPartFactory::createMany(100);
     }

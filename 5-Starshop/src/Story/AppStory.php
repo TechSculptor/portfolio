@@ -5,9 +5,8 @@ namespace App\Story;
 use Zenstruck\Foundry\Attribute\AsFixture;
 use Zenstruck\Foundry\Story;
 
-
-// code qui permet de créer des fixtures pour l'application, 
-// en utilisant Zenstruck Foundry
+// code that lets us create fixtures for the application,
+// using Zenstruck Foundry
 #[AsFixture(name: 'main')]
 final class AppStory extends Story
 {

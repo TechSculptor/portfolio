@@ -8,35 +8,35 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-// La classe AbstractController fournit des méthodes pratiques 
-// pour générer des réponses, accéder aux services 
-// et gérer les requêtes HTTP, et gérer les sessions, entre autres.
+// The AbstractController class provides handy methods
+// to generate responses, access services
+// and handle HTTP requests and sessions, among other things.
 class MainController extends AbstractController
 {
     #[Route('/', name: 'app_homepage')]
     public function homepage(
-        // La classe StarshipRepository fournit des métodes 
-        // pour accéder aux données de la base de données.
-        StarshipRepository $repository, 
-        // La classe Request encapsule les informations de la requête HTTP.
+        // The StarshipRepository class provides methods
+        // to access the data of the database.
+        StarshipRepository $repository,
+        // The Request class encapsulates the information of the HTTP request.
         Request $request): Response
     {
         $ships = $repository->findIncompleteOrderedByDroidCount();
         $ships->setMaxPerPage(5);
 
-        // La méthode getInt() récupère la valeur de la page depuis la requête HTTP,
-        // et la convertit en entier. Si la valeur n'est pas présente,
-        // elle retourne 1 par défaut.
+        // The getInt() method reads the page value from the HTTP request
+        // and converts it to an integer. If the value is not present,
+        // it returns 1 by default.
         $ships->setCurrentPage($request->query->getInt('page', 1));
-        // La méthode getCurrentPageResults() 
-        // retourne un itérateur sur les résultats de la page courante.
+        // The getCurrentPageResults() method
+        // returns an iterator over the results of the current page.
         $shipsOnPage = iterator_to_array($ships->getCurrentPageResults());
-        // La fonction array_rand() retourne une clé aléatoire 
-        // du tableau $shipsOnPage.
+        // The array_rand() function returns a random key
+        // of the $shipsOnPage array.
         $myShip = $shipsOnPage ? $shipsOnPage[array_rand($shipsOnPage)] : null;
 
-        // La méthode render() génère une réponse HTML 
-        // en utilisant le moteur de templates Twig.
+        // The render() method generates an HTML response
+        // using the Twig template engine.
         return $this->render('main/homepage.html.twig', [
             'ships' => $ships,
             'myShip' => $myShip,

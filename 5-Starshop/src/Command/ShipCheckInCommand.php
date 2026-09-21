@@ -18,10 +18,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ShipCheckInCommand extends Command
 {
     public function __construct(
-        // Usage de cette variable pour récupérer le vaisseau 
-        // à partir de son slug
+        // Used to fetch the starship
+        // from its slug
         private StarshipRepository $shipRepo,
-        // Usage de cette variable pour persister les changements
+        // Used to persist the changes
         private EntityManagerInterface $em,
     ) {
         parent::__construct();

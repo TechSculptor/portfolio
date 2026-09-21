@@ -18,19 +18,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ShipReportCommand extends Command
 {
     public function __construct(
-        // Seule dépendance nécessaire : le repository 
-        // StarshipRepository sait construire la requête
-        // d'agrégation (COUNT/SUM) qui produit les données du rapport.
+        // Only dependency needed: the repository
+        // StarshipRepository knows how to build the
+        // aggregation query (COUNT/SUM) that produces the report data.
         private readonly StarshipRepository $starshipRepository,
     ) {
         parent::__construct();
     }
 
-    // Déclare une unique option facultative --status=<valeur>, utilisée pour
-    // filtrer le rapport sur un seul statut de vaisseau 
-    // (ex: "active", "docked", "destroyed").
-    // Le message d'aide liste dynamiquement les valeurs possibles de l'enum
-    // StarshipStatusEnum, pour rester à jour si l'enum change.
+    // Declares a single optional --status=<value> option, used to
+    // filter the report on a single starship status
+    // (e.g. "waiting", "in progress", "completed").
+    // The help message dynamically lists the possible values of the enum
+    // StarshipStatusEnum, so that it stays up to date if the enum changes.
     protected function configure(): void
     {
         $this->addOption(
@@ -45,10 +45,10 @@ class ShipReportCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        // Étape 1 : valider l'option --status si elle est fournie.
-        // tryFrom() (contrairement à from()) ne lève pas d'exception : il renvoie
-        // null si la chaîne saisie ne correspond à aucun cas de l'enum, ce qui
-        // permet d'afficher une erreur propre plutôt qu'un crash.
+        // Step 1: validate the --status option if it is provided.
+        // tryFrom() (unlike from()) does not throw an exception: it returns
+        // null if the given string matches no case of the enum, which
+        // lets us display a clean error instead of crashing.
         $status = null;
         if ($statusOption = $input->getOption('status')) {
             $status = StarshipStatusEnum::tryFrom($statusOption);
@@ -59,43 +59,43 @@ class ShipReportCommand extends Command
             }
         }
 
-        // Étape 2 : récupérer les données déjà agrégées en base.
-        // findAllForReport() exécute une requête DQL qui, pour chaque vaisseau,
-        // fait un COUNT des pièces (parts), un COUNT des droïdes embarqués, et un
-        // SUM du prix des pièces (groupBy sur l'id du vaisseau) — donc chaque ligne
-        // de $rows contient déjà les totaux calculés côté base de données, pas de
-        // calcul supplémentaire à faire ici en PHP.
+        // Step 2: fetch the data already aggregated in the database.
+        // findAllForReport() runs a DQL query that, for each starship,
+        // does a COUNT of the parts, a COUNT of the onboard droids, and a
+        // SUM of the parts' price (groupBy on the starship id) — so each row
+        // of $rows already contains the totals computed on the database side, no
+        // extra computation is needed here in PHP.
         $rows = $this->starshipRepository->findAllForReport($status);
 
-        // Étape 3 : cas où aucun vaisseau ne correspond au filtre — on sort tôt
-        // avec un simple avertissement plutôt qu'un tableau vide.
+        // Step 3: no starship matches the filter — exit early
+        // with a simple warning rather than an empty table.
         if (!$rows) {
             $io->warning('No ships match this report.');
 
             return Command::SUCCESS;
         }
 
-        // Étape 4 : afficher le rapport sous forme de tableau dans le terminal.
-        // array_map() transforme chaque ligne brute ($row, un tableau associatif
-        // venant de Doctrine) en un tableau simple de valeurs affichables, dans le
-        // même ordre que les en-têtes de colonnes ci-dessus.
+        // Step 4: display the report as a table in the terminal.
+        // array_map() turns each raw row ($row, an associative array
+        // coming from Doctrine) into a simple array of displayable values, in the
+        // same order as the column headers above.
         $io->table(
             ['Id', 'Name', 'Status', 'Parts', 'Droids', 'Parts value'],
             array_map(static fn (array $row) => [
                 $row['id'],
                 $row['name'],
-                // $row['status'] est un cas d'enum StarshipStatusEnum, ->value en
-                // extrait la chaîne brute (ex: "active") pour l'affichage.
+                // $row['status'] is a StarshipStatusEnum case, ->value extracts
+                // the raw string (e.g. "waiting") for display.
                 $row['status']->value,
                 $row['partsCount'],
                 $row['droidsCount'],
-                // Formate le nombre avec un séparateur de milliers "espace" et
-                // aucune décimale, puis ajoute le suffixe "credits".
+                // Formats the number with a "space" thousands separator and
+                // no decimals, then appends the "credits" suffix.
                 number_format((float) $row['partsValue'], 0, ',', ' ').' credits',
             ], $rows),
         );
 
-        // Étape 5 : message récapitulatif final (nombre de vaisseaux rapportés).
+        // Step 5: final summary message (number of starships reported).
         $io->success(sprintf('%d ship(s) reported.', count($rows)));
 
         return Command::SUCCESS;

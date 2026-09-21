@@ -1,161 +1,164 @@
-# Guide de test — Starshop
+# Testing guide — Starshop
 
-Commandes pour vérifier manuellement toutes les fonctionnalités mises en place (cours "Doctrine, Symfony 7 & la database" + "Symfony, Doctrine Relations & Warp Drive Basics").
+Commands to manually verify all the implemented features (courses "Doctrine, Symfony 7 & the database" + "Symfony, Doctrine Relations & Warp Drive Basics").
 
-## 0. Prérequis
+## 0. Prerequisites
 
 ```bash
-# Démarrer la base de données et le mailer (Docker)
+# Start the database and the mailer (Docker)
 docker compose up -d
 
-# Démarrer le serveur web Symfony (en arrière-plan)
-symfony serve -d
+# Start the Symfony web server (keep this terminal open)
+symfony serve
 
-# Voir les logs si besoin
+# Show the logs if needed
 symfony server:log
 
-# Statut du serveur
+# Server status
 symfony server:status
 ```
 
-## 1. Base de données & migrations
+## 1. Database & migrations
 
 ```bash
-# Statut des migrations (doit être "Already at latest version")
+# Migration status (must be "Already at latest version")
 symfony console doctrine:migrations:status
 
-# Rejouer toutes les migrations depuis zéro (si besoin)
+# Replay all the migrations from scratch (if needed)
 symfony console doctrine:migrations:migrate --no-interaction
 
-# Recharger les fixtures (20 vaisseaux + 3 manuels + 2 nommés + 100 vaisseaux avec droïdes,
-# 100 pièces, 100 droïdes)
+# Reload the fixtures (20 starships + 3 manual + 2 named + 100 starships with droids,
+# 100 parts, 100 droids)
 symfony console doctrine:fixtures:load --no-interaction
 ```
 
-## 2. Vérifications SQL directes
+## 2. Direct SQL checks
 
 ```bash
-# Compter les vaisseaux (doit faire 125)
+# Count the starships (must be 125)
 symfony console dbal:run-sql "SELECT count(*) FROM starship"
 
-# Compter les pièces (doit faire 100)
+# Count the parts (must be 100)
 symfony console dbal:run-sql "SELECT count(*) FROM starship_part"
 
-# Compter les droïdes (doit faire 100)
+# Count the droids (must be 100)
 symfony console dbal:run-sql "SELECT count(*) FROM droid"
 
-# Compter les assignations droïde <-> vaisseau (~300+)
+# Count the droid <-> starship assignments (~300+)
 symfony console dbal:run-sql "SELECT count(*) FROM starship_droid"
 
-# Voir le schéma de la table de jointure (id, assigned_at, starship_id, droid_id)
+# Show the schema of the join table (id, assigned_at, starship_id, droid_id)
 symfony console dbal:run-sql "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'starship_droid'"
 
-# Lister quelques vaisseaux avec leur slug et statut (utile pour les tests suivants)
+# List a few starships with their slug and status (useful for the following tests)
 symfony console dbal:run-sql "SELECT slug, status FROM starship LIMIT 10"
 
-# Vérifier qu'aucune pièce n'a de starship_id null (contrainte NOT NULL)
+# Check that no part has a null starship_id (NOT NULL constraint)
 symfony console dbal:run-sql "SELECT count(*) FROM starship_part WHERE starship_id IS NULL"
 ```
 
-## 3. Commandes console métier
+## 3. Business console commands
 
 ```bash
-# Lister les commandes custom
+# List the custom commands
 symfony console list app
 
-# Récupérer un slug de vaisseau "completed" pour le check-in
+# Get the slug of a "completed" starship for the check-in
 symfony console dbal:run-sql "SELECT slug FROM starship WHERE status = 'completed' LIMIT 1"
 
-# Check-in : passe le statut à "waiting" et met à jour arrivedAt (Starship::checkIn())
-symfony console app:ship:check-in <slug-recuperé-ci-dessus>
+# Check-in: sets the status to "waiting" and updates arrivedAt (Starship::checkIn())
+symfony console app:ship:check-in <slug-retrieved-above>
 
-# Vérifier le changement
+# Verify the change
 symfony console dbal:run-sql "SELECT slug, status, arrived_at FROM starship WHERE slug = '<slug>'"
 
-# Suppression d'un vaisseau (⚠️ irréversible)
+# Remove a starship (⚠️ irreversible)
 symfony console app:ship:remove <slug>
 
-# Cas d'erreur : slug inexistant → doit afficher "Starship not found."
-symfony console app:ship:check-in slug-qui-nexiste-pas
+# Error case: unknown slug → must display "Starship not found."
+symfony console app:ship:check-in slug-that-does-not-exist
 ```
 
-## 3bis. Authentification
+## 3bis. Authentication
 
-Le site entier est protégé par un login (`config/packages/security.yaml`), pour permettre à un
-recruteur de visiter le site avec un compte dédié plutôt que de le laisser public.
+The whole site is protected by a login (`config/packages/security.yaml`), so that a recruiter can
+visit the site with a dedicated account instead of leaving it public.
 
 ```bash
-# Créer un utilisateur standard (mot de passe généré aléatoirement et affiché une seule fois)
-symfony console app:user:create recruteur@starshop.dev
+# Create a standard user (randomly generated password, displayed only once)
+symfony console app:user:create recruiter@starshop.dev
 
-# Créer un utilisateur avec un mot de passe imposé
-symfony console app:user:create quelquun@example.com --password="MonMotDePasse!"
+# Create a user with a chosen password
+symfony console app:user:create someone@example.com --password="MyPassword!"
 
-# Créer un futur administrateur (rôle ROLE_ADMIN, pas encore utilisé par une access_control dédiée)
+# Create an administrator (ROLE_ADMIN role, gives access to /admin)
 symfony console app:user:create admin@starshop.dev --admin
 ```
 
-Vérifications dans le navigateur :
+Checks in the browser:
 
-- [ ] Aller sur `http://127.0.0.1:8000/` sans être connecté → redirection vers `/login`
-- [ ] Se connecter avec un mauvais mot de passe → message d'erreur, pas de crash
-- [ ] Se connecter avec les identifiants créés ci-dessus → redirection vers la homepage
-- [ ] Le lien "Log out" dans le header déconnecte et renvoie vers `/login`
+- [ ] Go to `http://127.0.0.1:8000/` while logged out → redirect to `/login`
+- [ ] Log in with a wrong password → error message, no crash
+- [ ] Log in with the credentials created above → redirect to the homepage
+- [ ] The "Log out" link in the header logs out and redirects to `/login`
+- [ ] A standard user gets a 403 on `/admin/starship`; an administrator gets the list
 
-> Le formulaire de login utilise le même système de CSRF stateless (basé sur JS, contrôleur
-> Stimulus `csrf-protection`) que les autres formulaires du site : il n'est donc pas testable
-> via `curl` seul (le token reste à sa valeur "csrf-token" tant que le JS ne l'a pas recalculé),
-> uniquement dans un vrai navigateur.
+> The login form uses the same stateless CSRF system (JS-based, Stimulus `csrf-protection`
+> controller) as the other forms of the site: it therefore cannot be tested with `curl` alone (the
+> token keeps its "csrf-token" value until the JS has recomputed it), only in a real browser.
 
-## 4. Pages web — codes HTTP
+## 4. Web pages — HTTP codes
 
-> ⚠️ Le site entier requiert désormais d'être connecté (voir section 3bis). Sans session
-> authentifiée, ces requêtes redirigent en 302 vers `/login` — c'est le comportement attendu,
-> pas une régression. Pour tester en 200, connecte-toi d'abord dans un navigateur.
+> ⚠️ The whole site requires being logged in (see section 3bis). Without an authenticated session,
+> these requests redirect with a 302 to `/login` — this is the expected behaviour, not a
+> regression. To test with a 200, log in first in a browser.
 
 ```bash
-# Homepage : liste paginée, triée par nombre de droïdes croissant
+# Homepage: paginated list, sorted by ascending droid count
 curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8000/
 
-# Page suivante (pagination)
+# Next page (pagination)
 curl -s -o /dev/null -w "%{http_code}\n" "http://127.0.0.1:8000/?page=2"
 
-# Page détail d'un vaisseau (remplacer par un vrai slug)
+# Detail page of a starship (replace with a real slug)
 curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8000/starships/<slug>
 
-# Liste des pièces, triée par prix décroissant
+# List of parts, sorted by descending price
 curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8000/parts
 
-# Recherche de pièces (nom ou notes, insensible à la casse)
+# Part search (name or notes, case-insensitive)
 curl -s -o /dev/null -w "%{http_code}\n" "http://127.0.0.1:8000/parts?query=holodeck"
 ```
 
-## 5. Vérifications visuelles (dans le navigateur)
+## 5. Visual checks (in the browser)
 
-Ouvrir `http://127.0.0.1:8000/` et vérifier :
+Open `http://127.0.0.1:8000/` and check:
 
-- [ ] La liste des vaisseaux s'affiche, triée par nombre de droïdes croissant (les premiers doivent afficher "Droids: none")
-- [ ] Chaque carte affiche "Arrived", "Parts: N" et "Droids: ..."
-- [ ] Le lien "Parts" du header mène bien à `/parts`
-- [ ] La pagination (Previous/Next) fonctionne en bas de liste
+- [ ] The starship list is displayed, sorted by ascending droid count (the first ones must show "Droids: none")
+- [ ] Each card shows the starship name (a link to its detail page), a status badge matching its real status, "Parts: N" and "Droids: ..."
+- [ ] The "Parts" link in the header leads to `/parts` (there is no "Contact" link)
+- [ ] The pagination (Previous/Next) is displayed once, below the list, and works
 
-Cliquer sur un vaisseau (`/starships/{slug}`) et vérifier :
+Click on a starship name (`/starships/{slug}`) and check:
 
-- [ ] Statut, capitaine, classe, "Arrived At" (relatif, via le filtre `ago`)
-- [ ] Section "Droids" : `Nom (assigned X ago), Nom (assigned Y ago), ...` ou "No droids on board" si aucun
-- [ ] Section "Expensive Parts (N)" : uniquement les pièces > 50 000 crédits
+- [ ] Id, name, class, captain, status, arrival date (if any), slug and creation/update dates
+- [ ] The "Edit" and "Delete" buttons are displayed
 
-Aller sur `/parts` et vérifier :
+Go to `/parts` and check:
 
-- [ ] Les pièces sont triées par prix décroissant
-- [ ] Chaque pièce affiche `(assigned to <nom du vaisseau>)`
-- [ ] La barre de recherche fonctionne sur le nom ET les notes (ex: `holodeck`, `controls`)
-- [ ] Le champ de recherche conserve sa valeur après soumission
+- [ ] The parts are sorted by descending price
+- [ ] Each part displays `(assigned to <starship name>)`
+- [ ] The search bar works on the name AND the notes (e.g. `holodeck`, `controls`)
+- [ ] The search field keeps its value after submission
 
-## 6. Tests de non-régression rapides (tout en un)
+Log in as an administrator and open `/admin/starship`:
+
+- [ ] The table header is readable (light text on a dark background)
+
+## 6. Quick regression tests (all in one)
 
 ```bash
-# Reset complet + vérification des 4 pages principales
+# Full reset + check of the main pages
 symfony console doctrine:fixtures:load --no-interaction && \
 curl -s -o /dev/null -w "homepage: %{http_code}\n" http://127.0.0.1:8000/ && \
 curl -s -o /dev/null -w "parts: %{http_code}\n" http://127.0.0.1:8000/parts && \
@@ -163,61 +166,63 @@ SLUG=$(symfony console dbal:run-sql "SELECT slug FROM starship LIMIT 1" | grep -
 curl -s -o /dev/null -w "show: %{http_code}\n" "http://127.0.0.1:8000/starships/$SLUG"
 ```
 
-## 7. Tests automatisés
+## 7. Automated tests
 
-Le projet a une vraie suite PHPUnit (`phpunit/phpunit` + `symfony/browser-kit` +
-`zenstruck/foundry` pour les données de test), configurée dans `phpunit.dist.xml`.
+The project has a real PHPUnit suite (`phpunit/phpunit` + `symfony/browser-kit` +
+`zenstruck/foundry` for the test data), configured in `phpunit.dist.xml`.
 
 ```bash
-# Créer la base de test dédiée (une seule fois, ou après un changement de credentials)
-symfony console --env=test doctrine:database:create --if-not-exists
+# Create the dedicated test database and its schema (only once, or after a credentials change)
+php bin/console --env=test doctrine:database:create --if-not-exists
+php bin/console --env=test doctrine:migrations:migrate --no-interaction
 
-# Lancer toute la suite
+# Run the whole suite
 php bin/phpunit
 
-# Lancer un seul fichier
+# Run a single file
 php bin/phpunit tests/Controller/MainControllerTest.php
 
-# Lancer avec le détail des notices/dépréciations PHPUnit
+# Run with the detail of the PHPUnit notices/deprecations
 php bin/phpunit --display-phpunit-notices
 ```
 
-Points importants sur la config actuelle :
+Important points about the current configuration:
 
-- `.env.test` pointe vers une base **séparée** (`app_test`, suffixée automatiquement par
-  Symfony via `dbname_suffix` dans `config/packages/doctrine.yaml`) — les tests ne touchent
-  jamais aux 125 vaisseaux de la base de dev.
-- Les tests `WebTestCase` utilisent les traits Foundry `Factories` + `ResetDatabase`, qui
-  recréent le schéma et vident les tables entre chaque test automatiquement.
-- L'appel réel à l'API ISS (`api.wheretheiss.at`) est remplacé en environnement de test par un
-  `MockHttpClient` (voir `tests/Support/TestHttpClientFactory.php`, câblé dans
-  `config/services.yaml` sous `when@test`) — la suite ne dépend jamais du réseau.
-- Pour se connecter dans un test, utiliser `$client->loginUser(UserFactory::createOne())`
-  plutôt que de soumettre le vrai formulaire `/login` : celui-ci utilise un CSRF stateless
-  basé sur un contrôleur Stimulus JS, non exécutable dans un test PHP (même limitation que
-  pour `curl`, voir section 3bis).
+- The tests use a **separate** database (`app_test`, automatically suffixed by Symfony through
+  `dbname_suffix` in `config/packages/doctrine.yaml`) built from the `DATABASE_URL` of your `.env` —
+  the tests never touch the 125 starships of the dev database.
+- `KERNEL_CLASS` is set in `phpunit.dist.xml`, so no `.env.test` file is needed.
+- The `WebTestCase` tests use the Foundry `Factories` + `ResetDatabase` traits, which recreate the
+  schema and empty the tables between each test automatically.
+- The real call to the ISS API (`api.wheretheiss.at`) is replaced in the test environment by a
+  `MockHttpClient` (see `tests/Support/TestHttpClientFactory.php`, wired in
+  `config/services.yaml` under `when@test`) — the suite never depends on the network.
+- To log in within a test, use `$client->loginUser(UserFactory::createOne())` rather than
+  submitting the real `/login` form: it uses a stateless CSRF based on a Stimulus JS controller,
+  which cannot run in a PHP test (same limitation as for `curl`, see section 3bis).
 
-Fichiers actuels :
+Current files:
 
-- `tests/Twig/Runtime/AppExtensionRuntimeTest.php` — test unitaire pur du filtre `ago`
-- `tests/Controller/SecurityControllerTest.php` — redirection anonyme, rendu du formulaire de login
-- `tests/Controller/MainControllerTest.php` — homepage authentifiée + affichage ISS mocké
+- `tests/Twig/Runtime/AppExtensionRuntimeTest.php` — pure unit test of the `ago` filter
+- `tests/Controller/SecurityControllerTest.php` — anonymous redirect, rendering of the login form, access to the admin area
+- `tests/Controller/MainControllerTest.php` — authenticated homepage + mocked ISS display, clickable ship names, single pagination block
+- `tests/Command/ShipReportCommandTest.php` — the `app:ship-report` command
 
-### Documentation officielle
+### Official documentation
 
-- Symfony — [Testing](https://symfony.com/doc/current/testing.html) (bases PHPUnit),
-  [Testing with a Database](https://symfony.com/doc/current/testing/database.html) (patterns
-  DAMA/Foundry pour isoler la base entre tests)
-- Foundry — [Testing avec Foundry](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#testing)
-  (`ResetDatabase`, `Factories`, données factices)
-- PHPUnit — [manuel officiel](https://docs.phpunit.de/en/12.3/)
-- SymfonyCasts a aussi un cours dédié : [PHPUnit & Symfony: Testing Your App](https://symfonycasts.com/screencast/phpunit)
+- Symfony — [Testing](https://symfony.com/doc/current/testing.html) (PHPUnit basics),
+  [Testing with a Database](https://symfony.com/doc/current/testing/database.html) (DAMA/Foundry
+  patterns to isolate the database between tests)
+- Foundry — [Testing with Foundry](https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#testing)
+  (`ResetDatabase`, `Factories`, fake data)
+- PHPUnit — [official manual](https://docs.phpunit.de/en/12.3/)
+- SymfonyCasts also has a dedicated course: [PHPUnit & Symfony: Testing Your App](https://symfonycasts.com/screencast/phpunit)
 
-## 8. Ce qui doit être vrai en base après un `fixtures:load`
+## 8. What must be true in the database after a `fixtures:load`
 
-| Table            | Nombre de lignes attendu |
-|------------------|---------------------------|
-| `starship`       | 125                        |
-| `starship_part`  | 100                         |
-| `droid`          | 100                         |
-| `starship_droid` | variable (entre 100 et 500, 1 à 5 par nouveau vaisseau) |
+| Table            | Expected number of rows |
+|------------------|--------------------------|
+| `starship`       | 125                       |
+| `starship_part`  | 100                       |
+| `droid`          | 100                       |
+| `starship_droid` | variable (between 100 and 500, 1 to 5 per new starship) |

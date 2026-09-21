@@ -24,7 +24,7 @@ final class PartController extends AbstractController
         if ($searchForm->isSubmitted() && $searchForm->isValid()) {
             $query = $searchForm->get('query')->getData();
         }
-        // Use the repository to find all parts ordered by price, 
+        // Use the repository to find all parts ordered by price,
         // optionally filtered by the query
         $parts = $repository->findAllOrderedByPrice($query);
 

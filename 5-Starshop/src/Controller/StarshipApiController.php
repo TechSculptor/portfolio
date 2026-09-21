@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-// The StarshipApiController class provides API endpoints 
+// The StarshipApiController class provides API endpoints
 // for retrieving starship data.
 #[Route('/api/starships')]
 class StarshipApiController extends AbstractController

@@ -9,8 +9,8 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface as HttpClientExcep
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
-// Twig runtime extension that provides methods 
-// for retrieving ISS  (International Space Station) location data 
+// Twig runtime extension that provides methods
+// for retrieving ISS  (International Space Station) location data
 // and formatting time differences.
 class AppExtensionRuntime implements RuntimeExtensionInterface
 {

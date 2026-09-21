@@ -1,77 +1,104 @@
 # Starshop
 
-Une boutique/atelier de réparation de vaisseaux spatiaux construite avec Symfony 8.1 — vaisseaux, pièces, droïdes, relations Doctrine complètes, authentification, et une intégration temps réel avec l'API de position de l'ISS.
+A spaceship repair shop built with Symfony 8.1 — starships, parts, droids, full Doctrine relations, authentication, and a live integration with the ISS position API.
 
-## Stack technique
+## Tech stack
 
-- **Symfony 8.1** / PHP 8.5
-- **Doctrine ORM 3** + Migrations, extensions Gedmo (slug, timestampable)
-- **Zenstruck Foundry** pour les factories et les fixtures
-- **Pagerfanta** pour la pagination
+- **Symfony 8.1** / PHP 8.4+
+- **Doctrine ORM 3** + Migrations, Gedmo extensions (slug, timestampable)
+- **Zenstruck Foundry** for factories and fixtures
+- **Pagerfanta** for pagination
 - **Symfony Form** + **Validator**
-- **Symfony Security** — `form_login`, CSRF stateless (double-soumission, contrôleur Stimulus JS)
-- **HttpClient** + pools de cache nommés — intégration de l'API publique `wheretheiss.at`
+- **Symfony Security** — `form_login`, stateless CSRF (double submit, Stimulus JS controller)
+- **HttpClient** + named cache pools — integration of the public `wheretheiss.at` API
 - **Tailwind CSS v4**
 - **Docker Compose** — Postgres 16, Mailpit, Mercure
-- **PHPUnit 13** + Foundry (`ResetDatabase`, `Factories`) pour les tests
+- **PHPUnit 13** + Foundry (`ResetDatabase`, `Factories`) for the tests
 
-## Démarrer le projet
+## Getting started
 
 ```bash
-# 0. Configuration locale (les fichiers .env ne sont pas versionnés)
+# 0. Local configuration (.env files are not versioned)
 cp .env.example .env
 
-# 1. Dépendances PHP
+# 1. PHP dependencies
 composer install
 
 # 2. Services (Postgres, Mailpit, Mercure)
 docker compose up -d
 
-# 3. Schéma de base de données
+# 3. Database schema
 php bin/console doctrine:migrations:migrate --no-interaction
 
-# 4. Données de démonstration (vaisseaux, pièces, droïdes)
+# 4. Demo data (starships, parts, droids)
 php bin/console doctrine:fixtures:load --no-interaction
 
-# 5. Un compte pour se connecter (le site entier est derrière un login)
-php bin/console app:user:create moi@example.com --admin
+# 5. An account to log in with (the whole site is behind a login)
+php bin/console app:user:create me@example.com --admin
 
-# 6. Styles Tailwind (une seule fois : télécharge un binaire de 130 Mo, d'où la limite mémoire levée)
+# 6. Tailwind styles (only once: it downloads a 130 MB binary, hence the raised memory limit)
 php -d memory_limit=-1 bin/console tailwind:build
 
-# 7. Lancer le serveur (laisser ce terminal ouvert ; sans Symfony CLI : php -S 127.0.0.1:8000 -t public)
+# 7. Start the server (keep this terminal open; without the Symfony CLI: php -S 127.0.0.1:8000 -t public)
 symfony serve
 ```
 
-Le site est ensuite accessible sur `http://127.0.0.1:8000`. Voir [TESTING.md](TESTING.md) pour
-le détail des commandes de vérification manuelle.
+The site is then available at `http://127.0.0.1:8000`. See [TESTING.md](TESTING.md) for the
+manual verification commands.
 
-## Tests automatisés
+On Windows, `symfony serve -d` (background mode) can fail with "The process cannot access the file
+because it is being used by another process": run `symfony serve` in a dedicated terminal instead.
+
+## Automated tests
 
 ```bash
-# Base de test dédiée (une seule fois)
-symfony console --env=test doctrine:database:create --if-not-exists
+# Dedicated test database (only once)
+php bin/console --env=test doctrine:database:create --if-not-exists
+php bin/console --env=test doctrine:migrations:migrate --no-interaction
 
 php bin/phpunit
 ```
 
-Les tests utilisent une base séparée et un client HTTP mocké pour l'appel à l'API ISS — la
-suite ne dépend jamais du réseau ni des données de dev.
+The tests use a separate database and a mocked HTTP client for the ISS API call — the suite never
+depends on the network or on the dev data.
 
-## Authentification
+The GitHub Actions workflow (`.github/workflows/starshop-ci.yaml` at the root of the repository) runs the
+coding-style check, the Twig/YAML linters and the test suite on every change to this folder.
 
-Le site entier nécessite d'être connecté (`config/packages/security.yaml`). Deux niveaux :
+## Authentication
 
-- `ROLE_USER` — consultation du catalogue de vaisseaux et de pièces
-- `ROLE_ADMIN` — accès en plus à `/admin` (création/édition/suppression de vaisseaux et pièces)
+The whole site requires a login (`config/packages/security.yaml`). Two levels:
+
+- `ROLE_USER` — browse the starship and part catalogues
+- `ROLE_ADMIN` — additionally access `/admin` (create/edit/delete starships and parts)
 
 ```bash
-# Compte de démonstration en lecture seule
+# Read-only demo account
 php bin/console app:user:create demo@example.com
 
-# Compte administrateur
+# Administrator account
 php bin/console app:user:create admin@example.com --admin
 ```
 
-Voir [PRESENTATION.md](PRESENTATION.md) pour une présentation plus détaillée du projet
-(fonctionnalités, choix d'architecture, pistes d'amélioration).
+## Documentation
+
+- [PRESENTATION.md](PRESENTATION.md) — a more detailed presentation of the project (features, architecture choices, ideas for improvement)
+- [TESTING.md](TESTING.md) — manual verification commands
+- [docs/controllers.md](docs/controllers.md) — the controllers and their routes
+- [docs/forms.md](docs/forms.md) — the form types
+- [docs/factories.md](docs/factories.md) — the Foundry factories and the fixtures
+- [docs/twig-runtime.md](docs/twig-runtime.md) — the custom Twig filter and function (`ago`, `get_iss_location_data`)
+- [docs/create-user-command-imports.md](docs/create-user-command-imports.md) — what each import of the `app:user:create` command is for
+
+## Deploying a demo on Render
+
+The repository root contains a [`render.yaml`](../render.yaml) blueprint and this folder a `Dockerfile`:
+
+1. On [render.com](https://render.com): **New → Blueprint**, connect the GitHub repository and select it.
+2. Render reads `render.yaml` and proposes a web service (`starshop`) and a PostgreSQL database (`starshop-db`), both on the free plan.
+3. Enter a value for `ADMIN_PASSWORD` when prompted (it is never stored in the repository), then **Apply**.
+4. Wait for the first build (a few minutes). The site is then available at `https://starshop-<id>.onrender.com`.
+5. Log in with the read-only demo account `demo@starshop.dev` / `starshop-demo`, or with `admin@starshop.dev` and the password chosen in step 3.
+
+Demo data is recreated every time the service starts. On the free plan the service goes to sleep after
+15 minutes without traffic (about one minute to wake up) and the free database expires after 30 days.

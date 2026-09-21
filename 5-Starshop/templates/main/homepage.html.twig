@@ -32,13 +32,17 @@ and their status #}
                             <div class="flex justify-center min-[1174px]:justify-start">
                                 <img class="h-[83px] w-[84px]" src="{{ asset(ship.statusImageFilename) }}" alt="Status: {{ ship.statusString }}">
                                 <div class="ml-5">
-                                    <div class="rounded-2xl py-1 px-3 flex justify-center w-32 items-center bg-amber-400/10">
-                                        <div class="rounded-full h-2 w-2 bg-amber-400 blur-[1px] mr-2"></div>
-                                        <p class="uppercase text-xs text-nowrap">in progress</p>
+                                    {% set badge = {
+                                        'waiting': {bg: 'bg-slate-400/10', dot: 'bg-slate-400'},
+                                        'in progress': {bg: 'bg-amber-400/10', dot: 'bg-amber-400'},
+                                        'completed': {bg: 'bg-green-400/10', dot: 'bg-green-400'},
+                                    }[ship.statusString] ?? {bg: 'bg-slate-400/10', dot: 'bg-slate-400'} %}
+                                    <div class="rounded-2xl py-1 px-3 flex justify-center w-32 items-center {{ badge.bg }}">
+                                        <div class="rounded-full h-2 w-2 {{ badge.dot }} blur-[1px] mr-2"></div>
+                                        <p class="uppercase text-xs text-nowrap">{{ ship.statusString }}</p>
                                     </div>
                                     <h4 class="text-[22px] pt-1 font-semibold">
-                                    <a
-                                    >{{ ship.name }}</a>
+                                    <a class="hover:underline" href="{{ path('app_starship_show', {slug: ship.slug}) }}">{{ ship.name }}</a>
                                 </h4>
                                 <div>
                                     Parts: {{ ship.parts|length }}
@@ -58,23 +62,22 @@ and their status #}
                                     <p class="text-slate-400 text-xs">Class</p>
                                     <p class="text-xl">{{ ship.class }}</p>
                                 </div>
-                                <div class="text-slate-400 mb-4">
-                                    {% if ships.haveToPaginate %}
-                                        <div class="flex justify-around mt-3 underline font-semibold">
-                                            {% if ships.hasPreviousPage %}
-                                                <a href="{{ path('app_homepage', {page: ships.getPreviousPage}) }}">&lt; Previous</a>
-                                            {% endif %}
-                                            {% if ships.hasNextPage %}
-                                                <a href="{{ path('app_homepage', {page: ships.getNextPage}) }}">Next &gt;</a>
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
-                                </div>
                             </div>
                         </div>
                     <!-- end ship item -->
                 {% endfor %}
             </div>
+
+            {% if ships.haveToPaginate %}
+                <nav class="flex justify-center gap-8 my-8 underline font-semibold text-slate-400" aria-label="Pagination">
+                    {% if ships.hasPreviousPage %}
+                        <a href="{{ path('app_homepage', {page: ships.getPreviousPage}) }}">&lt; Previous</a>
+                    {% endif %}
+                    {% if ships.hasNextPage %}
+                        <a href="{{ path('app_homepage', {page: ships.getNextPage}) }}">Next &gt;</a>
+                    {% endif %}
+                </nav>
+            {% endif %}
         </div>
     </main>
 {% endblock %}

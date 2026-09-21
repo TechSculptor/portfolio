@@ -4,7 +4,7 @@
 .idea
 .vscode
 
-# Régénérés dans l'image
+# Regenerated inside the image
 vendor
 var
 public/assets
@@ -12,7 +12,7 @@ assets/vendor
 .phpunit.cache
 .php-cs-fixer.cache
 
-# Configuration locale : l'image utilise .env.example + les variables d'environnement
+# Local configuration: the image uses .env.example + the environment variables
 .env
 .env.local
 .env.*.local

@@ -1,38 +1,37 @@
-# Présentation du projet — Starshop (Symfony)
+# Project presentation — Starshop (Symfony)
 
-## En une phrase
+## In one sentence
 
-Une boutique/atelier de réparation de vaisseaux spatiaux en Symfony 8.1 — relations Doctrine
-complètes (ManyToOne, OneToMany, ManyToMany avec données supplémentaires), panel d'administration
-CRUD, authentification par rôles, et une intégration temps réel avec l'API publique de position
-de l'ISS.
+A spaceship repair shop built with Symfony 8.1 — full Doctrine relations (ManyToOne, OneToMany,
+ManyToMany with extra data), a CRUD administration panel, role-based authentication, and a live
+integration with the public ISS position API.
 
-## Pourquoi ce projet
+## Why this project
 
-Construit en suivant trois cours SymfonyCasts ("Doctrine, Symfony & la database", "Symfony,
-Doctrine Relations & Warp Drive Basics" et "Symfony Forms: The Basics") pour aller au-delà du
-tutoriel isolé : modéliser des relations Doctrine réalistes plutôt qu'un simple CRUD à une seule
-entité, gérer un vrai cycle de formulaires avec validation, brancher un service externe, et poser
-une authentification correcte plutôt que de laisser un panel d'administration ouvert à tous.
+Built by following three SymfonyCasts courses ("Doctrine, Symfony & the database", "Symfony,
+Doctrine Relations & Warp Drive Basics" and "Symfony Forms: The Basics") to go beyond an isolated
+tutorial: model realistic Doctrine relations rather than a simple single-entity CRUD, handle a real
+form lifecycle with validation, plug in an external service, and set up proper authentication
+instead of leaving an administration panel open to everyone.
 
-## Stack technique
+## Tech stack
 
-- **Symfony 8.1** / PHP 8.5 — pas de framework "trop simplifié", le vrai écosystème Symfony
-- **Doctrine ORM 3** + Migrations, extensions Gedmo (`slug`, `timestampable`)
-- **Zenstruck Foundry** pour les factories et les données de démo/test
-- **Pagerfanta** pour la pagination
-- **Symfony Form** + **Validator** (contraintes avec arguments nommés, API moderne)
-- **Symfony Security** — `form_login`, rôles `ROLE_USER`/`ROLE_ADMIN`, CSRF stateless
-  (double-soumission via un contrôleur Stimulus JS, pas de session nécessaire)
-- **HttpClient** + pools de cache nommés (config `framework.cache.pools`) pour l'appel à
-  `api.wheretheiss.at`, avec extension Twig custom pour l'exposer aux templates
+- **Symfony 8.1** / PHP 8.4+ — not an over-simplified framework, the real Symfony ecosystem
+- **Doctrine ORM 3** + Migrations, Gedmo extensions (`slug`, `timestampable`)
+- **Zenstruck Foundry** for factories and demo/test data
+- **Pagerfanta** for pagination
+- **Symfony Form** + **Validator** (constraints with named arguments, modern API)
+- **Symfony Security** — `form_login`, `ROLE_USER`/`ROLE_ADMIN` roles, stateless CSRF
+  (double submit through a Stimulus JS controller, no session needed)
+- **HttpClient** + named cache pools (`framework.cache.pools` config) for the call to
+  `api.wheretheiss.at`, with a custom Twig extension to expose it to the templates
 - **Tailwind CSS v4** (`@plugin`, `@tailwindcss/forms`)
 - **Docker Compose** — Postgres 16, Mailpit, Mercure
 - **PHPUnit 13** + Foundry (`ResetDatabase`, `Factories`, `MockHttpClient`)
-- **CI GitHub Actions** — style (`php-cs-fixer`), lint Twig/YAML, migrations sur une vraie base
-  Postgres de service, suite PHPUnit, à chaque push
+- **GitHub Actions CI** — code style (`php-cs-fixer`), Twig/YAML lint, migrations against a real
+  Postgres service database, PHPUnit suite, on every change to this folder
 
-### Commandes utilisées
+### Commands used
 
 ```bash
 docker compose up -d
@@ -40,36 +39,36 @@ composer install
 php bin/console doctrine:migrations:migrate --no-interaction
 php bin/console doctrine:fixtures:load --no-interaction
 php bin/console app:user:create <email> --admin
-symfony serve -d
+symfony serve
 php bin/phpunit
 ```
 
-### Dépendances ajoutées via `composer require` (par fonctionnalité)
+### Dependencies added through `composer require` (by feature)
 
-> Reconstruit à partir de `composer.json` plutôt que d'un historique de terminal — mais reflète
-> exactement ce qui est réellement installé.
+> Rebuilt from `composer.json` rather than from a terminal history — but it reflects exactly
+> what is actually installed.
 
 ```bash
-# Socle applicatif (squelette Symfony --webapp : Twig, Form, Validator, Mailer, Security,
+# Application base (Symfony --webapp skeleton: Twig, Form, Validator, Mailer, Security,
 # AssetMapper, Stimulus/UX Turbo, MakerBundle, Profiler...)
 symfony new kozmodev_starshop --webapp
 
-# Base de données & ORM
+# Database & ORM
 composer require doctrine
 
-# Extensions Gedmo (slug automatique, timestamps created/updated)
+# Gedmo extensions (automatic slug, created/updated timestamps)
 composer require stof/doctrine-extensions-bundle
 
 # Pagination
 composer require babdev/pagerfanta-bundle pagerfanta/doctrine-orm-adapter
 
-# Données de démo/test
+# Demo/test data
 composer require --dev doctrine/doctrine-fixtures-bundle zenstruck/foundry
 
-# Authentification
+# Authentication
 composer require symfony/security-bundle
 
-# Temps réel (Mercure — installé, pas encore branché à une fonctionnalité)
+# Real time (Mercure — installed, not yet wired to a feature)
 composer require mercure
 
 # Styles
@@ -78,92 +77,88 @@ composer require symfonycasts/tailwind-bundle
 # Tests
 composer require --dev phpunit/phpunit symfony/browser-kit symfony/css-selector
 
-# Style de code / CI
+# Code style / CI
 composer require --dev php-cs-fixer/shim
 ```
 
-## Fonctionnalités
+## Features
 
-1. **Catalogue de vaisseaux** — pagination, tri par nombre de droïdes assignés, page de détail
-   avec pièces liées et droïdes embarqués.
-2. **Relation ManyToMany avec données supplémentaires** — les droïdes sont assignés à un
-   vaisseau via une entité de jointure explicite (`StarshipDroid`) qui porte une date
-   d'assignation (`assignedAt`), impossible à faire avec une ManyToMany native Doctrine.
-3. **Catalogue de pièces** — recherche (nom + notes), tri par prix, `Doctrine\Criteria` pour
-   filtrer les pièces "chères" directement sur la collection déjà chargée.
-4. **Panel admin CRUD** — création/édition/suppression de vaisseaux et de pièces, formulaires
-   Symfony avec validation (prix positif, champs requis), réservé aux `ROLE_ADMIN`.
-5. **Authentification par rôles** — site entier derrière un login ; un compte "démo" en lecture
-   seule (`ROLE_USER`) pour qui veut visiter le site, un compte admin séparé (`ROLE_ADMIN`) pour
-   les actions de gestion.
-6. **Intégration API externe temps réel** — position de l'ISS affichée sur l'accueil, mise en
-   cache (TTL configurable via variable d'env) et tolérante à une panne de l'API externe (l'app
-   continue de fonctionner si `wheretheiss.at` est injoignable).
-7. **Commandes console métier** — check-in d'un vaisseau, suppression (avec gestion des cas
-   d'erreur type slug inexistant), et un rapport (`app:ship-report`, filtrable par statut) qui
-   agrège en une seule requête DQL le nombre de pièces, de droïdes et la valeur totale des
-   pièces par vaisseau.
+1. **Starship catalogue** — pagination, sorting by number of assigned droids, detail page with
+   linked parts and onboard droids.
+2. **ManyToMany relation with extra data** — droids are assigned to a starship through an
+   explicit join entity (`StarshipDroid`) that carries an assignment date (`assignedAt`), which is
+   impossible with a native Doctrine ManyToMany.
+3. **Parts catalogue** — search (name + notes), sorting by price, `Doctrine\Criteria` to filter
+   the "expensive" parts directly on the already-loaded collection.
+4. **CRUD admin panel** — create/edit/delete starships and parts, Symfony forms with validation
+   (positive price, required fields), restricted to `ROLE_ADMIN`.
+5. **Role-based authentication** — the whole site is behind a login; a read-only "demo" account
+   (`ROLE_USER`) for anyone who wants to visit the site, and a separate admin account
+   (`ROLE_ADMIN`) for management actions.
+6. **Live external API integration** — ISS position displayed on the homepage, cached (TTL
+   configurable through an environment variable) and tolerant to an outage of the external API
+   (the app keeps working if `wheretheiss.at` is unreachable).
+7. **Business console commands** — check-in of a starship, deletion (handling error cases such as
+   an unknown slug), and a report (`app:ship-report`, filterable by status) that aggregates, in a
+   single DQL query, the number of parts, the number of droids and the total value of the parts
+   per starship.
 
-## Choix d'architecture à mentionner
+## Architecture choices worth mentioning
 
-- **Entité de jointure plutôt que ManyToMany native** dès qu'une donnée doit vivre sur la
-  relation elle-même (`assignedAt`) — un des pièges classiques de Doctrine que beaucoup
-  découvrent tard.
-- **`fetch: EXTRA_LAZY` + `orphanRemoval`** sur la relation vaisseau → pièces, pour éviter de
-  charger toute la collection juste pour un `count()`, et supprimer les pièces orphelines
-  automatiquement quand un vaisseau est supprimé.
-- **Jointures explicites (DQL, `addSelect`)** dans les repositories pour éviter le piège du N+1
-  plutôt que de laisser Doctrine lazy-load chaque relation à l'affichage d'une liste.
-- **Logique de cache déplacée dans une extension Twig runtime** (`AppExtensionRuntime`) plutôt
-  que dans le contrôleur — le contrôleur ne s'occupe plus que de la pagination/rendu, la
-  fonction `get_iss_location_data()` est réutilisable dans n'importe quel template.
-- **CSRF stateless** (double-soumission via cookie + contrôleur JS) plutôt que basé sur la
-  session — permet un cache HTTP plus agressif des pages contenant des formulaires.
-- **Séparation nette démo / admin** sur le même firewall via `access_control` ordonné par
-  spécificité (`/admin` avant le `/` générique) — un recruteur peut naviguer sans jamais pouvoir
-  modifier ou supprimer une donnée par erreur.
+- **Join entity rather than a native ManyToMany** as soon as a piece of data must live on the
+  relation itself (`assignedAt`) — one of the classic Doctrine traps that many people discover
+  late.
+- **`fetch: EXTRA_LAZY` + `orphanRemoval`** on the starship → parts relation, to avoid loading
+  the whole collection just for a `count()`, and to automatically delete orphan parts when a
+  starship is deleted.
+- **Explicit joins (DQL, `addSelect`)** in the repositories to avoid the N+1 trap instead of
+  letting Doctrine lazy-load each relation when a list is displayed.
+- **Cache logic moved into a Twig runtime extension** (`AppExtensionRuntime`) rather than into the
+  controller — the controller only handles pagination/rendering, and the `get_iss_location_data()`
+  function is reusable in any template.
+- **Stateless CSRF** (double submit through a cookie + JS controller) rather than session-based —
+  allows more aggressive HTTP caching of pages containing forms.
+- **Clear demo / admin separation** on the same firewall through `access_control` ordered by
+  specificity (`/admin` before the generic `/`) — a recruiter can browse without ever being able to
+  modify or delete data by mistake.
 
-*Détail "vécu" : en mettant en place la CI, la toute première migration
-échouait sur une base neuve fraîchement clonée ("relation starship does not exist") — les toutes
-premières tables avaient été créées via `schema:update` avant que les migrations ne soient
-utilisées, donc l'historique de migrations ne partait pas de zéro. Diagnostiqué en testant
-explicitement contre une base vide plutôt qu'en supposant que ça marcherait, puis corrigé en
-régénérant un unique migration "schéma initial" avec `doctrine:migrations:diff` contre une base
-vraiment vide. Sans la CI (et le réflexe de tester "from scratch"), ce bug serait resté invisible
-jusqu'au jour où quelqu'un clone le repo pour la première fois.*
+*A real-world detail: when setting up the CI, the very first migration failed on a freshly cloned
+empty database ("relation starship does not exist") — the very first tables had been created
+through `schema:update` before migrations were used, so the migration history did not start from
+zero. It was diagnosed by explicitly testing against an empty database rather than assuming it
+would work, then fixed by regenerating a single "initial schema" migration with
+`doctrine:migrations:diff` against a really empty database. Without the CI (and the reflex of testing
+"from scratch"), this bug would have stayed invisible until the day someone clones the repository
+for the first time.*
 
-## Pistes d'amélioration — "et après ?"
+## Ideas for improvement — "what next?"
 
-- Inscription utilisateur self-service (actuellement les comptes sont créés en CLI)
-- Rate limiting sur `/login` (`symfony/rate-limiter`) contre le bruteforce
-- Vrai hébergement (Platform.sh / VPS) plutôt que local uniquement
-- Notifications temps réel avec Mercure (déjà dans le stack Docker, pas encore branché à une
-  fonctionnalité concrète)
-- Déplacer les secrets hors du `.env` commité vers un vrai vault (`secrets:set` Symfony)
+- Self-service user registration (accounts are currently created from the CLI)
+- Rate limiting on `/login` (`symfony/rate-limiter`) against brute force
+- Publish the live demo (a `Dockerfile` and a Render blueprint are provided, see the README)
+- Real-time notifications with Mercure (already in the Docker stack, not yet wired to a concrete
+  feature)
+- Move the secrets out of the committed `.env` into a real vault (Symfony `secrets:set`)
 
-## Questions probables et pistes de réponse
+## Likely questions and answer ideas
 
-- **"Pourquoi une entité de jointure plutôt qu'une ManyToMany simple ?"** — Parce qu'il faut
-  stocker `assignedAt` sur la relation elle-même : une ManyToMany native de Doctrine ne peut pas
-  porter de données propres, il faut modéliser explicitement la table pivot comme une entité à
-  part entière.
+- **"Why a join entity rather than a simple ManyToMany?"** — Because `assignedAt` has to be stored
+  on the relation itself: a native Doctrine ManyToMany cannot carry its own data, so the pivot
+  table has to be modelled explicitly as a full entity.
 
-- **"Comment tu as évité les requêtes N+1 sur la liste des vaisseaux ?"** — Jointures explicites
-  dans le repository (DQL avec `JOIN` + `addSelect`) plutôt que de laisser Doctrine lazy-load
-  chaque relation au moment de l'affichage.
+- **"How did you avoid N+1 queries on the starship list?"** — Explicit joins in the repository
+  (DQL with `JOIN` + `addSelect`) rather than letting Doctrine lazy-load each relation when it is
+  displayed.
 
-- **"Pourquoi tout le site est-il derrière un login ?"** — Décision volontaire pour ce
-  portfolio : un compte démo en lecture seule pour les visiteurs/recruteurs, un compte admin
-  séparé pour les actions de gestion — exactement comme on limiterait l'accès à un back-office
-  en production.
+- **"Why is the whole site behind a login?"** — A deliberate decision for this portfolio: a
+  read-only demo account for visitors/recruiters, a separate admin account for management
+  actions — exactly like access to a back-office would be restricted in production.
 
-- **"Comment tu as testé cette app ?"** — PHPUnit + Foundry : tests unitaires sur les fonctions
-  pures (filtre `ago`), tests fonctionnels sur les contrôleurs avec une base de test dédiée
-  (jamais les données de dev) et un `MockHttpClient` pour ne jamais dépendre du réseau ou de
-  l'API externe pendant les tests.
+- **"How did you test this app?"** — PHPUnit + Foundry: unit tests on pure functions (the `ago`
+  filter), functional tests on the controllers with a dedicated test database (never the dev data)
+  and a `MockHttpClient` so that the tests never depend on the network or on the external API.
 
-- **"Comment tu passerais ça en vrai produit ?"** — La CI existe déjà ; il manque le CD
-  (déploiement automatique vers un vrai hébergement), un vault de secrets, l'inscription
-  self-service, le rate limiting sur l'authentification, du monitoring des erreurs (Sentry), et
-  les notifications Mercure branchées à une vraie fonctionnalité (ex: statut de réparation en
-  direct).
+- **"How would you turn this into a real product?"** — The CI already exists; what is missing is
+  the CD (automatic deployment to real hosting), a secrets vault, self-service registration, rate
+  limiting on authentication, error monitoring (Sentry), and Mercure notifications wired to a
+  real feature (e.g. live repair status).

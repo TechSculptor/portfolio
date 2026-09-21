@@ -2,17 +2,14 @@
 {# It displays the status of the user's starship #}
 {# aside div setup the code to display the starship status #}
 {#
-  <aside> plutôt que <div> : c'est une balise sémantique HTML5, 
-  elle indique
-  au navigateur 
-  (et aux technologies d'assistance comme les lecteurs d'écran)
-  que ce bloc est un contenu tangentiel/complémentaire 
-  à la page principale
-  (ici, un panneau d'info secondaire sur le vaisseau), pas le contenu central.
-  Avantages concrets : meilleure accessibilité (les lecteurs d'écran peuvent
-  sauter directement à/vers les zones "aside" via leur outil de navigation par
-  landmarks), et meilleur SEO (les moteurs de recherche comprennent la
-  hiérarchie du contenu au lieu de voir un simple <div> générique).
+  <aside> rather than <div>: it is a semantic HTML5 tag, it tells the browser
+  (and assistive technologies such as screen readers) that this block is
+  tangential/complementary content to the main page
+  (here, a secondary info panel about the starship), not the central content.
+  Concrete benefits: better accessibility (screen readers can jump directly
+  to/from "aside" areas through their landmark navigation tool), and better
+  SEO (search engines understand the content hierarchy instead of seeing a
+  generic <div>).
 #}
 <aside
     class="pb-8 lg:pb-0 lg:w-[411px] shrink-0 lg:block lg:min-h-screen text-white transition-all overflow-hidden px-8 border-b lg:border-b-0 lg:border-r border-white/20"
@@ -33,7 +30,7 @@
             </div>
             <h3 class="tracking-tight text-[22px] font-semibold">
                 <a class="hover:underline" href="{{ path('app_starship_show', {
-                    id: myShip.id
+                    slug: myShip.slug
                 }) }}">{{ myShip.name }}</a>
             </h3>
         </div>

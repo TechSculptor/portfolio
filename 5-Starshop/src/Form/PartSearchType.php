@@ -1,10 +1,11 @@
 <?php
 
-// Un namespace regroupe les classes dans un "dossier logique" (ici App\Form)
-// pour éviter les collisions de noms entre classes (deux classes "Type"
-// peuvent coexister dans des namespaces différents) et permettre l'autoload :
-// PHP/Composer retrouve le fichier de la classe à partir de son namespace
-// (App\Form\PartSearchType -> src/Form/PartSearchType.php), sans include manuel.
+// A namespace groups classes in a "logical folder" (here App\Form)
+// to avoid name collisions between classes (two "Type" classes
+// can coexist in different namespaces) and to enable autoloading:
+// PHP/Composer finds the class file from its namespace
+// (App\Form\PartSearchType -> src/Form/PartSearchType.php), without a manual include.
+
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;

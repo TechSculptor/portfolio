@@ -21,42 +21,41 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class CreateUserCommand extends Command
 {
     public function __construct(
-        // pour la vérification de l'unicité de l'email
+        // to check that the email is unique
         private UserRepository $userRepository,
-        // pour la persistance de l'utilisateur
+        // to persist the user
         private EntityManagerInterface $entityManager,
-        // pour le hachage du mot de passe
+        // to hash the password
         private UserPasswordHasherInterface $passwordHasher,
     ) {
         parent::__construct();
     }
 
-    // void : type de retour, la fonction ne retourne rien
-    // Déclare les arguments/options que Symfony Console doit parser depuis la
-    // ligne de commande, avant que execute() ne soit appelée.
-    // La méthode configure() est là pour configurer la commande,
-    // mais elle ne fait pas partie de l'exécution de la commande.
+    // void: return type, the function returns nothing
+    // Declares the arguments/options that Symfony Console must parse from the
+    // command line, before execute() is called.
+    // The configure() method is there to configure the command,
+    // but it is not part of the command's execution.
     protected function configure(): void
     {
         $this
-            // Argument positionnel obligatoire, ex: bin/console app:user:create test@test.com
+            // Required positional argument, e.g. bin/console app:user:create test@test.com
             ->addArgument('email', InputArgument::REQUIRED, 'The email/username for the new user')
-            // Option avec valeur, ex: --password=secret (sinon un mot de passe est généré)
+            // Option with a value, e.g. --password=secret (otherwise a password is generated)
             ->addOption('password', null, InputOption::VALUE_REQUIRED, 'Plain password to use instead of generating one')
-            // Option "flag" sans valeur, ex: --admin (juste présente ou absente)
+            // "Flag" option without a value, e.g. --admin (simply present or absent)
             ->addOption('admin', null, InputOption::VALUE_NONE, 'Grant ROLE_ADMIN to this user')
         ;
     }
 
-    // Justement c'est cette méthode qui est appelée pour exécuter la commande.
+    // This is the method that is called to run the command.
     protected function execute(
-        // InputInterface $input : contient les arguments et options 
-        // fournis par l'utilisateur
-        // OutputInterface $output : permet d'écrire dans la console
-        InputInterface $input, 
-        OutputInterface $output
-        ): int
-    {
+        // InputInterface $input: contains the arguments and options
+        // provided by the user
+        // OutputInterface $output: lets us write to the console
+        InputInterface $input,
+        OutputInterface $output,
+    ): int {
         $io = new SymfonyStyle($input, $output);
         $email = $input->getArgument('email');
 
@@ -73,12 +72,12 @@ class CreateUserCommand extends Command
         $user->setRoles($input->getOption('admin') ? ['ROLE_ADMIN'] : []);
         $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
 
-        // persist() prépare $user pour l'insertion (Doctrine le suit désormais en mémoire),
-        // mais n'envoie encore aucune requête SQL.
+        // persist() prepares $user for insertion (Doctrine now tracks it in memory),
+        // but does not send any SQL query yet.
         $this->entityManager->persist($user);
-        // flush() compare l'état suivi par Doctrine à la base de données, puis exécute
-        // réellement les requêtes SQL nécessaires (ici un INSERT) dans une transaction.
-        // Sans cet appel, $user ne serait jamais écrit en base.
+        // flush() compares the state tracked by Doctrine with the database, then actually
+        // runs the required SQL queries (here an INSERT) in a transaction.
+        // Without this call, $user would never be written to the database.
         $this->entityManager->flush();
 
         $io->success(sprintf('User "%s" created.', $email));

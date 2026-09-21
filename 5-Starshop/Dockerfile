@@ -1,5 +1,5 @@
-# Image de démonstration pour Render (Apache + PHP 8.4).
-# Contexte de build : le dossier 5-Starshop/
+# Demo image for Render (Apache + PHP 8.4).
+# Build context: the 5-Starshop/ folder
 FROM php:8.4-apache
 
 ENV APP_ENV=prod \
@@ -17,23 +17,23 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY docker/php.ini /usr/local/etc/php/conf.d/zz-app.ini
 COPY docker/apache-vhost.conf /etc/apache2/sites-available/000-default.conf
 
-# Apache écoute sur le port fourni par Render ($PORT)
+# Apache listens on the port provided by Render ($PORT)
 RUN sed -i 's/Listen 80/Listen ${PORT}/' /etc/apache2/ports.conf
 
 WORKDIR /var/www/html
 
-# 1. Dépendances (couche mise en cache tant que composer.lock ne change pas).
-#    Les dépendances de dev restent installées : les fixtures (Foundry) n'existent
-#    qu'en environnement dev et servent à peupler la démo au démarrage.
+# 1. Dependencies (cached layer as long as composer.lock does not change).
+#    Dev dependencies stay installed: the fixtures (Foundry) only exist
+#    in the dev environment and are used to populate the demo at startup.
 COPY composer.json composer.lock symfony.lock ./
 RUN composer install --no-interaction --no-scripts --no-autoloader --prefer-dist
 
-# 2. Code + build des assets
+# 2. Code + assets build
 COPY . .
 RUN cp .env.example .env \
     && composer dump-autoload --optimize \
     && composer run-script auto-scripts \
-    # Le binaire Tailwind (~130 Mo) est téléchargé en mémoire : on lève la limite PHP
+    # The Tailwind binary (~130 MB) is downloaded into memory: raise the PHP limit
     && php -d memory_limit=-1 bin/console tailwind:build --minify \
     && php bin/console asset-map:compile \
     && php bin/console cache:warmup \

@@ -1,9 +1,20 @@
-name: CI
+name: Starshop CI
 
+# Runs only when the Starshop project (or this workflow) changes.
 on:
   push:
-    branches: [main, master]
+    branches: [main]
+    paths:
+      - '5-Starshop/**'
+      - '.github/workflows/starshop-ci.yaml'
   pull_request:
+    paths:
+      - '5-Starshop/**'
+      - '.github/workflows/starshop-ci.yaml'
+
+defaults:
+  run:
+    working-directory: 5-Starshop
 
 jobs:
   tests:
@@ -35,8 +46,12 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
-          extensions: ctype, iconv, pdo_pgsql
+          extensions: ctype, iconv, intl, pdo_pgsql
           coverage: none
+
+      # The .env files are not versioned: Symfony needs a .env to boot
+      - name: Create .env from the example
+        run: cp .env.example .env
 
       - name: Get composer cache directory
         id: composer-cache
@@ -46,7 +61,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('5-Starshop/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
