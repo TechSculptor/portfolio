@@ -1,0 +1,12 @@
+@plugin "@tailwindcss/forms";
+@import "tailwindcss";
+/* Tailwind CSS safelist */
+@source "./../../vendor/symfony/twig-bridge/Resources/views/Form/tailwind_2_layout.html.twig";
+
+body {
+    background-color: skyblue;
+}
+
+input, textarea, select {
+    background-color: inherit;
+}
