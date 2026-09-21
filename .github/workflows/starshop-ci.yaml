@@ -67,6 +67,11 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
+      # The pages reference the compiled Tailwind stylesheet; the binary (~130 MB) is
+      # downloaded into memory, hence the raised PHP memory limit
+      - name: Build Tailwind CSS
+        run: php -d memory_limit=-1 bin/console tailwind:build
+
       - name: Check coding style
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
