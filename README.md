@@ -149,3 +149,20 @@ Quelques captures des projets réalisés :
 
 ![Portfolio Overview 5](Screen/Portfolio5.png)
 *Back-office et administration*
+
+### 5-Starshop (Symfony)
+
+![Starshop - Connexion](Screen/Starshop1-login.png)
+*Authentification `form_login` : tout le site est derrière un login*
+
+![Starshop - File de réparation](Screen/Starshop2-catalogue.png)
+*Catalogue paginé des vaisseaux et position de l'ISS (API externe)*
+
+![Starshop - Fiche vaisseau](Screen/Starshop3-vaisseau.png)
+*Fiche détaillée d'un vaisseau*
+
+![Starshop - Pièces](Screen/Starshop4-pieces.png)
+*Catalogue de pièces avec recherche*
+
+![Starshop - Administration](Screen/Starshop5-admin.png)
+*Back-office CRUD réservé au rôle `ROLE_ADMIN`*
