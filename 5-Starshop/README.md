@@ -36,8 +36,11 @@ php bin/console doctrine:fixtures:load --no-interaction
 # 5. Un compte pour se connecter (le site entier est derrière un login)
 php bin/console app:user:create moi@example.com --admin
 
-# 6. Lancer le serveur
-symfony serve -d
+# 6. Styles Tailwind (une seule fois : télécharge un binaire de 130 Mo, d'où la limite mémoire levée)
+php -d memory_limit=-1 bin/console tailwind:build
+
+# 7. Lancer le serveur (laisser ce terminal ouvert ; sans Symfony CLI : php -S 127.0.0.1:8000 -t public)
+symfony serve
 ```
 
 Le site est ensuite accessible sur `http://127.0.0.1:8000`. Voir [TESTING.md](TESTING.md) pour
