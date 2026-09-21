@@ -18,6 +18,9 @@ Une boutique/atelier de réparation de vaisseaux spatiaux construite avec Symfon
 ## Démarrer le projet
 
 ```bash
+# 0. Configuration locale (les fichiers .env ne sont pas versionnés)
+cp .env.example .env
+
 # 1. Dépendances PHP
 composer install
 

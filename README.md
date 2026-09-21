@@ -103,13 +103,14 @@ Une boutique / atelier de réparation de vaisseaux spatiaux fictif, construite a
 
 **🚀 Comment tester ce projet :**
 1. `cd 5-Starshop`
-2. `composer install`
-3. `docker compose up -d` (PostgreSQL, Mailpit, Mercure)
-4. `php bin/console doctrine:migrations:migrate --no-interaction`
-5. `php bin/console doctrine:fixtures:load --no-interaction`
-6. `php bin/console app:user:create moi@example.com --admin`
-7. `symfony serve -d`
-8. Accédez à `http://127.0.0.1:8000` et connectez-vous avec le compte créé.
+2. `cp .env.example .env` (PowerShell : `Copy-Item .env.example .env`)
+3. `composer install`
+4. `docker compose up -d` (PostgreSQL, Mailpit, Mercure)
+5. `php bin/console doctrine:migrations:migrate --no-interaction`
+6. `php bin/console doctrine:fixtures:load --no-interaction`
+7. `php bin/console app:user:create moi@example.com --admin`
+8. `symfony serve -d`
+9. Accédez à `http://127.0.0.1:8000` et connectez-vous avec le compte créé.
 
 Voir le [README du projet](5-Starshop/README.md) pour le détail (tests, authentification, architecture).
 
