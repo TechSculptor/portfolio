@@ -26,3 +26,7 @@
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< php-cs-fixer/shim ###
+
+# Local env files (may contain credentials)
+/.env.dev
+/.env.test

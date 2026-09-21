@@ -88,6 +88,33 @@ Une todo-list conçue spécifiquement pour l'organisation quotidienne d'un déve
 
 [**✨ Voir la démo live**](4-Todo-List-Dev/demo/index.html)
 
+### 5️⃣ 5-Starshop : Boutique de vaisseaux Symfony
+
+Une boutique / atelier de réparation de vaisseaux spatiaux fictif, construite avec Symfony 8.1 pour démontrer la conception d'une application web complète avec PHP et PostgreSQL.
+* **Objectif :** Modéliser un catalogue relationnel (vaisseaux, pièces, droïdes) avec authentification, back-office d'administration et appel à une API externe.
+* **Stack :** Symfony 8.1, PHP, Doctrine ORM (migrations), PostgreSQL, Twig, Stimulus/Turbo, Tailwind CSS, Docker Compose, PHPUnit.
+* **Points Forts :**
+    - 🏗️ Code organisé par responsabilité (entités, dépôts, contrôleurs, formulaires, commandes console, factories).
+    - 🔐 Authentification `form_login` avec deux rôles (`ROLE_USER` en consultation, `ROLE_ADMIN` pour le CRUD) et protection CSRF.
+    - 🗃️ Relations Doctrine complètes, pagination (Pagerfanta), slugs et horodatage automatiques (Gedmo).
+    - 🌱 Jeux de données de démonstration générés avec Zenstruck Foundry, et commandes console dédiées (création d'utilisateur, check-in / retrait / rapport de vaisseaux).
+    - 🌍 Intégration de l'API publique `wheretheiss.at` (position de l'ISS) via HttpClient et pools de cache.
+    - 🧪 Tests PHPUnit sur base dédiée, avec client HTTP mocké pour ne jamais dépendre du réseau.
+
+**🚀 Comment tester ce projet :**
+1. `cd 5-Starshop`
+2. `composer install`
+3. `docker compose up -d` (PostgreSQL, Mailpit, Mercure)
+4. `php bin/console doctrine:migrations:migrate --no-interaction`
+5. `php bin/console doctrine:fixtures:load --no-interaction`
+6. `php bin/console app:user:create moi@example.com --admin`
+7. `symfony serve -d`
+8. Accédez à `http://127.0.0.1:8000` et connectez-vous avec le compte créé.
+
+Voir le [README du projet](5-Starshop/README.md) pour le détail (tests, authentification, architecture).
+
+[**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/5-Starshop)
+
 ### 🔒 Note sur la Confidentialité
 
 Le code source de ces projets a été entièrement anonymisé. Tous les noms d'entreprise, la logique métier propriétaire, et les identifiants de sécurité ont été retirés pour des raisons de confidentialité. Les projets présentés ici sont des versions génériques destinées à démontrer mes compétences techniques à des fins de recrutement.
