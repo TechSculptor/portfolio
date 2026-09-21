@@ -59,7 +59,7 @@ Automatisation de la création de pages HTML pour un annuaire de grossistes.
 
 [**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/3-Generate-Html)
 
-[**✨ Voir le rendu final (40 pages)**](3-Generate-Html/index.html)
+[**✨ Voir le rendu final (40 pages)**](https://techsculptor.github.io/portfolio/3-Generate-Html/index.html)
 
 **🚀 Comment tester ce projet :**
 1. `cd 3-Generate-Html`
@@ -86,7 +86,7 @@ Une todo-list conçue spécifiquement pour l'organisation quotidienne d'un déve
 
 [**📂 Voir le code du projet**](https://github.com/TechSculptor/portfolio/tree/main/4-Todo-List-Dev)
 
-[**✨ Voir la démo live**](4-Todo-List-Dev/demo/index.html)
+[**✨ Voir la démo live**](https://techsculptor.github.io/portfolio/4-Todo-List-Dev/demo/index.html)
 
 ### 5️⃣ 5-Starshop : Boutique de vaisseaux Symfony
 
