@@ -6,6 +6,8 @@ services:
       - "80:80"
     volumes:
       - .:/var/www/html
+      # Keep the dependencies installed in the image (vendor/ is not versioned)
+      - /var/www/html/vendor
     environment:
       DB_HOST: db
       DB_PORT: 5432

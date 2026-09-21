@@ -1,0 +1,2 @@
+# Composer dependencies (installed by the Docker build)
+/vendor/
