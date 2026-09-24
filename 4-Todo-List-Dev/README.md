@@ -36,6 +36,18 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
+## Rebuilding the online demo
+
+The `demo/` folder is the production build published by GitHub Pages
+(https://techsculptor.github.io/portfolio/4-Todo-List-Dev/demo/). To refresh it after a change:
+
+```bash
+ng build --base-href /portfolio/4-Todo-List-Dev/demo/
+# then replace the content of demo/ with dist/kozmodev-app/browser/
+```
+
+(On Git Bash for Windows, prefix the build with `MSYS_NO_PATHCONV=1`, otherwise the base href is rewritten into a Windows path.)
+
 ## Running unit tests
 
 To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
