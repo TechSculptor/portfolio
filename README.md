@@ -102,7 +102,9 @@ Une boutique / atelier de réparation de vaisseaux spatiaux fictif, construite a
     - 🌍 Intégration de l'API publique `wheretheiss.at` (position de l'ISS) via HttpClient et pools de cache.
     - 🧪 Tests PHPUnit sur base dédiée, avec client HTTP mocké pour ne jamais dépendre du réseau.
 
-**🚀 Comment tester ce projet :**
+[**✨ Voir la démo en ligne**](https://starshop-ky4b.onrender.com) : connexion avec le compte de démonstration en lecture seule `demo@starshop.dev` / `starshop-demo`. Hébergement gratuit : le site s'endort après 15 minutes d'inactivité (comptez environ 1 minute au réveil) et les données de démonstration sont recréées à chaque démarrage.
+
+**🚀 Comment tester ce projet en local :**
 1. `cd 5-Starshop`
 2. `cp .env.example .env` (PowerShell : `Copy-Item .env.example .env`)
 3. `composer install`
@@ -130,14 +132,15 @@ Ce guide permet de tout démarrer sur une machine Windows, macOS ou Linux, puis 
 
 ### 🌐 Sans rien installer
 
-Deux projets sont consultables directement dans le navigateur (GitHub Pages) :
+Trois projets sont consultables directement dans le navigateur :
 
 | Projet | Lien |
 |---|---|
 | 3-Generate-Html | [Annuaire de 40 pages](https://techsculptor.github.io/portfolio/3-Generate-Html/index.html) |
 | 4-Todo-List-Dev | [Todo List Angular](https://techsculptor.github.io/portfolio/4-Todo-List-Dev/demo/index.html) |
+| 5-Starshop | [Démo Symfony](https://starshop-ky4b.onrender.com) : compte `demo@starshop.dev` / `starshop-demo` (réveil d'environ 1 minute si le site dormait) |
 
-Les projets 1, 2 et 5 ont un back-end (PHP, Node, Symfony) et une base de données : ils se lancent en local.
+Les projets 1 et 2 ont un back-end (PHP, Node) et une base de données : ils se lancent en local.
 
 ### 🧰 Prérequis
 
