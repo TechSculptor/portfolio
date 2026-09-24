@@ -22,7 +22,8 @@ instead of leaving an administration panel open to everyone.
 - **Pagerfanta** for pagination
 - **Symfony Form** + **Validator** (constraints with named arguments, modern API)
 - **Symfony Security** — `form_login`, `ROLE_USER`/`ROLE_ADMIN` roles, stateless CSRF
-  (double submit through a Stimulus JS controller, no session needed)
+  (double submit through a Stimulus JS controller, no session needed), login throttling
+  (`symfony/rate-limiter`) against brute force
 - **HttpClient** + named cache pools (`framework.cache.pools` config) for the call to
   `api.wheretheiss.at`, with a custom Twig extension to expose it to the templates
 - **Tailwind CSS v4** (`@plugin`, `@tailwindcss/forms`)
@@ -134,7 +135,6 @@ for the first time.*
 ## Ideas for improvement — "what next?"
 
 - Self-service user registration (accounts are currently created from the CLI)
-- Rate limiting on `/login` (`symfony/rate-limiter`) against brute force
 - Publish the live demo (a `Dockerfile` and a Render blueprint are provided, see the README)
 - Real-time notifications with Mercure (already in the Docker stack, not yet wired to a concrete
   feature)

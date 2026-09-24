@@ -39,6 +39,26 @@ class SecurityControllerTest extends WebTestCase
         self::assertResponseRedirects('/');
     }
 
+    public function testLoginIsThrottledAfterTooManyFailedAttempts(): void
+    {
+        $client = static::createClient();
+        UserFactory::createOne(['email' => 'victim@example.com']);
+
+        // 5 failed attempts are allowed, the 6th one is blocked
+        for ($attempt = 1; $attempt <= 6; ++$attempt) {
+            $client->request('POST', '/login', [
+                '_username' => 'victim@example.com',
+                '_password' => 'wrong-password-'.$attempt,
+                // Same-origin stateless CSRF: the placeholder token is accepted when the browser
+                // sends same-origin headers (what a real browser does)
+                '_csrf_token' => 'csrf-token',
+            ], [], ['HTTP_ORIGIN' => 'http://localhost', 'HTTP_SEC_FETCH_SITE' => 'same-origin']);
+        }
+        $client->followRedirect();
+
+        self::assertSelectorTextContains('body', 'Too many failed login attempts');
+    }
+
     public function testStandardUserCannotReachTheAdminArea(): void
     {
         $client = static::createClient();

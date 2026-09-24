@@ -10,7 +10,7 @@ Homepage (behind the login, like the rest of the site).
 
 ## [StarshipController.php](../src/Controller/StarshipController.php)
 
-Detail page of a starship.
+Detail page of a starship: captain, class, arrival, the droids on board (with their assignment date), the parts, and the "expensive parts" (price above 50,000, filtered with a Doctrine `Criteria`). The "Edit" and "Delete" buttons are only shown to `ROLE_ADMIN` users.
 
 - **`GET /starships/{slug}` (`app_starship_show`)** — uses `#[MapEntity(mapping: ['slug' => 'slug'])]` so that Symfony automatically resolves the `Starship` entity from the `slug` URL parameter (instead of loading it manually through a repository). If no starship matches, Symfony automatically returns a 404.
 
@@ -25,13 +25,13 @@ Catalogue of spare parts.
 Read-only JSON API, prefixed with `/api/starships`.
 
 - **`GET /api/starships`** — returns all starships as JSON (`$this->json($starships)` serializes the entities directly).
-- **`GET /api/starships/{id}`** (with the `<\d+>` constraint: the `id` must be numeric) — returns a starship by its id, or throws a 404 through `createNotFoundException()` if it does not exist.
+- **`GET /api/starships/{id}`** (the class-level `/api/starships` prefix is inherited, so the method route is just `/{id}`; with the `<\d+>` constraint: the `id` must be numeric) — returns a starship by its id, or throws a 404 through `createNotFoundException()` if it does not exist.
 
 ## [SecurityController.php](../src/Controller/SecurityController.php)
 
 Authentication (Symfony Security login form).
 
-- **`/login` (`app_login`)** — if the user is already logged in, redirects to the homepage. Otherwise it retrieves the last authentication error and the last username entered (through `AuthenticationUtils`) to redisplay the form with that information.
+- **`/login` (`app_login`)** — login attempts are throttled (`login_throttling` in `security.yaml`: 5 failed attempts per username + IP address, then blocked for 15 minutes). If the user is already logged in, redirects to the homepage. Otherwise it retrieves the last authentication error and the last username entered (through `AuthenticationUtils`) to redisplay the form with that information.
 - **`/logout` (`app_logout`)** — the method body is **never executed**: Symfony intercepts this route at the firewall level (see `config/packages/security.yaml`) before it reaches the controller. The `throw` is a safeguard in case the security configuration is ever wired incorrectly.
 
 ## [AdminController.php](../src/Controller/AdminController.php)

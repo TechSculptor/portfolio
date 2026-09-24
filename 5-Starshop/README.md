@@ -72,6 +72,8 @@ The whole site requires a login (`config/packages/security.yaml`). Two levels:
 - `ROLE_USER` — browse the starship and part catalogues
 - `ROLE_ADMIN` — additionally access `/admin` (create/edit/delete starships and parts)
 
+Login attempts are throttled: after 5 failed attempts (per username and IP address), the login is blocked for 15 minutes.
+
 ```bash
 # Read-only demo account
 php bin/console app:user:create demo@example.com

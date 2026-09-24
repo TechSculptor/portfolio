@@ -102,6 +102,7 @@ Checks in the browser:
 - [ ] Log in with the credentials created above → redirect to the homepage
 - [ ] The "Log out" link in the header logs out and redirects to `/login`
 - [ ] A standard user gets a 403 on `/admin/starship`; an administrator gets the list
+- [ ] After 5 wrong passwords for the same email, the 6th attempt shows "Too many failed login attempts" (blocked for 15 minutes, per username + IP address)
 
 > The login form uses the same stateless CSRF system (JS-based, Stimulus `csrf-protection`
 > controller) as the other forms of the site: it therefore cannot be tested with `curl` alone (the
@@ -141,8 +142,11 @@ Open `http://127.0.0.1:8000/` and check:
 
 Click on a starship name (`/starships/{slug}`) and check:
 
-- [ ] Id, name, class, captain, status, arrival date (if any), slug and creation/update dates
-- [ ] The "Edit" and "Delete" buttons are displayed
+- [ ] Name, status badge, captain, class, arrival ("Not yet arrived" if none) and slug
+- [ ] "Droids on board": each droid with its function and how long ago it was assigned (or "No droids on board.")
+- [ ] "Parts (N)": every part with its price (or "No parts assigned yet.")
+- [ ] "Expensive parts (N)": only the parts above 50,000 credits
+- [ ] The "Edit" and "Delete" buttons are displayed for an administrator only (a standard user does not see them)
 
 Go to `/parts` and check:
 
@@ -204,8 +208,10 @@ Important points about the current configuration:
 Current files:
 
 - `tests/Twig/Runtime/AppExtensionRuntimeTest.php` — pure unit test of the `ago` filter
-- `tests/Controller/SecurityControllerTest.php` — anonymous redirect, rendering of the login form, access to the admin area
+- `tests/Controller/SecurityControllerTest.php` — anonymous redirect, rendering of the login form, access to the admin area, login throttling
 - `tests/Controller/MainControllerTest.php` — authenticated homepage + mocked ISS display, clickable ship names, single pagination block
+- `tests/Controller/StarshipControllerTest.php` — detail page (droids, parts, expensive parts, empty states), admin-only buttons, 404
+- `tests/Controller/StarshipApiControllerTest.php` — JSON API (collection, by id, 404, anonymous redirect)
 - `tests/Command/ShipReportCommandTest.php` — the `app:ship-report` command
 
 ### Official documentation

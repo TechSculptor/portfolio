@@ -1,58 +1,106 @@
 {# This file is part of the Starshop project. #}
-{# It displays the details of a specific starship #}
+{# It displays the detail page of a starship: its information, parts and droids #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ ship.name }}{% endblock %}
 
 {% block body %}
-    <div class="max-w-7xl mx-auto px-5 mt-4">
-        <a class="hover:text-gray-400 underline" href="{{ path('app_starship_admin_index') }}"> << back to list</a>
+    {% set badge = {
+        'waiting': {bg: 'bg-slate-400/10', dot: 'bg-slate-400'},
+        'in progress': {bg: 'bg-amber-400/10', dot: 'bg-amber-400'},
+        'completed': {bg: 'bg-green-400/10', dot: 'bg-green-400'},
+    }[ship.statusString] ?? {bg: 'bg-slate-400/10', dot: 'bg-slate-400'} %}
 
-        <h1 class="text-[32px] font-semibold border-b border-white/10 pb-5 mb-5 mt-8">{{ ship.name }}</h1>
+    <div class="max-w-5xl mx-auto px-5 mt-4 pb-12">
+        <a class="hover:text-gray-400 underline" href="{{ path('app_homepage') }}">&lt;&lt; back to the repair queue</a>
 
-        <table class="table-fixed">
-            <tbody>
-            <tr>
-                <th class="text-xs text-slate-300 font-semibold mt-2 uppercase">Id</th>
-                <td class="text-[22px] font-semibold pl-5">{{ ship.id }}</td>
-            </tr>
-            <tr>
-                <th class="text-xs text-slate-300 font-semibold mt-2 uppercase">Name</th>
-                <td class="text-[22px] font-semibold pl-5">{{ ship.name }}</td>
-            </tr>
-            <tr>
-                <th class="text-xs text-slate-300 font-semibold mt-2 uppercase">Class</th>
-                <td class="text-[22px] font-semibold pl-5">{{ ship.class }}</td>
-            </tr>
-            <tr>
-                <th class="text-xs text-slate-300 font-semibold mt-2 uppercase">Captain</th>
-                <td class="text-[22px] font-semibold pl-5">{{ ship.captain }}</td>
-            </tr>
-            <tr>
-                <th class="text-xs text-slate-300 font-semibold mt-2 uppercase">Status</th>
-                <td class="text-[22px] font-semibold pl-5">{{ ship.status.value }}</td>
-            </tr>
-            <tr>
-                <th class="text-xs text-slate-300 font-semibold mt-2 uppercase">ArrivedAt</th>
-                <td class="text-[22px] font-semibold pl-5">{{ ship.arrivedAt ? ship.arrivedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th class="text-xs text-slate-300 font-semibold mt-2 uppercase">Slug</th>
-                <td class="text-[22px] font-semibold pl-5">{{ ship.slug }}</td>
-            </tr>
-            <tr>
-                <th class="text-xs text-slate-300 font-semibold mt-2 uppercase">CreatedAt</th>
-                <td class="text-[22px] font-semibold pl-5">{{ ship.createdAt ? ship.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th class="text-xs text-slate-300 font-semibold mt-2 uppercase">UpdatedAt</th>
-                <td class="text-[22px] font-semibold pl-5">{{ ship.updatedAt ? ship.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="flex gap-3 mt-5">
-            <a class="text-white bg-green-700 hover:bg-green-800 rounded-lg px-5 py-2.5 me-2 mb-2 cursor-pointer" href="{{ path('app_starship_admin_edit', {'id': ship.id}) }}">Edit</a>
-            {{ include('starship_admin/_delete_form.html.twig', {starship: ship}) }}
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/10 pb-5 mb-6 mt-8">
+            <h1 class="text-[32px] font-semibold">{{ ship.name }}</h1>
+            <div class="rounded-2xl py-1 px-3 flex justify-center w-32 items-center {{ badge.bg }}">
+                <div class="rounded-full h-2 w-2 {{ badge.dot }} blur-[1px] mr-2"></div>
+                <p class="uppercase text-xs text-nowrap">{{ ship.statusString }}</p>
+            </div>
         </div>
+
+        <dl class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-10">
+            <div>
+                <dt class="text-slate-400 text-xs uppercase">Captain</dt>
+                <dd class="text-xl">{{ ship.captain }}</dd>
+            </div>
+            <div>
+                <dt class="text-slate-400 text-xs uppercase">Class</dt>
+                <dd class="text-xl">{{ ship.class }}</dd>
+            </div>
+            <div>
+                <dt class="text-slate-400 text-xs uppercase">Arrived</dt>
+                <dd class="text-xl">{{ ship.arrivedAt ? ship.arrivedAt|ago : 'Not yet arrived' }}</dd>
+            </div>
+            <div>
+                <dt class="text-slate-400 text-xs uppercase">Slug</dt>
+                <dd class="text-xl break-all">{{ ship.slug }}</dd>
+            </div>
+        </dl>
+
+        <section class="mb-10" aria-labelledby="droids-title">
+            <h2 id="droids-title" class="text-2xl font-semibold mb-4">Droids on board</h2>
+            {% if ship.starshipDroids|length %}
+                <ul class="space-y-2">
+                    {% for starshipDroid in ship.starshipDroids %}
+                        <li class="bg-[#16202A] rounded-xl px-5 py-3 flex justify-between">
+                            <span>
+                                <strong>{{ starshipDroid.droid.name }}</strong>
+                                <span class="text-slate-400">({{ starshipDroid.droid.primaryFunction }})</span>
+                            </span>
+                            <span class="text-slate-400">assigned {{ starshipDroid.assignedAt|ago }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-slate-400">No droids on board.</p>
+            {% endif %}
+        </section>
+
+        <section class="mb-10" aria-labelledby="parts-title">
+            <h2 id="parts-title" class="text-2xl font-semibold mb-4">Parts ({{ ship.parts|length }})</h2>
+            {% if ship.parts|length %}
+                <ul class="space-y-2">
+                    {% for part in ship.parts %}
+                        <li class="bg-[#16202A] rounded-xl px-5 py-3 flex justify-between gap-4">
+                            <span>
+                                <strong>{{ part.name }}</strong>
+                                {% if part.notes %}<span class="text-slate-400"> — {{ part.notes }}</span>{% endif %}
+                            </span>
+                            <span class="text-emerald-400 font-semibold whitespace-nowrap">✦{{ part.price }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-slate-400">No parts assigned yet.</p>
+            {% endif %}
+        </section>
+
+        <section class="mb-10" aria-labelledby="expensive-title">
+            {# getExpensiveParts() filters the already-loaded collection with a Doctrine Criteria (price > 50,000) #}
+            <h2 id="expensive-title" class="text-2xl font-semibold mb-4">Expensive parts ({{ ship.expensiveParts|length }})</h2>
+            {% if ship.expensiveParts|length %}
+                <ul class="space-y-2">
+                    {% for part in ship.expensiveParts %}
+                        <li class="bg-[#16202A] rounded-xl px-5 py-3 flex justify-between gap-4">
+                            <strong>{{ part.name }}</strong>
+                            <span class="text-emerald-400 font-semibold whitespace-nowrap">✦{{ part.price }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-slate-400">No part costs more than 50,000 credits.</p>
+            {% endif %}
+        </section>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="flex gap-3 mt-5">
+                <a class="text-white bg-green-700 hover:bg-green-800 rounded-lg px-5 py-2.5 me-2 mb-2 cursor-pointer" href="{{ path('app_starship_admin_edit', {'id': ship.id}) }}">Edit</a>
+                {{ include('starship_admin/_delete_form.html.twig', {starship: ship}) }}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
