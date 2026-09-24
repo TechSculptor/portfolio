@@ -14,12 +14,14 @@ class StarshipApiController extends AbstractController
 {
     // The getCollection method retrieves all starships
     // from the repository and returns them as a JSON response.
+    // Only the 'starship:read' fields are exposed: serializing the whole entity would follow
+    // the relations (parts, droids...) and end in a circular reference.
     #[Route('', methods: ['GET'])]
     public function getCollection(StarshipRepository $repository): Response
     {
         $starships = $repository->findAll();
 
-        return $this->json($starships);
+        return $this->json($starships, context: ['groups' => 'starship:read']);
     }
 
     // The get method retrieves a single starship by its ID
@@ -34,6 +36,6 @@ class StarshipApiController extends AbstractController
             throw $this->createNotFoundException('Starship not found');
         }
 
-        return $this->json($starship);
+        return $this->json($starship, context: ['groups' => 'starship:read']);
     }
 }

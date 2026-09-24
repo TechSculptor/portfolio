@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\Slug;
 use Gedmo\Mapping\Annotation\Timestampable;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: StarshipRepository::class)]
 class Starship
@@ -17,25 +18,32 @@ class Starship
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('starship:read')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('starship:read')]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('starship:read')]
     private ?string $class = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('starship:read')]
     private ?string $captain = null;
 
     #[ORM\Column(enumType: StarshipStatusEnum::class)]
+    #[Groups('starship:read')]
     private ?StarshipStatusEnum $status = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Slug(fields: ['name'])]
+    #[Groups('starship:read')]
     private ?string $slug = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups('starship:read')]
     private ?\DateTimeImmutable $arrivedAt = null;
 
     #[ORM\Column]
