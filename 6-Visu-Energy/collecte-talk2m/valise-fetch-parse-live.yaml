@@ -1,0 +1,265 @@
+- id: 2ca8beef1fe92551
+  type: subflow
+  name: VALISE – Fetch & Parse Live
+  normalizedLabel: valise-fetch-parse-live
+  info: >-
+    Récupère les valeurs instantanées ($dtIV$ftT) d'un eWON via Talk2M.
+
+    Délègue la requête Talk2M (construction URL + credentials) au sous-flux
+    "Moteur 3 – Live eWON", puis parse le CSV brut renvoyé.
+
+
+    Entrée : msg.ewonName (string)
+
+    Sortie 0 : msg._sampleData = { nom_valise, global{hz,v1..u31,cumul_p..},
+    voies[{numero_voie,i1..sum_er}] }
+
+    Sortie 1 : msg._error (string) — réponse invalide ou aucune voie détectée
+
+
+    Valeurs calculées par le nœud (absentes du CSV) :
+      tot_p = P1+P2+P3, tot_q = Q1+Q2+Q3, tot_s = √(tot_p²+tot_q²)
+      i_tri = i_moy_tri = (I1+I2+I3)/3
+      cumul_p/q/i1/i2/i3 = Σ sur toutes les voies
+      i_moy_tri_cumul = (Σi1+Σi2+Σi3)/(3×nbVoies)
+  category: 🔧 Moteurs eWON
+  in:
+    - x: 40
+      "y": 100
+      wires:
+        - id: 1f90d4e020972401
+  out:
+    - x: 860
+      "y": 60
+      wires:
+        - id: 60b18971642cadc9
+          port: 0
+    - x: 860
+      "y": 140
+      wires:
+        - id: 60b18971642cadc9
+          port: 1
+  env:
+    - name: MAX_VOIES
+      type: num
+      value: "9"
+      ui:
+        label: Nb max voies à scanner
+        type: spinner
+        opts:
+          min: 1
+          max: 24
+  meta: {}
+  color: "#27ae60"
+  icon: node-red/white-globe.svg
+- id: 1f90d4e020972401
+  type: subflow:28d6d4f963d330c1
+  z: 2ca8beef1fe92551
+  name: ""
+  x: 280
+  "y": 100
+  wires:
+    - - 60b18971642cadc9
+- id: 60b18971642cadc9
+  type: function
+  z: 2ca8beef1fe92551
+  name: Parse CSV → _sampleData
+  func: >-
+    // ─── Config ───────────────────────────────────────────────────
+
+    const ewon     = msg.ewonName || '';
+
+    const MAX_V    = parseInt(env.get('MAX_VOIES')) || 9;
+
+    const raw      = (msg.payload || '').toString().trim();
+
+
+    // ─── Validation réponse ───────────────────────────────────────
+
+    if (!raw || !raw.includes(';')) {
+        node.warn('[sf_ewon_live] Réponse Talk2M invalide pour ' + ewon + ' : ' + raw.substring(0, 150));
+        msg._error = 'Réponse Talk2M invalide (pas de CSV)';
+        return [null, msg];
+    }
+
+
+    // ─── Fonctions utilitaires ────────────────────────────────────
+
+    const strip = s => String(s || '').replace(/"/g, '').trim();
+
+    const num   = v => {
+        if (v === undefined || v === null) return null;
+        const s = strip(String(v));
+        if (!s || s === 'Indef' || s === 'N/A' || s === '#NA') return null;
+        const n = parseFloat(s.replace(',', '.'));
+        return isNaN(n) ? null : n;
+    };
+
+
+    // ─── Parsing CSV ─────────────────────────────────────────────
+
+    const lines = raw.split(/\r?\n/).filter(l => l.trim());
+
+    if (lines.length < 2) {
+        msg._error = 'CSV trop court (' + lines.length + ' ligne(s))';
+        return [null, msg];
+    }
+
+
+    const hdr0      = strip(lines[0]).toLowerCase();
+
+    const isTagList = hdr0.includes('tagname') && hdr0.includes('value');
+
+    const tags      = {};
+
+
+    if (isTagList) {
+        // Format TagList — $dtIV$ftT : TagId;TagName;Value;AlarmStatus;...
+        const hdr   = lines[0].split(';').map(h => strip(h).toLowerCase());
+        const iName = hdr.indexOf('tagname');
+        const iVal  = hdr.findIndex(h => h === 'value' || h === 'tagvalue');
+        if (iName < 0 || iVal < 0) {
+            msg._error = 'Colonnes TagName/Value introuvables : ' + hdr.join('|');
+            return [null, msg];
+        }
+        for (let i = 1; i < lines.length; i++) {
+            const cols = lines[i].split(';').map(strip);
+            const n    = cols[iName];
+            const v    = cols[iVal];
+            if (n) tags[n.toLowerCase()] = v;
+        }
+    } else {
+        // Format tableau — $dtHT$ftC ou export FTP : "TimeStr";"hz";"V1";...
+        // On prend la DERNIÈRE ligne de données (la plus récente)
+        const hdrs    = lines[0].split(';').map(strip);
+        const lastRow = lines[lines.length - 1].split(';').map(strip);
+        hdrs.forEach((h, i) => {
+            if (h && h.toLowerCase() !== 'timestr') {
+                tags[h.toLowerCase()] = lastRow[i] !== undefined ? lastRow[i] : '';
+            }
+        });
+    }
+
+
+    // ─── Détection des voies ──────────────────────────────────────
+
+    let nbVoies = 0;
+
+    for (let y = 1; y <= MAX_V; y++) {
+        if (tags['i1_' + y] !== undefined || tags['p1_' + y] !== undefined) {
+            nbVoies = y;
+        }
+    }
+
+    if (nbVoies === 0) {
+        node.warn('[sf_ewon_live] Aucune voie détectée pour ' + ewon +
+                  ' | tags: ' + Object.keys(tags).join(', '));
+        msg._error = 'Aucune voie détectée (I1_y / P1_y absents)';
+        return [null, msg];
+    }
+
+
+    // ─── Données globales ─────────────────────────────────────────
+
+    const g = {
+        hz:          num(tags['hz']),
+        temp_valise: num(tags['temp_valise']),
+        v1:  num(tags['v1']),  v2:  num(tags['v2']),  v3:  num(tags['v3']),
+        u12: num(tags['u12']), u23: num(tags['u23']), u31: num(tags['u31']),
+        cumul_p: 0, cumul_q: 0,
+        cumul_i1: 0, cumul_i2: 0, cumul_i3: 0,
+        i_moy_tri_cumul: null
+    };
+
+
+    // ─── Voies ───────────────────────────────────────────────────
+
+    const voies = [];
+
+    for (let y = 1; y <= nbVoies; y++) {
+        const s  = String(y);
+        const i1 = num(tags['i1_' + s]) || 0;
+        const i2 = num(tags['i2_' + s]) || 0;
+        const i3 = num(tags['i3_' + s]) || 0;
+        const p1 = num(tags['p1_' + s]) || 0;
+        const p2 = num(tags['p2_' + s]) || 0;
+        const p3 = num(tags['p3_' + s]) || 0;
+        const q1 = num(tags['q1_' + s]) || 0;
+        const q2 = num(tags['q2_' + s]) || 0;
+        const q3 = num(tags['q3_' + s]) || 0;
+
+        // Valeurs dérivées (calculées ici car absentes du CSV)
+        const i_tri = (i1 !== null && i2 !== null && i3 !== null)
+                      ? parseFloat(((i1 + i2 + i3) / 3).toFixed(4)) : null;
+        const tot_p = (p1 !== null && p2 !== null && p3 !== null) ? p1 + p2 + p3 : null;
+        const tot_q = (q1 !== null && q2 !== null && q3 !== null) ? q1 + q2 + q3 : null;
+        const tot_s = (tot_p !== null && tot_q !== null)
+                      ? parseFloat(Math.sqrt(tot_p * tot_p + tot_q * tot_q).toFixed(4)) : null;
+
+        g.cumul_p  += tot_p !== null ? tot_p : 0;
+        g.cumul_q  += tot_q !== null ? tot_q : 0;
+        g.cumul_i1 += i1    !== null ? i1    : 0;
+        g.cumul_i2 += i2    !== null ? i2    : 0;
+        g.cumul_i3 += i3    !== null ? i3    : 0;
+
+        voies.push({
+            numero_voie:        y,
+            i1, i2, i3,
+            i_tri,
+            i_moy_tri:          i_tri,
+            i1_max:             num(tags['i1_max_' + s]),
+            i2_max:             num(tags['i2_max_' + s]),
+            i3_max:             num(tags['i3_max_' + s]),
+            i1_max_max:         num(tags['i1_max_max_' + s]),
+            i2_max_max:         num(tags['i2_max_max_' + s]),
+            i3_max_max:         num(tags['i3_max_max_' + s]),
+            i1_ratio:           num(tags['i1_ratio_' + s]),
+            i2_ratio:           num(tags['i2_ratio_' + s]),
+            i3_ratio:           num(tags['i3_ratio_' + s]),
+            i_moy_max:          num(tags['i_moy_max_' + s]),
+            i_moy_max_max:      num(tags['i_moy_max_max_' + s]),
+            i_moy_ratio:        num(tags['i_moy_ratio_' + s]),
+            i_desequilibre_max: num(tags['i_desequilibre_max_' + s]),
+            p1, p2, p3, q1, q2, q3,
+            tot_p, tot_q, tot_s,
+            pf:           num(tags['pf_'       + s]) || 0,
+            thd:          num(tags['thd_'      + s]) || 0,
+            unb:          num(tags['unb_'      + s]) || num(tags['i_desequilibre_max_' + s]) || 0,
+            index_ea:     num(tags['index_ea_' + s]) || 0,
+            index_er:     num(tags['index_er_' + s]) || 0,
+            index_es:     num(tags['index_es_' + s]) || 0,
+            index_deb_ea: null,
+            index_deb_er: null,
+            tot_p_max:    num(tags['p_tot_max_' + s]),
+            sum_ea:       num(tags['sum_ea_'   + s]),
+            sum_er:       num(tags['sum_er_'   + s])
+        });
+    }
+
+
+    g.i_moy_tri_cumul = parseFloat(
+        ((g.cumul_i1 + g.cumul_i2 + g.cumul_i3) / (3 * nbVoies)).toFixed(4)
+    );
+
+
+    node.status({ fill: 'green', shape: 'dot', text: ewon + ' — ' + nbVoies + '
+    voie(s)' });
+
+    msg._sampleData = {
+        nom_valise: ewon,
+        global: g,
+        voies: voies
+    };
+
+    return [msg, null];
+  outputs: 2
+  timeout: 0
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 640
+  "y": 100
+  wires:
+    - []
+    - []

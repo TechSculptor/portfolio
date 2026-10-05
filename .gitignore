@@ -2,3 +2,7 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Stage VISU Energy : code privé (propriété de VISU Energy), ne jamais publier
+/visu-energy/
+*.mkv

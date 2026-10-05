@@ -1,0 +1,136 @@
+- id: 6070eb540ad832e3
+  type: subflow
+  name: Moteur 4 – Fetch & Parse Live
+  normalizedLabel: moteur-4-fetch-parse-live
+  info: >-
+    Récupère les valeurs instantanées ($dtIV$ftT) d'un eWON via Talk2M.
+
+    Délègue la requête Talk2M (construction URL + credentials) au sous-flux
+    "Moteur 3 – Live eWON", puis parse le CSV brut renvoyé.
+
+
+    Entrée : msg.ewonName (string)
+
+    Sortie 0 : msg._sampleData = { nom_valise, global{hz,v1..u31,cumul_p..},
+    voies[{numero_voie,i1..sum_er}] }
+
+    Sortie 1 : msg._error (string) — réponse invalide ou aucune voie détectée
+
+
+    Valeurs calculées par le nœud (absentes du CSV) :
+      tot_p = P1+P2+P3, tot_q = Q1+Q2+Q3, tot_s = √(tot_p²+tot_q²)
+      i_tri = i_moy_tri = (I1+I2+I3)/3
+      cumul_p/q/i1/i2/i3 = Σ sur toutes les voies
+      i_moy_tri_cumul = (Σi1+Σi2+Σi3)/(3×nbVoies)
+  category: 🔧 Moteurs eWON
+  in:
+    - x: 40
+      "y": 100
+      wires:
+        - id: fc46e56c298be10b
+  out:
+    - x: 860
+      "y": 60
+      wires:
+        - id: b2343164c3dcd3d6
+          port: 0
+    - x: 860
+      "y": 140
+      wires:
+        - id: b2343164c3dcd3d6
+          port: 1
+  env: []
+  meta: {}
+  color: "#27ae60"
+  icon: node-red/white-globe.svg
+- id: b2343164c3dcd3d6
+  type: function
+  z: 6070eb540ad832e3
+  name: Parse CSV → _sampleData
+  func: >-
+    // ─── Config ───────────────────────────────────────────────────
+
+    const ewon = msg.ewonName || '';
+
+    const raw  = (msg.payload || '').toString().trim();
+
+
+    // ─── Validation réponse ───────────────────────────────────────
+
+    if (!raw || !raw.includes(';')) {
+        node.warn('[sf_ewon_live] Réponse Talk2M invalide pour ' + ewon + ' : ' + raw.substring(0, 150));
+        msg._error = 'Réponse Talk2M invalide (pas de CSV)';
+        return [null, msg];
+    }
+
+
+    // ─── Parsing CSV → dictionnaire de tags, puis extraction des 9 voies ───
+    // Logique partagée (global context) avec 10_COLLECTE_EWONS (même format //
+    Talk2M $dtIV$ftT que "Moteur 2 – Live eWON Batch").
+
+    const obj   = global.get('parseCsvToObj')(raw);
+
+    const voies = global.get('extractVoies')(obj);
+
+    if (voies.length === 0) {
+        node.warn('[sf_ewon_live] Aucune voie détectée pour ' + ewon +
+                  ' | tags: ' + Object.keys(obj).join(', '));
+        msg._error = 'Aucune voie détectée (I1_y / P1_y absents)';
+        return [null, msg];
+    }
+
+
+    // ─── Données globales ─────────────────────────────────────────
+
+    const g = {
+        hz:          obj['hz'] ?? null,
+        temp_valise: obj['TEMP_VALISE'] ?? null,
+        v1:  obj['V1'] ?? null,  v2:  obj['V2'] ?? null,  v3:  obj['V3'] ?? null,
+        u12: obj['U12'] ?? null, u23: obj['U23'] ?? null, u31: obj['U31'] ?? null,
+        cumul_p: 0, cumul_q: 0,
+        cumul_i1: 0, cumul_i2: 0, cumul_i3: 0,
+        i_moy_tri_cumul: null
+    };
+
+    voies.forEach(v => {
+        g.cumul_p  += v.tot_p ?? 0;
+        g.cumul_q  += v.tot_q ?? 0;
+        g.cumul_i1 += v.i1 ?? 0;
+        g.cumul_i2 += v.i2 ?? 0;
+        g.cumul_i3 += v.i3 ?? 0;
+    });
+
+    g.i_moy_tri_cumul = parseFloat(
+        ((g.cumul_i1 + g.cumul_i2 + g.cumul_i3) / (3 * voies.length)).toFixed(4)
+    );
+
+
+    node.status({ fill: 'green', shape: 'dot', text: ewon + ' — ' + voies.length
+    + ' voie(s)' });
+
+    msg._sampleData = {
+        nom_valise: ewon,
+        global: g,
+        voies: voies
+    };
+
+    return [msg, null];
+  outputs: 2
+  timeout: 0
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 640
+  "y": 100
+  wires:
+    - []
+    - []
+- id: fc46e56c298be10b
+  type: subflow:d611212af378a887
+  z: 6070eb540ad832e3
+  name: ""
+  x: 280
+  "y": 100
+  wires:
+    - - b2343164c3dcd3d6

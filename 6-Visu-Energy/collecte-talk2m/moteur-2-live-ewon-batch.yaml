@@ -1,0 +1,115 @@
+- id: 6807b3a6a218cd43
+  type: subflow
+  name: Moteur 2 – Live eWON (batch)
+  normalizedLabel: moteur-2-live-ewon-batch
+  info: |-
+    GET données instantanées Talk2M ($dtIV$ftT). Entrée msg : ewonName.
+    Retourne le CSV des valeurs courantes de tous les tags.
+  category: 🔧 Moteurs eWON
+  in:
+    - x: 60
+      "y": 80
+      wires:
+        - id: 0f74ca3cebf5b73f
+  out:
+    - x: 780
+      "y": 80
+      wires:
+        - id: 44ac4233021f4351
+          port: 0
+  env: []
+  meta: {}
+  color: "#E67E22"
+  icon: node-red/white-globe.svg
+- id: 0f74ca3cebf5b73f
+  type: function
+  z: 6807b3a6a218cd43
+  name: Build Request – live ($dtIV)
+  func: >-
+    const t2m_cfg = global.get('t2m_config') || {};
+
+    const visu_cfg = global.get('visuConfig') || {};
+
+
+    const account = t2m_cfg.t2m_account || (visu_cfg.t2m &&
+    visu_cfg.t2m.account);
+
+    const username = t2m_cfg.t2m_username || (visu_cfg.t2m &&
+    visu_cfg.t2m.username);
+
+    const devId = t2m_cfg.t2m_developer_id || (visu_cfg.t2m &&
+    visu_cfg.t2m.devId);
+
+    const devUser = t2m_cfg.device_username || (visu_cfg.device &&
+    visu_cfg.device.username);
+
+    const t2mPass = global.get('T2M_PASSWORD')
+           || (typeof process !== 'undefined' && process.env.T2M_PASSWORD)
+           || (typeof env !== 'undefined' && env.get('T2M_PASSWORD'))
+           || t2m_cfg.t2m_password
+           || (visu_cfg.t2m && visu_cfg.t2m.password);
+
+    const devPass = global.get('T2M_DEVICE_PASSWORD')
+           || (typeof process !== 'undefined' && process.env.T2M_DEVICE_PASSWORD)
+           || (typeof env !== 'undefined' && env.get('T2M_DEVICE_PASSWORD'))
+           || t2m_cfg.device_password
+           || (visu_cfg.device && visu_cfg.device.password);
+
+    if (!msg.ewonName || !account) {
+        // Ne JAMAIS faire un "return null" ici : ça tue silencieusement le message
+        // (ex: un AUTH_ERROR venu de /api/live sans ewonName) et personne en aval ne
+        // répond jamais à la requête HTTP d'origine — elle reste en attente indéfiniment.
+        // On renvoie plutôt sur la sortie 2, qui contourne l'appel http et retombe
+        // directement sur la sortie du sous-flux avec un payload vide : le parseur CSV
+        // appelant (ex: "VALISE – Fetch & Parse Live") le traite comme une réponse
+        // invalide et répond proprement (msg._error) au lieu de bloquer.
+        node.warn('[Moteur 3 – Live eWON] ewonName ou config Talk2M manquante — réponse vide renvoyée', { ewonName: msg.ewonName, hasAccount: !!account });
+        msg.payload = '';
+        return [null, msg];
+    }
+
+    const qs = '?t2maccount=' + encodeURIComponent(account)
+             + '&t2musername=' + encodeURIComponent(username)
+             + '&t2mpassword=' + encodeURIComponent(t2mPass)
+             + '&t2mdeveloperid=' + encodeURIComponent(devId)
+             + '&t2mdeviceusername=' + encodeURIComponent(devUser)
+             + '&t2mdevicepassword=' + encodeURIComponent(devPass)
+             + '&AST_Param=' + encodeURIComponent('$dtIV$ftT');
+
+
+    msg.url = global.get('TALK2M_M2WEB_BASE_URL') + '/get/' + msg.ewonName +
+    '/rcgi.bin/ParamForm' + qs;
+
+    msg.method = 'GET';
+
+    return msg;
+  outputs: 2
+  timeout: ""
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 260
+  "y": 80
+  wires:
+    - - 44ac4233021f4351
+    - []
+- id: 44ac4233021f4351
+  type: http request
+  z: 6807b3a6a218cd43
+  name: GET Live CSV
+  method: use
+  ret: txt
+  paytoqs: ignore
+  url: ""
+  tls: ""
+  persist: false
+  proxy: ""
+  insecureHTTPParser: false
+  authType: ""
+  senderr: false
+  headers: []
+  x: 540
+  "y": 80
+  wires:
+    - []

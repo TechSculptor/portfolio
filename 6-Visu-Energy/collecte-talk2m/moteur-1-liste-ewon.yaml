@@ -1,0 +1,76 @@
+- id: ea41abd0212dc1d3
+  type: subflow
+  name: Moteur 1 – Liste eWON
+  normalizedLabel: moteur-1-liste-ewon
+  info: >-
+    POST /t2mapi/getewons — Retourne la liste complète des eWON du compte
+    Talk2M.
+
+    Lit les credentials depuis global.visuConfig.t2m.
+  category: 🔧 Moteurs eWON
+  in:
+    - x: 60
+      "y": 80
+      wires:
+        - id: bada9f9ec1688dc9
+  out:
+    - x: 660
+      "y": 120
+      wires:
+        - id: 10f70a0724cde16f
+          port: 0
+  env: []
+  meta: {}
+  color: "#3FADB5"
+  icon: node-red/white-globe.svg
+- id: 10f70a0724cde16f
+  type: http request
+  z: ea41abd0212dc1d3
+  name: POST /getewons
+  method: use
+  ret: obj
+  paytoqs: ignore
+  url: ""
+  tls: ""
+  persist: false
+  proxy: ""
+  insecureHTTPParser: false
+  authType: ""
+  senderr: false
+  headers: []
+  x: 490
+  "y": 120
+  wires:
+    - []
+- id: bada9f9ec1688dc9
+  type: function
+  z: ea41abd0212dc1d3
+  name: Build Request – getewons
+  func: >-
+    const c = global.get('visuConfig').t2m;
+
+    msg.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+
+    msg.method  = 'POST';
+
+    msg.url     = global.get('TALK2M_M2WEB_BASE_URL') + '/getewons';
+
+    msg.payload = Object.entries({
+        t2maccount:     c.account,
+        t2musername:    c.username,
+        t2mpassword:    c.password || global.get('T2M_PASSWORD'),
+        t2mdeveloperid: c.devId
+    }).map(([k,v]) =>
+    encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&');
+
+    return msg;
+  outputs: 1
+  timeout: ""
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 260
+  "y": 80
+  wires:
+    - - 10f70a0724cde16f

@@ -1,0 +1,1055 @@
+- id: 91608584366dc5a3
+  type: tab
+  label: 60_IMPORT_DATA_from_EWON
+  env: []
+  normalizedLabel: 60-import-data-from-ewon
+  disabled: false
+  info: ""
+- id: 06f29c3da1b6a69e
+  type: debug
+  z: 91608584366dc5a3
+  name: debug 6
+  active: true
+  tosidebar: true
+  console: false
+  tostatus: false
+  complete: "false"
+  statusVal: ""
+  statusType: auto
+  x: 500
+  "y": 480
+  g: b358524491643f2e
+  wires: []
+- id: 0ba158e144992d84
+  type: postgresql
+  z: 91608584366dc5a3
+  name: upsert voies_parametrage
+  query: ""
+  postgreSQLConfig: d5a1386edf214a95
+  split: false
+  rowsPerMsg: 1
+  outputs: 1
+  x: 1290
+  "y": 660
+  g: b358524491643f2e
+  wires:
+    - []
+- id: 0e8886c5adf2bdfb
+  type: change
+  z: 91608584366dc5a3
+  name: params = projets
+  rules:
+    - t: set
+      p: params
+      pt: msg
+      to: >-
+        [ $exists(payload.NOM_PROJET) ? $trim($string(payload.NOM_PROJET)) :
+        null, $exists(payload.Etat_Projet) ? payload.Etat_Projet : null,
+        $exists(payload.Sequence_Projet) ? payload.Sequence_Projet : null,
+        $exists(payload.Date_Debut_Projet) ? payload.Date_Debut_Projet : null,
+        $exists(payload.Date_Fin_Projet) ? payload.Date_Fin_Projet : null ]
+      tot: jsonata
+  action: ""
+  property: ""
+  from: ""
+  to: ""
+  reg: false
+  x: 370
+  "y": 600
+  g: b358524491643f2e
+  wires:
+    - - 33290bb32a9c873e
+- id: 11309f3583c1702f
+  type: debug
+  z: 91608584366dc5a3
+  name: "DBG: sortie erreurs"
+  active: true
+  tosidebar: true
+  console: false
+  tostatus: false
+  complete: error
+  targetType: msg
+  statusVal: ""
+  statusType: auto
+  x: 430
+  "y": 960
+  g: aea09d9aee225d64
+  wires: []
+- id: 1d858b842c5b1fc4
+  type: http request
+  z: 91608584366dc5a3
+  name: 🌐 http GET tags CSV
+  method: use
+  ret: txt
+  paytoqs: ignore
+  url: ""
+  tls: ""
+  persist: true
+  proxy: ""
+  insecureHTTPParser: false
+  authType: ""
+  senderr: false
+  headers: []
+  x: 1140
+  "y": 440
+  g: b358524491643f2e
+  wires:
+    - - d76415eca7c24c35
+- id: 1e35f36c5b0b988f
+  type: change
+  z: 91608584366dc5a3
+  name: params = valises
+  rules:
+    - t: set
+      p: params
+      pt: msg
+      to: >-
+        [ $exists(ewons_list.name) ? $trim($string(ewons_list.name)) : null,
+        $exists(ewons_list.description) ? ewons_list.description : null ]
+      tot: jsonata
+  action: ""
+  property: ""
+  from: ""
+  to: ""
+  reg: false
+  x: 510
+  "y": 340
+  g: b358524491643f2e
+  wires:
+    - - 8a0de527956f2407
+- id: 2b03bb63e02287a5
+  type: debug
+  z: 91608584366dc5a3
+  name: debug 4
+  active: true
+  tosidebar: true
+  console: false
+  tostatus: false
+  complete: "false"
+  statusVal: ""
+  statusType: auto
+  x: 1020
+  "y": 520
+  g: b358524491643f2e
+  wires: []
+- id: 32eaf44b34bbad67
+  type: debug
+  z: 91608584366dc5a3
+  name: debug 5
+  active: true
+  tosidebar: true
+  console: false
+  tostatus: false
+  complete: "true"
+  targetType: full
+  statusVal: ""
+  statusType: auto
+  x: 800
+  "y": 520
+  g: b358524491643f2e
+  wires: []
+- id: 33290bb32a9c873e
+  type: function
+  z: 91608584366dc5a3
+  name: switch upsert/add mode for projets
+  func: >-
+    if (msg.topic === 'AUTH_ERROR') return msg;
+
+    // Par défaut on met à jour si le projet existe déjà.
+
+    const mode = msg.mode || "ALL";
+
+
+    // Garde-fou : sans nom de projet il n'y a rien à créer, et surtout rien à
+
+    // lier ensuite à la valise. On arrête la branche ici plutôt que d'envoyer
+
+    // une requête vouée à échouer (nom_projet est NOT NULL en base).
+
+    const nomProjet = msg.params && msg.params[0];
+
+    if (!nomProjet || String(nomProjet).trim() === "") {
+        node.status({fill:'grey', shape:'ring', text:'sans NOM_PROJET — ignoré'});
+        return null;
+    }
+
+
+    // etat_projet, sequence_ewon et date_debut_projet sont NOT NULL en base :
+
+    // à la CRÉATION on fournit une valeur de repli au lieu de laisser l'INSERT
+
+    // échouer quand le tag eWON correspondant est absent.
+
+    //
+
+    // À la MISE À JOUR en revanche, surtout ne pas réutiliser EXCLUDED : ce
+
+    // serait la valeur de repli (0 / NOW()), qui écraserait une date de début
+
+    // de projet correcte par la date du jour. On garde donc la valeur déjà en
+
+    // base quand le tag eWON n'a rien renvoyé.
+
+    const colonnes = "(nom_projet, etat_projet, sequence_ewon,
+    date_debut_projet, date_fin_projet)";
+
+    const valeurs = "($1, COALESCE($2::smallint, 0), COALESCE($3::smallint, 0),
+    COALESCE($4::timestamptz, NOW()), $5::timestamptz)";
+
+
+    if (mode === "NEW") {
+        // Mode Add : crée le projet s'il est nouveau, ignore s'il existe déjà
+        msg.query = `
+            INSERT INTO projets ${colonnes}
+            VALUES ${valeurs}
+            ON CONFLICT (nom_projet) DO NOTHING;
+        `;
+    } else {
+        // Mode Upsert : écrase les anciennes valeurs si le projet existe déjà
+        msg.query = `
+            INSERT INTO projets ${colonnes}
+            VALUES ${valeurs}
+            ON CONFLICT (nom_projet)
+            DO UPDATE SET
+                etat_projet       = COALESCE($2::smallint,     projets.etat_projet),
+                sequence_ewon   = COALESCE($3::smallint,     projets.sequence_ewon),
+                date_debut_projet = COALESCE($4::timestamptz,  projets.date_debut_projet),
+                date_fin_projet   = COALESCE($5::timestamptz,  projets.date_fin_projet);
+        `;
+    }
+
+
+    node.status({fill:'blue', shape:'ring', text: String(nomProjet)});
+
+    return msg;
+  outputs: 1
+  timeout: 0
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 620
+  "y": 600
+  g: b358524491643f2e
+  wires:
+    - - 35c35f224bd919d1
+- id: 33fd6fd91ffab94e
+  type: split
+  z: 91608584366dc5a3
+  name: ""
+  splt: \n
+  spltType: str
+  arraySplt: 1
+  arraySpltType: len
+  stream: false
+  addname: ""
+  property: payload
+  x: 470
+  "y": 660
+  g: b358524491643f2e
+  wires:
+    - - 7302b23f1068ae35
+- id: 35c35f224bd919d1
+  type: postgresql
+  z: 91608584366dc5a3
+  name: upsert projets
+  query: ""
+  postgreSQLConfig: d5a1386edf214a95
+  split: false
+  rowsPerMsg: 1
+  outputs: 1
+  x: 860
+  "y": 600
+  g: b358524491643f2e
+  wires:
+    - - 83f77f6ec972059e
+      - 2b03bb63e02287a5
+- id: 4415d74a8fa832e7
+  type: split
+  z: 91608584366dc5a3
+  name: ""
+  splt: \n
+  spltType: str
+  arraySplt: 1
+  arraySpltType: len
+  stream: false
+  addname: ""
+  property: payload
+  x: 470
+  "y": 440
+  g: b358524491643f2e
+  wires:
+    - - 66fa78bfa631bdb1
+- id: 4fee30e3fe6c37a4
+  type: catch
+  z: 91608584366dc5a3
+  name: Attraper erreurs d'importations
+  scope: null
+  uncaught: false
+  x: 190
+  "y": 960
+  g: aea09d9aee225d64
+  wires:
+    - - 11309f3583c1702f
+- id: 66fa78bfa631bdb1
+  type: change
+  z: 91608584366dc5a3
+  name: set request
+  rules:
+    - t: set
+      p: request
+      pt: msg
+      to: payload
+      tot: msg
+  action: ""
+  property: ""
+  from: ""
+  to: ""
+  reg: false
+  x: 610
+  "y": 440
+  g: b358524491643f2e
+  wires:
+    - - f70474029074478b
+- id: 6a6ea10f15ced0ac
+  type: change
+  z: 91608584366dc5a3
+  name: params =[]
+  rules:
+    - t: set
+      p: params
+      pt: msg
+      to: "[]"
+      tot: json
+    - t: delete
+      p: query
+      pt: msg
+  action: ""
+  property: ""
+  from: ""
+  to: ""
+  reg: false
+  x: 230
+  "y": 400
+  g: b358524491643f2e
+  wires:
+    - - 820241c2531b4f65
+- id: 7302b23f1068ae35
+  type: change
+  z: 91608584366dc5a3
+  name: params = voie_parametrage
+  rules:
+    - t: set
+      p: params
+      pt: msg
+      to: >-
+        [ $exists(payload.valise_id) ? payload.valise_id : null,
+        $exists(payload.numero_voie) ? payload.numero_voie : null,
+        $exists(payload.nom_voie) ? payload.nom_voie : null,
+        $exists(payload.etat_voie) ? payload.etat_voie : false,
+        $exists(payload.seuil_haut) ? payload.seuil_haut : null,
+        $exists(payload.seuil_bas) ? payload.seuil_bas : null,
+        $exists(payload.ct_ratio) ? payload.ct_ratio : null,
+        $exists(payload.val_tc) ? payload.val_tc : null,
+        $exists(payload.tc_cumul) ? payload.tc_cumul : null ]
+      tot: jsonata
+  action: ""
+  property: ""
+  from: ""
+  to: ""
+  reg: false
+  x: 660
+  "y": 660
+  g: b358524491643f2e
+  wires:
+    - - ad1c13738ddc1ac5
+- id: 8190abda44425b07
+  type: function
+  z: 91608584366dc5a3
+  name: 🔎 extract_ewon_names
+  func: >-
+    //debug1
+
+    if (!msg.payload || !msg.payload.ewons) {
+        node.status({ fill: 'red', shape: 'dot', text: 'payload.ewons absent' });
+        node.error('[extract] msg.payload.ewons absent');
+        return null;
+    }
+
+    //debug1
+
+
+    var ewons = msg.payload.ewons;
+
+    var names = [];
+
+    var statuts = {};
+
+    var ewons_list =[];
+
+
+    for (var i = 0; i < ewons.length; i++) {
+        var e = ewons[i];
+        if (e.name) { 
+            names.push(e.name); 
+            statuts[e.name] = e.status || 'unknown';
+            ewons_list.push({"name": e.name, "description": e.description});
+
+        }
+    }
+
+
+    names.sort();
+
+
+    var onlineNames = names.filter(function (n) { 
+        return statuts[n] === 'online';
+    });
+
+
+
+    msg.ewons_list = ewons_list;
+
+    msg.names = names;
+
+    msg.onlineNames = onlineNames;
+
+
+    node.status({ fill: 'green', shape: 'dot', text: names.length + ' Talk2M ('
+    + onlineNames.length + ' on)' });
+
+    return msg;
+  outputs: 1
+  timeout: ""
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 690
+  "y": 260
+  g: b358524491643f2e
+  wires:
+    - - e5ab46b80c88177f
+- id: 820241c2531b4f65
+  type: postgresql
+  z: 91608584366dc5a3
+  name: SELECT disponibles
+  query: |-
+    SELECT 
+        v.id AS valise_id, 
+        v.projet_id, 
+        v.nom_valise
+    FROM valises v
+  postgreSQLConfig: d5a1386edf214a95
+  split: false
+  rowsPerMsg: 1
+  outputs: 1
+  x: 300
+  "y": 440
+  g: b358524491643f2e
+  wires:
+    - - 4415d74a8fa832e7
+- id: 83f77f6ec972059e
+  type: change
+  z: 91608584366dc5a3
+  name: params = [nom_projet, nom_valise]
+  rules:
+    - t: set
+      p: params
+      pt: msg
+      to: >-
+        [ $exists(request.NOM_PROJET) ? $trim($string(request.NOM_PROJET)) :
+        null, $exists(request.nom_valise_encode) ? request.nom_valise_encode :
+        null ]
+      tot: jsonata
+    - t: delete
+      p: query
+      pt: msg
+  action: ""
+  property: ""
+  from: ""
+  to: ""
+  reg: false
+  x: 1100
+  "y": 600
+  g: b358524491643f2e
+  wires:
+    - - ef8d1a221823af0d
+- id: 8a0de527956f2407
+  type: function
+  z: 91608584366dc5a3
+  name: switch upsert/add mode for valises
+  func: |-
+    if (msg.topic === 'AUTH_ERROR') return msg;
+    // Par défaut on met à jour si la valise existe déjà.
+    const mode = msg.mode || "ALL";
+
+    // Garde-fou : sans nom d'eWON il n'y a pas de valise à créer.
+    const nomValise = msg.params && msg.params[0];
+    if (!nomValise || String(nomValise).trim() === "") {
+        node.status({fill:'grey', shape:'ring', text:'sans nom eWON — ignoré'});
+        return null;
+    }
+
+    if (mode === "NEW") {
+        // Mode Add : ajoute uniquement les nouvelles, ignore les existantes
+        msg.query = `
+            INSERT INTO valises (nom_valise, description)
+            VALUES ($1, $2)
+            ON CONFLICT (nom_valise) DO NOTHING;
+        `;
+    } else {
+        // Mode Upsert : met à jour la description si la valise existe déjà
+        msg.query = `
+            INSERT INTO valises (nom_valise, description)
+            VALUES ($1, $2)
+            ON CONFLICT (nom_valise)
+            DO UPDATE SET description = COALESCE(EXCLUDED.description, valises.description);
+        `;
+    }
+
+    node.status({fill:'blue', shape:'ring', text: String(nomValise)});
+    return msg;
+  outputs: 1
+  timeout: 0
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 780
+  "y": 340
+  g: b358524491643f2e
+  wires:
+    - - 9dd13247c5402300
+- id: 9dd13247c5402300
+  type: postgresql
+  z: 91608584366dc5a3
+  name: upsert valises
+  query: ""
+  postgreSQLConfig: d5a1386edf214a95
+  split: false
+  rowsPerMsg: 1
+  outputs: 1
+  x: 1040
+  "y": 340
+  g: b358524491643f2e
+  wires:
+    - - 6a6ea10f15ced0ac
+- id: aa5b6e18a97bf18b
+  type: inject
+  z: 91608584366dc5a3
+  name: Add NEW
+  props:
+    - p: mode
+      v: NEW
+      vt: str
+  repeat: ""
+  crontab: ""
+  once: false
+  onceDelay: 0.1
+  topic: ""
+  x: 180
+  "y": 200
+  g: b358524491643f2e
+  wires:
+    - - eab123e335fa8ad1
+- id: ad1c13738ddc1ac5
+  type: function
+  z: 91608584366dc5a3
+  name: switch upsert/add mode for voie_parametrage
+  func: |-
+    if (msg.topic === 'AUTH_ERROR') return msg;
+    let mode = msg.mode || "ALL";
+
+    if (mode === "ALL") {
+        msg.query = `
+            INSERT INTO voies_parametrage (
+                valise_id, numero_voie, nom_voie, etat_voie, 
+                seuil_haut, seuil_bas, ct_ratio, val_tc, tc_cumul, maj_a
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+            ON CONFLICT (valise_id, numero_voie)
+            DO UPDATE SET
+                nom_voie   = COALESCE(EXCLUDED.nom_voie,   voies_parametrage.nom_voie),
+                etat_voie  = COALESCE(EXCLUDED.etat_voie,  voies_parametrage.etat_voie),
+                seuil_haut = COALESCE(EXCLUDED.seuil_haut, voies_parametrage.seuil_haut),
+                seuil_bas  = COALESCE(EXCLUDED.seuil_bas,  voies_parametrage.seuil_bas),
+                ct_ratio   = COALESCE(EXCLUDED.ct_ratio,   voies_parametrage.ct_ratio),
+                val_tc     = COALESCE(EXCLUDED.val_tc,     voies_parametrage.val_tc),
+                tc_cumul   = COALESCE(EXCLUDED.tc_cumul,   voies_parametrage.tc_cumul),
+                maj_a      = NOW();
+        `;
+    } else if (mode === "NEW") {
+        msg.query = `
+            INSERT INTO voies_parametrage (
+                valise_id, numero_voie, nom_voie, etat_voie, 
+                seuil_haut, seuil_bas, ct_ratio, val_tc, tc_cumul, maj_a
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+            ON CONFLICT (valise_id, numero_voie) DO NOTHING;
+        `;
+    }
+
+    return msg;
+  outputs: 1
+  timeout: 0
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 980
+  "y": 660
+  g: b358524491643f2e
+  wires:
+    - - 0ba158e144992d84
+- id: adm_sync_moteur1
+  type: subflow:ea41abd0212dc1d3
+  z: 91608584366dc5a3
+  name: ""
+  x: 790
+  "y": 800
+  g: grp_60import_admin_sync
+  wires:
+    - - lo_60import_to_30db_data
+      - dbg_talk2m_getewons_001
+- id: aea09d9aee225d64
+  type: group
+  z: 91608584366dc5a3
+  name: Debug — Importation données
+  x: 44
+  "y": 919
+  style:
+    fill: "#f2f2f2"
+    fill-opacity: "0.5"
+    stroke: "#aaaaaa"
+    label: true
+    color: "#555555"
+  nodes:
+    - 11309f3583c1702f
+    - 4fee30e3fe6c37a4
+- id: b27e063699ac4b07
+  type: http request
+  z: 91608584366dc5a3
+  name: 🌐 http POST getewons
+  method: POST
+  ret: obj
+  paytoqs: ignore
+  url: ""
+  tls: ""
+  persist: true
+  proxy: ""
+  insecureHTTPParser: false
+  authType: ""
+  senderr: false
+  headers: []
+  x: 410
+  "y": 260
+  g: b358524491643f2e
+  wires:
+    - - 8190abda44425b07
+- id: b358524491643f2e
+  type: group
+  z: 91608584366dc5a3
+  name: Import — Fetch et UPSERT depuis Talk2M
+  x: 34
+  "y": 79
+  style:
+    fill: "#ead1dc"
+    fill-opacity: "0.5"
+    stroke: "#7030a0"
+    stroke-opacity: "1"
+    label: true
+    color: "#000000"
+  nodes:
+    - 06f29c3da1b6a69e
+    - 0ba158e144992d84
+    - 0e8886c5adf2bdfb
+    - 1d858b842c5b1fc4
+    - 1e35f36c5b0b988f
+    - 2b03bb63e02287a5
+    - 32eaf44b34bbad67
+    - 33290bb32a9c873e
+    - 33fd6fd91ffab94e
+    - 35c35f224bd919d1
+    - 4415d74a8fa832e7
+    - 66fa78bfa631bdb1
+    - 6a6ea10f15ced0ac
+    - 7302b23f1068ae35
+    - 8190abda44425b07
+    - 820241c2531b4f65
+    - 83f77f6ec972059e
+    - 8a0de527956f2407
+    - 9dd13247c5402300
+    - aa5b6e18a97bf18b
+    - ad1c13738ddc1ac5
+    - b27e063699ac4b07
+    - b377e4852756d5fa
+    - ccb802c80e882c35
+    - d5514db7a231ec90
+    - d76415eca7c24c35
+    - dbg_60import_valise_projet
+    - e5ab46b80c88177f
+    - eab123e335fa8ad1
+    - ef8d1a221823af0d
+    - f4cf38b0f29c22ba
+    - f70474029074478b
+    - fe3c66fbba8ecc51
+- id: b377e4852756d5fa
+  type: change
+  z: 91608584366dc5a3
+  name: Create voies list for parametrage
+  rules:
+    - t: set
+      p: payload
+      pt: msg
+      to: "(\t  $d := payload;\t  \t  /* Safe lookup function */\t  $get := function($key) {\t    $exists($lookup($d, $key)) ? $lookup($d, $key) : null\t  };\t  \t  /* Loop for channels 1 through 9 */\t  [1..9].(\t    $c := $string($);\t    {\t      \"valise_id\": $d.valise_id,\t      \"numero_voie\": $,\t      \"nom_voie\": $get(\"NOM_TC\" & $c),\t      \"etat_voie\": (\t          $v := $get(\"TC\" & $c & \"_ACTIF\");\t          $v = \"1\" or $v = 1 or $lowercase($string($v)) = \"true\" ? true : false\t      ),\t      \"ct_ratio\": $get(\"CT_Ratio_\" & $c),\t      \"val_tc\": $get(\"VAL_TC\" & $c),\t      \"seuil_haut\": $get(\"VAL_HIGH_TC\" & $c),\t      \"seuil_bas\": $get(\"VAL_LOW_TC\" & $c),\t      \"tc_cumul\": $get(\"TC\" & $c & \"_CUMUL\")\t    }\t  )\t)"
+      tot: jsonata
+  action: ""
+  property: ""
+  from: ""
+  to: ""
+  reg: false
+  x: 270
+  "y": 660
+  g: b358524491643f2e
+  wires:
+    - - 33fd6fd91ffab94e
+- id: ccb802c80e882c35
+  type: comment
+  z: 91608584366dc5a3
+  name: Import manuel data from eWON into DB
+  x: 210
+  "y": 120
+  g: b358524491643f2e
+  wires: []
+- id: cmt_60import_sync_role
+  type: comment
+  z: 91608584366dc5a3
+  name: >-
+    ENTREE: <- 30_DB Router (ADMIN_SYNC_VALISES) | ACTION: Moteur 1 - fetch
+    liste eWON depuis Talk2M | SORTIE: -> 30_DB (données pour UPSERT SQL)
+  x: 590
+  "y": 760
+  g: grp_60import_admin_sync
+  wires: []
+- id: d5514db7a231ec90
+  type: change
+  z: 91608584366dc5a3
+  name: Array into one object
+  rules:
+    - t: set
+      p: ts
+      pt: msg
+      to: iso
+      tot: date
+    - t: set
+      p: payload
+      pt: msg
+      to: >-
+        $merge([     { "ts": ts, "valise_id":request.valise_id,
+        "nom_valise_encode":request.nom_valise, 
+        "disponibilite":request.disponibilite},     $merge(payload[TagName].{
+        TagName: Value }) ])
+      tot: jsonata
+    - t: set
+      p: payload.Date_Debut_Projet
+      pt: msg
+      to: >-
+        payload.Date_Debut_Projet != "" ? ($substring(payload.Date_Debut_Projet,
+        6, 4) & "-" & $substring(payload.Date_Debut_Projet, 3, 2) & "-" &
+        $substring(payload.Date_Debut_Projet, 0, 2) & "T" &
+        $substring(payload.Date_Debut_Projet, 11, 8) & ".000Z") : null
+      tot: jsonata
+    - t: set
+      p: payload.Date_Fin_Projet
+      pt: msg
+      to: >-
+        payload.Date_Fin_Projet != "" ? ($substring(payload.Date_Fin_Projet, 6,
+        4) & "-" & $substring(payload.Date_Fin_Projet, 3, 2) & "-" &
+        $substring(payload.Date_Fin_Projet, 0, 2) & "T" &
+        $substring(payload.Date_Fin_Projet, 11, 8) & ".000Z") : null
+      tot: jsonata
+    - t: set
+      p: request
+      pt: msg
+      to: payload
+      tot: msg
+  action: ""
+  property: ""
+  from: ""
+  to: ""
+  reg: false
+  x: 600
+  "y": 520
+  g: b358524491643f2e
+  wires:
+    - - 0e8886c5adf2bdfb
+      - b377e4852756d5fa
+      - 32eaf44b34bbad67
+- id: d76415eca7c24c35
+  type: csv
+  z: 91608584366dc5a3
+  name: csv into array of object
+  spec: rfc
+  sep: ;
+  hdrin: true
+  hdrout: none
+  multi: mult
+  ret: \r\n
+  temp: ""
+  skip: "0"
+  strings: true
+  include_empty_strings: true
+  include_null_values: true
+  x: 340
+  "y": 520
+  g: b358524491643f2e
+  wires:
+    - - d5514db7a231ec90
+      - 06f29c3da1b6a69e
+- id: dbg_60import_valise_projet
+  type: debug
+  z: 91608584366dc5a3
+  name: "DEBUG : lien valise → projet"
+  active: true
+  tosidebar: true
+  console: false
+  tostatus: true
+  complete: payload
+  targetType: msg
+  statusVal: payload
+  statusType: auto
+  x: 1620
+  "y": 600
+  g: b358524491643f2e
+  wires: []
+- id: dbg_talk2m_getewons_001
+  type: debug
+  z: 91608584366dc5a3
+  name: "DEBUG : réponse brute Talk2M getewons"
+  active: true
+  tosidebar: true
+  console: false
+  tostatus: false
+  complete: "true"
+  targetType: full
+  statusVal: ""
+  statusType: auto
+  x: 810
+  "y": 860
+  g: grp_60import_admin_sync
+  wires: []
+- id: e5ab46b80c88177f
+  type: split
+  z: 91608584366dc5a3
+  name: ""
+  splt: \n
+  spltType: str
+  arraySplt: 1
+  arraySpltType: len
+  stream: false
+  addname: ""
+  property: ewons_list
+  x: 350
+  "y": 340
+  g: b358524491643f2e
+  wires:
+    - - 1e35f36c5b0b988f
+- id: eab123e335fa8ad1
+  type: function
+  z: 91608584366dc5a3
+  name: 🔍 check_config
+  func: |-
+    var config = global.get('t2m_config');
+    if (!config || !config.t2m_account) {
+        node.status({fill:'red', shape:'dot', text:'t2m_config absent'});
+        return null;
+    }
+    node.status({fill:'green', shape:'dot', text:'OK'});
+    return msg;
+  outputs: 1
+  timeout: ""
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 380
+  "y": 200
+  g: b358524491643f2e
+  wires:
+    - - fe3c66fbba8ecc51
+- id: ef8d1a221823af0d
+  type: postgresql
+  z: 91608584366dc5a3
+  name: lien valise → projet
+  query: |-
+    -- Rattache la valise au projet lu sur l'eWON.
+    -- $1 = nom du projet, $2 = nom de la valise (nom eWON).
+    -- Si $1 ou $2 est NULL, aucune ligne ne correspond : pas d'erreur,
+    -- simplement aucune mise à jour.
+    UPDATE valises v
+       SET projet_id = p.id
+      FROM projets p
+     WHERE p.nom_projet = $1
+       AND v.nom_valise = $2
+       AND v.projet_id IS DISTINCT FROM p.id
+    RETURNING v.id, v.nom_valise, v.projet_id, p.nom_projet;
+  postgreSQLConfig: d5a1386edf214a95
+  split: false
+  rowsPerMsg: 1
+  outputs: 1
+  x: 1360
+  "y": 600
+  g: b358524491643f2e
+  wires:
+    - - dbg_60import_valise_projet
+- id: f4cf38b0f29c22ba
+  type: inject
+  z: 91608584366dc5a3
+  name: Update ALL
+  props:
+    - p: mode
+      v: ALL
+      vt: str
+  repeat: ""
+  crontab: ""
+  once: false
+  onceDelay: 0.1
+  topic: ""
+  x: 190
+  "y": 160
+  g: b358524491643f2e
+  wires:
+    - - eab123e335fa8ad1
+- id: f70474029074478b
+  type: function
+  z: 91608584366dc5a3
+  name: 📡 build_tags_request
+  func: >-
+    var cfg = global.get('t2m_config');
+
+
+    var ewon_name = msg.request.nom_valise;
+
+
+    //debug1
+
+    if (!ewon_name) {
+        node.status({fill:'red', shape:'dot', text:'ewon_name absent'});
+        return null;
+    }
+
+    //debug1
+
+
+    //prepare the request
+
+    var params = [
+        't2maccount=' + encodeURIComponent(cfg.t2m_account),
+        't2musername=' + encodeURIComponent(cfg.t2m_username),
+        't2mpassword=' + encodeURIComponent(global.get('T2M_PASSWORD') || cfg.t2m_password),
+        't2mdeveloperid=' + encodeURIComponent(cfg.t2m_developer_id),
+        't2mdeviceusername=' + encodeURIComponent(cfg.device_username),
+        't2mdevicepassword=' + encodeURIComponent(global.get('T2M_DEVICE_PASSWORD') || cfg.device_password),
+        'AST_Param=' + encodeURIComponent('$dtIV$ftT')
+    ].join('&');
+
+    msg.method = 'GET';
+
+    msg.url = global.get('TALK2M_M2WEB_BASE_URL') + '/get/' +
+    encodeURIComponent(ewon_name) + '/rcgi.bin/ParamForm?' + params;
+
+    msg.payload = null;
+
+    msg.requestTimeout = 15000;
+
+
+    node.status({fill:'blue', shape:'ring', text: ewon_name});
+
+
+    return msg;
+  outputs: 1
+  timeout: ""
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 920
+  "y": 440
+  g: b358524491643f2e
+  wires:
+    - - 1d858b842c5b1fc4
+- id: fdd1ad181e25befa
+  type: comment
+  z: 91608584366dc5a3
+  name: "=== 60_IMPORT_DATA_from_EWON ==="
+  x: 180
+  "y": 40
+  wires: []
+- id: fe3c66fbba8ecc51
+  type: function
+  z: 91608584366dc5a3
+  name: 📋 build_ewons_request
+  func: |-
+    var cfg = global.get('t2m_config');
+    //msg.method = 'POST';
+    msg.url = global.get('TALK2M_M2WEB_BASE_URL') + '/getewons';
+    msg.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    msg.payload = 't2maccount=' + encodeURIComponent(cfg.t2m_account)
+        + '&t2musername=' + encodeURIComponent(cfg.t2m_username)
+        + '&t2mpassword=' + encodeURIComponent(global.get('T2M_PASSWORD') || cfg.t2m_password)
+        + '&t2mdeveloperid=' + encodeURIComponent(cfg.t2m_developer_id);
+    msg.requestTimeout = 15000;
+    node.status({fill:'blue', shape:'ring', text:'POST getewons'});
+    return msg;
+  outputs: 1
+  timeout: ""
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 610
+  "y": 200
+  g: b358524491643f2e
+  wires:
+    - - b27e063699ac4b07
+- id: grp_60import_admin_sync
+  type: group
+  z: 91608584366dc5a3
+  name: Synchronisation — Déclencheur admin
+  x: 34
+  "y": 719
+  style:
+    fill: "#ead1dc"
+    fill-opacity: "0.5"
+    stroke: "#7030a0"
+    stroke-opacity: "1"
+    label: true
+    color: "#000000"
+  nodes:
+    - adm_sync_moteur1
+    - cmt_60import_sync_role
+    - dbg_talk2m_getewons_001
+    - li_60import_admin_sync
+    - lo_60import_to_30db_data
+- id: li_60import_admin_sync
+  type: link in
+  z: 91608584366dc5a3
+  name: ← 30_DB (déclencheur admin sync)
+  links: []
+  x: 490
+  "y": 800
+  g: grp_60import_admin_sync
+  wires:
+    - - adm_sync_moteur1
+- id: lo_60import_to_30db_data
+  type: link out
+  z: 91608584366dc5a3
+  name: → 30_DB (données ewon pour UPSERT)
+  mode: link
+  links:
+    - li_60import_valises_upsert
+  x: 1090
+  "y": 800
+  g: grp_60import_admin_sync
+  wires: []

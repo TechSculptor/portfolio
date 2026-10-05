@@ -1,0 +1,114 @@
+- id: 1ea7efdffbcef9e5
+  type: subflow
+  name: Moteur 2 – Historique eWON
+  normalizedLabel: moteur-2-historique-ewon
+  info: >-
+    GET historique Talk2M ($dtHT$ftT). Entrées msg : ewonName, dateFrom
+    (YYYYMMDDHHmmss), dateTo.
+
+    Convertit les dates au format Talk2M DDMMYYYY_HHmmss ($st/$et).
+  category: 🔧 Moteurs eWON
+  in:
+    - x: 60
+      "y": 80
+      wires:
+        - id: e1e9b186d3a52e0b
+  out:
+    - x: 580
+      "y": 80
+      wires:
+        - id: dd511354158e17a1
+          port: 0
+  env: []
+  meta: {}
+  color: "#27AE60"
+  icon: node-red/white-globe.svg
+- id: dd511354158e17a1
+  type: http request
+  z: 1ea7efdffbcef9e5
+  name: GET History CSV
+  method: use
+  ret: txt
+  paytoqs: ignore
+  url: ""
+  tls: ""
+  persist: false
+  proxy: ""
+  insecureHTTPParser: false
+  authType: ""
+  senderr: false
+  headers: []
+  x: 450
+  "y": 140
+  wires:
+    - []
+- id: e1e9b186d3a52e0b
+  type: function
+  z: 1ea7efdffbcef9e5
+  name: Build Request – historique
+  func: >-
+    // 1. Sécurisation du format de date
+
+    const conv = d => {
+        if (!d || typeof d !== 'string' || d.length < 8) return "01012026_000000";
+        return d.substring(6,8)+d.substring(4,6)+d.substring(0,4)+'_'+d.substring(8);
+    };
+
+
+    // 2. Récupération de la configuration globale
+
+    const cfg = global.get('t2m_config');
+
+    if (!cfg || !cfg.t2m_account) {
+        node.error("Erreur : 't2m_config' introuvable !");
+        return null;
+    }
+
+    const t2m  = { account: cfg.t2m_account, username: cfg.t2m_username,
+                   password: cfg.t2m_password || global.get('T2M_PASSWORD'), devId: cfg.t2m_developer_id };
+    const dev  = { username: cfg.device_username, password: cfg.device_password
+    || global.get('T2M_DEVICE_PASSWORD') };
+
+    const ewon = msg.ewonName || "VALISE-009";
+
+
+    // Sécurité : Si la configuration globale n'existe pas, on lève une alerte
+    claire
+
+    if (!cfg || !cfg.t2m || !cfg.device) {
+        node.error("Erreur : La variable globale 'visuConfig' est introuvable ou mal configurée !");
+        return null;
+    }
+
+
+    // 3. Construction des paramètres
+
+    const ast  = '$dtHT$ftT$st'+conv(msg.dateFrom)+'$et'+conv(msg.dateTo);
+
+    const qs   = '?t2maccount='        + encodeURIComponent(t2m.account || "")
+               + '&t2musername='       + encodeURIComponent(t2m.username || "")
+               + '&t2mpassword='       + encodeURIComponent(t2m.password || "")
+               + '&t2mdeveloperid='    + encodeURIComponent(t2m.devId || "")
+               + '&t2mdeviceusername=' + encodeURIComponent(dev.username || "")
+               + '&t2mdevicepassword=' + encodeURIComponent(dev.password || "")
+               + '&AST_Param='         + encodeURIComponent(ast);
+
+    // 4. Assignation de l'URL finale
+
+    msg.url    = 'https://m2web.talk2m.com/t2mapi/get/' + ewon +
+    '/rcgi.bin/ParamForm' + qs;
+
+    msg.method = 'GET';
+
+
+    return msg;
+  outputs: 1
+  timeout: ""
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 250
+  "y": 80
+  wires:
+    - - dd511354158e17a1

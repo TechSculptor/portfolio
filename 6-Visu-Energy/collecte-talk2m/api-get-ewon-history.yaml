@@ -1,0 +1,122 @@
+- id: f743dfa37eadf79c
+  type: subflow
+  name: api_get_ewon_history
+  normalizedLabel: api-get-ewon-history
+  info: >-
+    Extrait les données archivées sur une période précise en permettant de
+    filtrer par groupes de machines.
+
+
+    Entrées requises :
+
+    - msg.t2mUsername
+
+    - msg.t2mPassword
+
+    - msg.ewonName
+
+    - msg.dateFrom  (format YYYYMMDDHHMMSS)
+
+    - msg.dateTo    (format YYYYMMDDHHMMSS)
+
+    - msg.groupName (optionnel – filtre par groupe)
+  category: Ewon API
+  in:
+    - x: 60
+      "y": 80
+      wires:
+        - id: 7d2d889bcd325cfd
+  out:
+    - x: 740
+      "y": 80
+      wires:
+        - id: 9e10a8ee6b60c0ae
+          port: 0
+  env:
+    - name: T2M_ACCOUNT
+      type: str
+      value: ""
+    - name: T2M_DEVID
+      type: str
+      value: ""
+    - name: T2M_DEVICE_USER
+      type: str
+      value: ""
+    - name: T2M_DEVICE_PASS
+      type: str
+      value: ""
+  meta: {}
+  color: "#27AE60"
+  icon: node-red/white-globe.svg
+- id: 7d2d889bcd325cfd
+  type: function
+  z: f743dfa37eadf79c
+  name: Build Request – History
+  func: >-
+    const account    = env.get('T2M_ACCOUNT');
+
+    const devId      = env.get('T2M_DEVID');
+
+    const deviceUser = env.get('T2M_DEVICE_USER');
+
+    const devicePass = env.get('T2M_DEVICE_PASS');
+
+
+    msg.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+
+    msg.method  = 'POST';
+
+    msg.url     =
+    `https://m2web.talk2m.com/t2mapi/get/${msg.ewonName}/rcgi.bin/ParamForm`;
+
+
+    // Utilisation de $gn au lieu de $grp pour Talk2M
+
+    const group = msg.groupName ? `$gn${msg.groupName}` : '';
+
+
+    msg.payload = {
+        t2maccount:         account,
+        t2musername:        msg.t2mUsername,
+        t2mpassword:        msg.t2mPassword,
+        t2mdeveloperid:     devId,
+        t2mdeviceusername:  deviceUser,
+        t2mdevicepassword:  devicePass,
+        AST_Param: `$dtHL$ftT$st${msg.dateFrom}$et${msg.dateTo}${group}`
+    };
+
+
+    // On laisse 3 minutes à l'eWON pour compiler son CSV interne
+
+    msg.timeout = 180000;
+
+    return msg;
+  outputs: 1
+  timeout: ""
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 280
+  "y": 80
+  wires:
+    - - 9e10a8ee6b60c0ae
+- id: 9e10a8ee6b60c0ae
+  type: http request
+  z: f743dfa37eadf79c
+  name: GET History
+  method: use
+  ret: txt
+  paytoqs: ignore
+  url: ""
+  tls: ""
+  persist: false
+  proxy: ""
+  insecureHTTPParser: false
+  authType: ""
+  senderr: false
+  headers: []
+  x: 550
+  "y": 80
+  wires:
+    - []

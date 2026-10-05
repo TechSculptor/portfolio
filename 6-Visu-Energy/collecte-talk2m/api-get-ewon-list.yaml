@@ -1,0 +1,77 @@
+- id: 1d7fa0a189a5bdf7
+  type: subflow
+  name: api_get_ewon_list
+  normalizedLabel: api-get-ewon-list
+  info: >-
+    Interroge les serveurs Talk2M pour lister toutes les passerelles eWON liées
+    au compte et vérifier leur état de connexion.
+
+
+    Entrées requises :
+
+    - msg.t2mUsername
+
+    - msg.t2mPassword
+  category: Ewon API
+  in:
+    - x: 60
+      "y": 80
+      wires:
+        - id: 0fe4b9cf6c772b2e
+  out:
+    - x: 780
+      "y": 80
+      wires:
+        - id: 5f85486937a5f5d0
+          port: 0
+  env:
+    - name: T2M_ACCOUNT
+      type: str
+      value: ""
+    - name: T2M_DEVID
+      type: str
+      value: ""
+  color: "#3FADB5"
+  icon: node-red/white-globe.svg
+- id: 0fe4b9cf6c772b2e
+  type: function
+  z: 1d7fa0a189a5bdf7
+  name: Build Request – getewons
+  func: |-
+    const account = env.get('T2M_ACCOUNT');
+    const devId   = env.get('T2M_DEVID');
+
+    msg.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    msg.method  = 'POST';
+    msg.url     = 'https://m2web.talk2m.com/t2mapi/getewons';
+
+    msg.payload = {
+        t2maccount:      account,
+        t2musername:     msg.t2mUsername,
+        t2mpassword:     msg.t2mPassword,
+        t2mdeveloperid:  devId
+    };
+
+    return msg;
+  outputs: 1
+  timeout: ""
+  noerr: 0
+  initialize: ""
+  finalize: ""
+  libs: []
+  x: 280
+  "y": 80
+  wires:
+    - - 5f85486937a5f5d0
+- id: 5f85486937a5f5d0
+  type: http request
+  z: 1d7fa0a189a5bdf7
+  name: GET /getewons
+  method: use
+  ret: obj
+  paytoqs: ignore
+  url: ""
+  x: 540
+  "y": 80
+  wires:
+    - []

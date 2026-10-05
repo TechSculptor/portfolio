@@ -1,0 +1,94 @@
+- id: 0e0230de6f58e653
+  type: subflow
+  name: api_get_tag_list
+  normalizedLabel: api-get-tag-list
+  info: >-
+    Télécharge la configuration technique complète de la passerelle pour
+    identifier la nature de chaque donnée enregistrée.
+
+
+    Entrées requises :
+
+    - msg.t2mUsername
+
+    - msg.t2mPassword
+
+    - msg.ewonName
+  category: Ewon API
+  in:
+    - x: 60
+      "y": 80
+      wires:
+        - id: f1668ca35d56c80d
+  out:
+    - x: 780
+      "y": 80
+      wires:
+        - id: 5611c525d2150511
+          port: 0
+  env:
+    - name: T2M_ACCOUNT
+      type: str
+      value: ""
+    - name: T2M_DEVID
+      type: str
+      value: ""
+    - name: T2M_DEVICE_USER
+      type: str
+      value: ""
+    - name: T2M_DEVICE_PASS
+      type: str
+      value: ""
+  color: "#9B59B6"
+  icon: node-red/white-globe.svg
+- id: 5611c525d2150511
+  type: http request
+  z: 0e0230de6f58e653
+  name: GET Tag List
+  method: use
+  ret: txt
+  paytoqs: ignore
+  url: ""
+  x: 540
+  "y": 80
+  wires:
+    - []
+- id: f1668ca35d56c80d
+  type: function
+  z: 0e0230de6f58e653
+  name: Build Request – Tag Config
+  func: >-
+    const account    = env.get('T2M_ACCOUNT');
+
+    const devId      = env.get('T2M_DEVID');
+
+    const deviceUser = env.get('T2M_DEVICE_USER');
+
+    const devicePass = env.get('T2M_DEVICE_PASS');
+
+
+    msg.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+
+    msg.method  = 'POST';
+
+    msg.url     =
+    `https://m2web.talk2m.com/t2mapi/get/${msg.ewonName}/rcgi.bin/ParamForm`;
+
+
+    msg.payload = {
+        t2maccount:         account,
+        t2musername:        msg.t2mUsername,
+        t2mpassword:        msg.t2mPassword,
+        t2mdeveloperid:     devId,
+        t2mdeviceusername:  deviceUser,
+        t2mdevicepassword:  devicePass,
+        AST_Param:          '$dtTL$ftT'
+    };
+
+
+    return msg;
+  outputs: 1
+  x: 280
+  "y": 80
+  wires:
+    - - 5611c525d2150511
