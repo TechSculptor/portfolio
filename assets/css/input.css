@@ -1,25 +1,50 @@
 @tailwind base;
 @tailwind components;
 
+/* Palette : mode clair par défaut des variables, mode sombre sous .dark */
+:root {
+  --canvas: 246 245 241;
+  --surface: 255 255 255;
+  --line: 226 223 214;
+  --fg: 63 63 70;
+  --head: 24 24 27;
+  --muted: 110 110 120;
+  --gold: 150 122 22;
+  --steel: 140 140 150;
+  color-scheme: light;
+}
+.dark {
+  --canvas: 28 28 31;
+  --surface: 37 37 41;
+  --line: 58 58 64;
+  --fg: 192 192 200;
+  --head: 238 238 242;
+  --muted: 130 130 140;
+  --gold: 214 192 92;
+  --steel: 142 142 150;
+  color-scheme: dark;
+}
+
+html { scroll-behavior: smooth; }
+body { -webkit-font-smoothing: antialiased; }
+
 /* Composants réutilisés (hors @layer pour ne jamais être purgés) */
-.tag { @apply px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 dark:bg-white/5 dark:text-cyan-300 border border-indigo-100 dark:border-white/10; }
-.proj-link { @apply inline-flex items-center gap-1.5 text-indigo-600 dark:text-cyan-400 hover:underline underline-offset-4; }
-.filter-btn { @apply px-4 py-2 rounded-xl text-sm font-medium border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:border-indigo-400 dark:hover:border-cyan-400 transition; }
-.filter-btn.is-active { @apply bg-gradient-to-r from-indigo-600 to-cyan-500 text-white border-transparent shadow-md shadow-indigo-500/30; }
-.skill-card { @apply rounded-2xl p-6 border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-ink-900 hover:-translate-y-1 hover:border-indigo-400 dark:hover:border-cyan-400/50 transition duration-300; }
-.skill-icon { @apply w-12 h-12 grid place-items-center rounded-xl text-white text-lg bg-gradient-to-br shadow-lg; }
-.skill-title { @apply mt-5 font-display text-lg font-bold text-slate-900 dark:text-white; }
-.skill-list { @apply mt-4 space-y-2.5 text-sm; }
-.skill-list li { @apply flex items-center gap-3; }
-.skill-list i { @apply w-5 text-center; }
-.contact-item { @apply flex items-center gap-4 p-3 -m-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition; }
-.contact-icon { @apply w-12 h-12 shrink-0 grid place-items-center rounded-xl bg-indigo-50 dark:bg-white/5 text-indigo-600 dark:text-cyan-400 text-lg border border-indigo-100 dark:border-white/10; }
-.form-label { @apply block mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-300; }
-.form-input { @apply w-full px-4 py-3 rounded-xl bg-white dark:bg-ink-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-cyan-400 focus:border-transparent transition; }
-.form-input.is-invalid { @apply ring-2 ring-red-500 border-transparent; }
-.social-btn { @apply w-10 h-10 grid place-items-center rounded-xl border border-slate-200 dark:border-white/10 hover:text-white hover:bg-indigo-600 hover:border-indigo-600 transition; }
-.copy-btn { @apply w-7 h-7 grid place-items-center rounded-md text-slate-500 hover:text-indigo-600 dark:hover:text-cyan-400 hover:bg-white dark:hover:bg-white/10 transition; }
-.nav-link.is-current { @apply text-indigo-600 dark:text-cyan-400 bg-indigo-50 dark:bg-white/5; }
-#navbar.is-scrolled { @apply bg-white/80 dark:bg-ink-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 shadow-sm; }
+.pill { @apply inline-flex items-center rounded-full bg-gold/10 px-3 py-1 text-xs font-medium leading-5 text-gold; }
+.link-gold { @apply font-medium text-head underline decoration-gold/60 decoration-1 underline-offset-[6px] transition hover:text-gold hover:decoration-gold; }
+.section-title { @apply sticky top-0 z-20 -mx-6 mb-6 bg-canvas/80 px-6 py-5 text-sm font-semibold uppercase tracking-[0.2em] text-head backdrop-blur md:-mx-12 md:px-12 lg:sr-only; }
+.card { @apply relative rounded-lg p-5 transition lg:-mx-5 lg:hover:bg-surface/60 lg:hover:shadow-[inset_0_1px_0_0_rgb(var(--line)/0.6)] lg:group-hover/list:opacity-50 lg:hover:!opacity-100; }
+.nav-link .nav-indicator { @apply mr-4 h-px w-8 bg-muted transition-all motion-reduce:transition-none; }
+.nav-link .nav-text { @apply text-xs font-semibold uppercase tracking-[0.2em] text-muted transition; }
+.nav-link:hover .nav-indicator, .nav-link.is-current .nav-indicator { @apply w-16 bg-gold; }
+.nav-link:hover .nav-text, .nav-link.is-current .nav-text { @apply text-head; }
+.icon-btn { @apply grid h-10 w-10 place-items-center rounded-md text-muted transition hover:text-gold; }
+.copy-btn { @apply grid h-7 w-7 place-items-center rounded-md text-muted transition hover:bg-surface hover:text-gold; }
+.form-label { @apply mb-1.5 block text-xs font-semibold uppercase tracking-[0.15em] text-muted; }
+.form-input { @apply w-full rounded-md border border-line bg-surface/60 px-4 py-3 text-head placeholder-muted/70 transition focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold; }
+.form-input.is-invalid { @apply border-red-500 ring-1 ring-red-500; }
+.btn-gold { @apply inline-flex items-center gap-2 rounded-md border border-gold bg-gold px-5 py-3 text-sm font-semibold text-canvas transition hover:bg-transparent hover:text-gold; }
+.btn-line { @apply inline-flex items-center gap-2 rounded-md border border-gold/60 px-5 py-3 text-sm font-semibold text-gold transition hover:bg-gold/10; }
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq[open] .faq-icon { transform: rotate(45deg); }
 
 @tailwind utilities;
