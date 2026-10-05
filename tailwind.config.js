@@ -2,15 +2,16 @@
 const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
 
 module.exports = {
-  content: ['./index.html'],
+  content: ['./index.html', './mentions-legales.html'],
   darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
         sans: ['Montserrat', 'system-ui', 'sans-serif']
       },
-      // Couleurs pilotées par des variables CSS (voir assets/css/input.css) :
-      // le mode clair / sombre ne fait que changer les variables.
+      // Couleurs de structure pilotées par des variables CSS (voir assets/css/input.css) :
+      // le mode clair / sombre ne fait que changer les variables. Les couleurs vives
+      // (sky, violet, amber, emerald) viennent de la palette Tailwind.
       colors: {
         canvas: v('canvas'),
         surface: v('surface'),
@@ -18,8 +19,8 @@ module.exports = {
         fg: v('fg'),
         head: v('head'),
         muted: v('muted'),
-        gold: v('gold'),
-        steel: v('steel')
+        accent: v('accent'),
+        band: v('band')
       }
     }
   }
