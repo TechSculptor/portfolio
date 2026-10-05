@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,10 +11,11 @@
   <meta name="keywords" content="TechSculptor, Thomas Daloz, création site internet, développeur web freelance, site vitrine, référencement, application sur mesure, automatisation, Ain, Pays de Gex, Genève, France, Suisse">
   <meta name="author" content="Thomas Daloz">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#111827">
+  <meta name="theme-color" content="#1c1c1f" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f8fc" media="(prefers-color-scheme: light)">
   <link rel="canonical" href="https://techsculptor.github.io/portfolio/">
   <link rel="apple-touch-icon" href="media/apple-touch-icon.png">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230ea5e9'/%3E%3Cstop offset='.55' stop-color='%238b5cf6'/%3E%3Cstop offset='1' stop-color='%23f59e0b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23111827'/%3E%3Cpath d='M25 20 13 32l12 12M39 20l12 12-12 12' fill='none' stroke='url(%23g)' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23d6c05c'/%3E%3Cstop offset='1' stop-color='%238e8e96'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%231c1c1f'/%3E%3Cpath d='M25 20 13 32l12 12M39 20l12 12-12 12' fill='none' stroke='url(%23g)' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -71,443 +72,581 @@
   }
   </script>
 
-  <!-- Thème appliqué avant le rendu : clair par défaut, sombre si choisi -->
+  <!-- Thème appliqué avant le rendu : sombre par défaut, clair si choisi -->
   <script>
     (function () {
       var stored = null;
       try { stored = localStorage.getItem('theme'); } catch (e) {}
-      document.documentElement.classList.toggle('dark', stored === 'dark');
+      document.documentElement.classList.toggle('dark', stored !== 'light');
     })();
   </script>
 
   <!-- Polices & icônes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
 
   <!-- Tailwind CSS compilé, chargé après Font Awesome pour que `hidden` l'emporte (source : assets/css/input.css, config : tailwind.config.js) -->
   <link rel="stylesheet" href="assets/css/site.css">
 </head>
 
-<body class="bg-canvas font-sans leading-relaxed text-fg selection:bg-sky-500/20">
+<body class="bg-canvas font-sans leading-relaxed text-fg selection:bg-gold/30 selection:text-head">
 
   <!-- Curseur personnalisé (souris uniquement) -->
   <div class="cursor-dot" aria-hidden="true"></div>
   <div class="cursor-ring" aria-hidden="true"></div>
 
-  <!-- Dégradé partagé (logo + équerres) -->
+  <!-- Halo doré qui suit la souris -->
+  <div id="spotlight" class="pointer-events-none fixed inset-0 z-0 hidden transition duration-300 lg:block" aria-hidden="true"></div>
+
+  <!-- Dégradé partagé (équerres + logo), dans un SVG toujours affiché -->
   <svg class="absolute h-0 w-0" aria-hidden="true" focusable="false">
-    <defs><linearGradient id="brand" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0ea5e9"/><stop offset=".55" stop-color="#8b5cf6"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs>
+    <defs><linearGradient id="bracket" x1="0" y1="1" x2="1" y2="0"><stop offset="0" style="stop-color: rgb(var(--gold))"/><stop offset="1" style="stop-color: rgb(var(--steel))"/></linearGradient></defs>
   </svg>
 
-  <a href="#contenu" class="absolute left-2 top-2 z-[70] -translate-y-24 rounded bg-sky-500 px-4 py-2 text-sm font-bold text-white focus:translate-y-0">Aller au contenu</a>
+  <!-- Équerres décoratives dans les angles -->
+  <svg class="pointer-events-none fixed left-4 top-0 z-0 hidden h-[200px] w-[220px] md:block lg:left-10" viewBox="0 0 220 200" aria-hidden="true">
+    <path d="M0 0H210L196 14H14V182L0 196Z" fill="url(#bracket)"/>
+  </svg>
+  <svg class="pointer-events-none fixed bottom-0 right-4 z-0 hidden h-[200px] w-[220px] rotate-180 md:block lg:right-10" viewBox="0 0 220 200" aria-hidden="true">
+    <path d="M0 0H210L196 14H14V182L0 196Z" fill="url(#bracket)"/>
+  </svg>
 
-  <!-- ========== EN-TÊTE ========== -->
-  <header class="sticky top-0 z-50 bg-band/95 backdrop-blur">
-    <nav class="container-x flex h-16 items-center justify-between" aria-label="Navigation principale">
-      <a href="#accueil" class="flex items-center gap-2.5" aria-label="TechSculptor, accueil">
-        <svg class="h-9 w-9" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#1f2937"/><path d="M25 20 13 32l12 12M39 20l12 12-12 12" fill="none" stroke="url(#brand)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span class="text-lg font-extrabold tracking-tight text-white">Tech<span class="text-brand">Sculptor</span></span>
-      </a>
-      <ul class="hidden items-center gap-1 lg:flex">
-        <li><a class="nav-a" href="#services">Services</a></li>
-        <li><a class="nav-a" href="#references">Références</a></li>
-        <li><a class="nav-a" href="#projets">Projets</a></li>
-        <li><a class="nav-a" href="#apropos">À propos</a></li>
-        <li><a class="nav-a" href="#faq">Questions</a></li>
-      </ul>
-      <div class="flex items-center gap-1">
-        <button id="theme-toggle" type="button" class="icon-btn" aria-label="Basculer le thème clair / sombre">
-          <i class="fa-solid fa-moon dark:hidden"></i><i class="fa-solid fa-sun hidden dark:inline"></i>
-        </button>
-        <a href="#contact" class="btn-main ml-2 hidden !px-5 !py-2.5 sm:inline-flex">Devis gratuit</a>
-        <button id="menu-toggle" type="button" class="icon-btn lg:hidden" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-menu"><i class="fa-solid fa-bars"></i></button>
-      </div>
-    </nav>
-    <div id="mobile-menu" class="hidden border-t border-white/10 lg:hidden">
-      <ul class="container-x flex flex-col py-2">
-        <li><a class="nav-a block py-3" href="#services">Services</a></li>
-        <li><a class="nav-a block py-3" href="#references">Références</a></li>
-        <li><a class="nav-a block py-3" href="#projets">Projets</a></li>
-        <li><a class="nav-a block py-3" href="#apropos">À propos</a></li>
-        <li><a class="nav-a block py-3" href="#faq">Questions</a></li>
-        <li><a class="nav-a block py-3" href="#contact">Contact &amp; devis gratuit</a></li>
-      </ul>
-    </div>
-  </header>
+  <a href="#contenu" class="absolute left-0 top-0 z-50 -translate-y-full rounded bg-gold px-4 py-3 text-sm font-semibold text-canvas focus:translate-y-0">Aller au contenu</a>
 
-  <main id="contenu">
+  <div class="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 pb-12 pt-[60px] md:px-12 md:pb-20 lg:px-24 lg:py-0">
+    <div class="lg:flex lg:justify-between lg:gap-8">
 
-    <!-- ========== ACCUEIL ========== -->
-    <section id="accueil" class="relative overflow-hidden">
-      <div class="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-sky-400/25 blur-3xl" aria-hidden="true"></div>
-      <div class="pointer-events-none absolute -right-24 top-24 h-80 w-80 rounded-full bg-violet-400/20 blur-3xl" aria-hidden="true"></div>
-      <div class="pointer-events-none absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-amber-300/20 blur-3xl" aria-hidden="true"></div>
-      <!-- Équerres -->
-      <svg class="pointer-events-none absolute left-4 top-0 hidden h-[170px] w-[190px] md:block" viewBox="0 0 220 200" aria-hidden="true"><path d="M0 0H210L196 14H14V182L0 196Z" fill="url(#brand)"/></svg>
-      <svg class="pointer-events-none absolute bottom-0 right-4 hidden h-[170px] w-[190px] rotate-180 md:block" viewBox="0 0 220 200" aria-hidden="true"><path d="M0 0H210L196 14H14V182L0 196Z" fill="url(#brand)"/></svg>
-
-      <div class="container-x relative grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.1fr_1fr]">
+      <!-- ========== COLONNE GAUCHE (fixe sur grand écran) ========== -->
+      <header class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[46%] lg:flex-col lg:justify-between lg:pb-8 lg:pt-[60px]">
         <div>
-          <p class="eyebrow">Studio web indépendant · France &amp; Suisse</p>
-          <h1 class="mt-5 text-4xl font-extrabold leading-[1.1] tracking-tight text-head sm:text-5xl lg:text-[3.4rem]">
-            Des sites et des outils web qui font <span class="text-brand">grandir votre activité.</span>
-          </h1>
-          <p class="mt-6 max-w-xl text-lg">
-            Sites vitrines, référencement, applications sur mesure et automatisation pour les TPE, PME, indépendants et associations. À distance ou sur place.
-          </p>
-          <div class="mt-8 flex flex-wrap gap-3">
-            <a href="#contact" class="btn-main"><i class="fa-regular fa-calendar"></i> Réserver un échange gratuit</a>
-            <a href="#references" class="btn-ghost">Voir mes réalisations</a>
+          <div class="flex items-center justify-between">
+            <a href="#services" class="group flex items-center gap-3" aria-label="TechSculptor, retour en haut">
+              <svg class="h-11 w-11" viewBox="0 0 64 64" aria-hidden="true">
+                <rect width="64" height="64" rx="12" style="fill: rgb(var(--surface)); stroke: rgb(var(--line))"/>
+                <path d="M25 20 13 32l12 12M39 20l12 12-12 12" fill="none" stroke="url(#bracket)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="text-sm font-semibold tracking-[0.2em] text-muted transition group-hover:text-gold">TECHSCULPTOR</span>
+            </a>
+            <button id="theme-toggle" type="button" class="icon-btn" aria-label="Basculer le thème clair / sombre">
+              <i class="fa-solid fa-sun hidden dark:inline"></i>
+              <i class="fa-solid fa-moon dark:hidden"></i>
+            </button>
           </div>
-          <div class="mt-10">
-            <p class="text-xs font-bold uppercase tracking-[0.2em] text-muted">Ils m'ont fait confiance</p>
-            <p class="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-head">
-              <span>VISU Energy</span><span>Easy Tech</span><span>InnovGuide</span><span>Pension Chat Petit Paradis</span>
+
+          <div class="mx-auto max-w-md text-center">
+            <p class="mt-10 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Studio web indépendant · France &amp; Suisse</p>
+            <h1 class="mt-4 text-4xl font-extralight leading-tight tracking-tight text-head sm:text-5xl">Des sites et des outils web qui font grandir votre activité.</h1>
+            <p class="mt-5 leading-normal">
+              Sites vitrines, référencement, applications sur mesure et automatisation pour les TPE, PME, indépendants et associations. À distance ou sur place.
+            </p>
+
+            <div class="mt-7 flex flex-wrap justify-center gap-3">
+              <a href="#contact" class="btn-primary"><i class="fa-regular fa-calendar text-gold"></i> Réserver un échange gratuit</a>
+              <a href="#references" class="btn-line">Voir mes réalisations</a>
+            </div>
+
+            <p class="mt-6 inline-flex items-center gap-2 text-xs font-medium text-muted">
+              <span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span></span>
+              Disponible pour de nouveaux projets
             </p>
           </div>
+
+          <nav class="nav hidden lg:block" aria-label="Sections de la page">
+            <ul class="mx-auto mt-10 w-max">
+              <li><a class="nav-link group flex items-center py-2" href="#services"><span class="nav-indicator"></span><span class="nav-text">Services</span></a></li>
+              <li><a class="nav-link group flex items-center py-2" href="#references"><span class="nav-indicator"></span><span class="nav-text">Références</span></a></li>
+              <li><a class="nav-link group flex items-center py-2" href="#realisations"><span class="nav-indicator"></span><span class="nav-text">Réalisations</span></a></li>
+              <li><a class="nav-link group flex items-center py-2" href="#apropos"><span class="nav-indicator"></span><span class="nav-text">À propos</span></a></li>
+              <li><a class="nav-link group flex items-center py-2" href="#faq"><span class="nav-indicator"></span><span class="nav-text">Questions</span></a></li>
+              <li><a class="nav-link group flex items-center py-2" href="#contact"><span class="nav-indicator"></span><span class="nav-text">Contact</span></a></li>
+            </ul>
+          </nav>
         </div>
 
-        <!-- Visuel : deux sites en aperçu -->
-        <div class="relative mx-auto w-full max-w-lg" aria-hidden="true">
-          <div class="rotate-2 overflow-hidden rounded-xl border border-line bg-surface shadow-2xl shadow-slate-900/20">
-            <div class="flex items-center gap-1.5 border-b border-line px-3 py-2"><span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span><span class="ml-3 truncate text-[11px] text-muted">visu-energy.fr</span></div>
-            <img src="media/sites/visu-energy.jpg" alt="" class="w-full">
-          </div>
-          <div class="absolute -bottom-10 -left-6 w-3/5 -rotate-3 overflow-hidden rounded-xl border border-line bg-surface shadow-2xl shadow-slate-900/25">
-            <div class="flex items-center gap-1.5 border-b border-line px-3 py-1.5"><span class="h-2 w-2 rounded-full bg-rose-400"></span><span class="h-2 w-2 rounded-full bg-amber-400"></span><span class="h-2 w-2 rounded-full bg-emerald-400"></span></div>
-            <img src="media/sites/innovguide.jpg" alt="" class="w-full">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== SERVICES ========== -->
-    <section id="services" class="scroll-mt-16 py-20 md:py-28">
-      <div class="container-x">
-        <div class="text-center">
-          <p class="eyebrow">Services</p>
-          <h2 class="h-section">Des prestations adaptées à vos besoins</h2>
-          <div class="bar"></div>
-        </div>
-        <ul class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <li class="service">
-            <div class="service-icon border-sky-500 text-sky-500"><i class="fa-solid fa-display"></i></div>
-            <h3 class="mt-6 text-sm font-extrabold uppercase tracking-[0.12em] text-head">Site vitrine &amp; référencement</h3>
-            <p class="mt-3 text-sm">Un site clair, rapide et bien placé sur Google pour présenter votre activité et être contacté.</p>
-          </li>
-          <li class="service">
-            <div class="service-icon border-violet-500 text-violet-500"><i class="fa-solid fa-gears"></i></div>
-            <h3 class="mt-6 text-sm font-extrabold uppercase tracking-[0.12em] text-head">Application sur mesure</h3>
-            <p class="mt-3 text-sm">Prise de rendez-vous, espace client, outil de gestion : une application qui colle à votre métier.</p>
-          </li>
-          <li class="service">
-            <div class="service-icon border-amber-500 text-amber-500"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-            <h3 class="mt-6 text-sm font-extrabold uppercase tracking-[0.12em] text-head">Automatisation &amp; données</h3>
-            <p class="mt-3 text-sm">Vos outils reliés entre eux, vos chiffres clés en tableaux de bord : fini les copier-coller.</p>
-          </li>
-          <li class="service">
-            <div class="service-icon border-emerald-500 text-emerald-500"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-            <h3 class="mt-6 text-sm font-extrabold uppercase tracking-[0.12em] text-head">Suivi &amp; maintenance</h3>
-            <p class="mt-3 text-sm">Mises à jour, sécurité, corrections et évolutions, avec un forfait mensuel si vous le souhaitez.</p>
-          </li>
+        <ul class="mt-6 flex items-center justify-center gap-2" aria-label="Réseaux">
+          <li><a class="icon-btn text-xl" href="https://github.com/TechSculptor" target="_blank" rel="noopener" aria-label="GitHub (nouvel onglet)"><i class="fa-brands fa-github"></i></a></li>
+          <li><a class="icon-btn text-xl" href="https://www.linkedin.com/in/thomas-daloz-16933b281" target="_blank" rel="noopener" aria-label="LinkedIn (nouvel onglet)"><i class="fa-brands fa-linkedin"></i></a></li>
+          <li><a class="icon-btn text-xl" href="mailto:thomasdaloz9799@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a></li>
+          <li><a class="icon-btn text-xl" href="cv/Thomas-Daloz-CV.pdf" download aria-label="Télécharger mon CV"><i class="fa-regular fa-file-lines"></i></a></li>
         </ul>
-      </div>
-    </section>
+      </header>
 
-    <!-- ========== RÉFÉRENCES (diaporama) ========== -->
-    <section id="references" class="scroll-mt-16 bg-surface py-20 md:py-28">
-      <div class="container-x">
-        <div class="text-center">
-          <p class="eyebrow">Références</p>
-          <h2 class="h-section">Des sites sur lesquels j'ai travaillé</h2>
-          <div class="bar"></div>
-        </div>
+      <!-- ========== COLONNE DROITE (contenu) ========== -->
+      <main id="contenu" class="pt-24 lg:w-[54%] lg:py-24">
 
-        <div class="relative mx-auto mt-14 max-w-4xl" role="region" aria-roledescription="carrousel" aria-label="Sites réalisés">
-          <div id="slides" class="slides flex snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-2xl">
-            <figure class="w-full shrink-0 snap-center" aria-roledescription="diapositive" aria-label="1 sur 4">
-              <div class="overflow-hidden rounded-2xl border border-line bg-canvas shadow-xl shadow-slate-900/10">
-                <div class="flex items-center gap-1.5 border-b border-line px-4 py-2.5"><span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span><span class="ml-3 text-xs text-muted">visu-energy.fr</span></div>
-                <img src="media/sites/visu-energy.jpg" alt="Page d'accueil du site VISU Energy" class="w-full" loading="lazy">
+        <!-- SERVICES -->
+        <section id="services" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Services">
+          <h2 class="section-title">Services</h2>
+          <p class="mb-6 hidden text-xs font-semibold uppercase tracking-[0.2em] text-gold lg:block">Ce que je peux faire pour vous</p>
+          <ul class="group/list space-y-4">
+            <li class="card">
+              <div class="flex gap-4">
+                <i class="fa-solid fa-display mt-1 w-6 text-center text-xl text-gold"></i>
+                <div>
+                  <h3 class="font-semibold text-head">Site vitrine &amp; référencement</h3>
+                  <p class="mt-2 text-sm">Un site clair, rapide et bien placé sur Google pour présenter votre activité et être contacté. WordPress si vous voulez le modifier vous-même, ou sur mesure.</p>
+                </div>
               </div>
-              <figcaption class="mt-5 flex flex-wrap items-center justify-between gap-3 px-1">
-                <div><p class="font-extrabold text-head">VISU Energy</p><p class="text-sm text-muted">Supervision énergétique · site vitrine</p></div>
-                <a class="link-a text-sm" href="https://www.visu-energy.fr/" target="_blank" rel="noopener">Voir le site <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
-              </figcaption>
-            </figure>
-            <figure class="w-full shrink-0 snap-center" aria-roledescription="diapositive" aria-label="2 sur 4">
-              <div class="overflow-hidden rounded-2xl border border-line bg-canvas shadow-xl shadow-slate-900/10">
-                <div class="flex items-center gap-1.5 border-b border-line px-4 py-2.5"><span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span><span class="ml-3 text-xs text-muted">innovguide.com</span></div>
-                <img src="media/sites/innovguide.jpg" alt="Page d'accueil du site InnovGuide" class="w-full" loading="lazy">
+            </li>
+            <li class="card">
+              <div class="flex gap-4">
+                <i class="fa-solid fa-gears mt-1 w-6 text-center text-xl text-gold"></i>
+                <div>
+                  <h3 class="font-semibold text-head">Application métier sur mesure</h3>
+                  <p class="mt-2 text-sm">Prise de rendez-vous, espace client, outil de gestion, tableau de bord : une application qui colle à votre façon de travailler, utilisable sur ordinateur et mobile.</p>
+                </div>
               </div>
-              <figcaption class="mt-5 flex flex-wrap items-center justify-between gap-3 px-1">
-                <div><p class="font-extrabold text-head">InnovGuide</p><p class="text-sm text-muted">Guide digital pour les hébergeurs · site produit</p></div>
-                <a class="link-a text-sm" href="https://innovguide.com/fr/" target="_blank" rel="noopener">Voir le site <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
-              </figcaption>
-            </figure>
-            <figure class="w-full shrink-0 snap-center" aria-roledescription="diapositive" aria-label="3 sur 4">
-              <div class="overflow-hidden rounded-2xl border border-line bg-canvas shadow-xl shadow-slate-900/10">
-                <div class="flex items-center gap-1.5 border-b border-line px-4 py-2.5"><span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span><span class="ml-3 text-xs text-muted">pensionchatpetitparadis.com</span></div>
-                <img src="media/sites/chat-petit-paradis.jpg" alt="Page d'accueil du site de la Pension Chat Petit Paradis" class="w-full" loading="lazy">
+            </li>
+            <li class="card">
+              <div class="flex gap-4">
+                <i class="fa-solid fa-wand-magic-sparkles mt-1 w-6 text-center text-xl text-gold"></i>
+                <div>
+                  <h3 class="font-semibold text-head">Automatisation &amp; tableaux de bord</h3>
+                  <p class="mt-2 text-sm">Fini les copier-coller : je relie vos outils (formulaires, emails, Google Sheets…) et je mets vos chiffres clés en graphiques, mis à jour automatiquement.</p>
+                </div>
               </div>
-              <figcaption class="mt-5 flex flex-wrap items-center justify-between gap-3 px-1">
-                <div><p class="font-extrabold text-head">Pension Chat Petit Paradis</p><p class="text-sm text-muted">Pension pour chats · refonte du site, +40 % de trafic</p></div>
-                <a class="link-a text-sm" href="https://www.pensionchatpetitparadis.com/" target="_blank" rel="noopener">Voir le site <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
-              </figcaption>
-            </figure>
-            <figure class="w-full shrink-0 snap-center" aria-roledescription="diapositive" aria-label="4 sur 4">
-              <div class="overflow-hidden rounded-2xl border border-line bg-canvas shadow-xl shadow-slate-900/10">
-                <div class="flex items-center gap-1.5 border-b border-line px-4 py-2.5"><span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span><span class="ml-3 text-xs text-muted">predescoons.com</span></div>
-                <img src="media/sites/predescoons.jpg" alt="Page d'accueil du site de la chatterie Pre des Coon's" class="w-full" loading="lazy">
+            </li>
+            <li class="card">
+              <div class="flex gap-4">
+                <i class="fa-solid fa-screwdriver-wrench mt-1 w-6 text-center text-xl text-gold"></i>
+                <div>
+                  <h3 class="font-semibold text-head">Reprise &amp; maintenance</h3>
+                  <p class="mt-2 text-sm">Site lent, bugué ou plus mis à jour ? Je fais le point, je corrige et j'assure le suivi : sécurité, sauvegardes, petites évolutions.</p>
+                </div>
               </div>
-              <figcaption class="mt-5 flex flex-wrap items-center justify-between gap-3 px-1">
-                <div><p class="font-extrabold text-head">Pre des Coon's</p><p class="text-sm text-muted">Chatterie de Maine Coons · site vitrine</p></div>
-                <a class="link-a text-sm" href="https://www.predescoons.com/" target="_blank" rel="noopener">Voir le site <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
-              </figcaption>
-            </figure>
-          </div>
-
-          <button type="button" data-slide="-1" class="absolute left-0 top-[38%] hidden h-11 w-11 -translate-x-1/2 place-items-center rounded-full border border-line bg-surface text-head shadow-lg transition hover:text-accent md:grid" aria-label="Site précédent"><i class="fa-solid fa-chevron-left"></i></button>
-          <button type="button" data-slide="1" class="absolute right-0 top-[38%] hidden h-11 w-11 translate-x-1/2 place-items-center rounded-full border border-line bg-surface text-head shadow-lg transition hover:text-accent md:grid" aria-label="Site suivant"><i class="fa-solid fa-chevron-right"></i></button>
-          <div id="dots" class="mt-6 flex justify-center gap-2"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== PROJETS ========== -->
-    <section id="projets" class="scroll-mt-16 py-20 md:py-28">
-      <div class="container-x">
-        <div class="text-center">
-          <p class="eyebrow">Projets</p>
-          <h2 class="h-section">Applications &amp; outils sur mesure</h2>
-          <div class="bar"></div>
-        </div>
-
-        <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <!-- VISU Energy : grande carte avec vidéo -->
-          <article class="card md:col-span-2 lg:col-span-3 lg:grid lg:grid-cols-[1.6fr_1fr]">
-            <video class="w-full bg-slate-900" src="media/visu-energy-demo.mp4" poster="media/visu-energy-poster.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Démonstration de la plateforme VISU Energy"></video>
-            <div class="flex flex-col p-6 lg:p-8">
-              <p class="text-xs font-bold uppercase tracking-[0.15em] text-emerald-500">VISU Energy · 2026</p>
-              <h3 class="mt-2 text-xl font-extrabold text-head">Supervision énergétique en temps réel</h3>
-              <p class="mt-3 text-sm">Une application qui affiche en direct la consommation électrique d'événements et de chantiers : tableaux de bord, calendrier, éditeur de plan, version mobile.</p>
-              <p class="mt-4 flex flex-wrap gap-1.5"><span class="pill">Node-RED</span><span class="pill">JavaScript</span><span class="pill">PostgreSQL</span></p>
-              <p class="mt-auto pt-5 text-sm"><a class="link-a" href="https://github.com/TechSculptor/portfolio/tree/main/6-Visu-Energy" target="_blank" rel="noopener">Extraits de code <i class="fa-solid fa-arrow-right text-xs"></i></a></p>
-            </div>
-          </article>
-
-          <article class="card md:col-span-2 lg:col-span-2 lg:grid lg:grid-cols-2">
-            <img class="h-full w-full object-cover object-top" src="Screen/Starshop3-vaisseau.png" alt="Application Starshop" loading="lazy">
-            <div class="flex flex-col p-6">
-              <p class="text-xs font-bold uppercase tracking-[0.15em] text-violet-500">Démonstration</p>
-              <h3 class="mt-2 text-lg font-extrabold text-head">Boutique &amp; espace d'administration</h3>
-              <p class="mt-3 text-sm">Catalogue, comptes utilisateurs, back-office, données en direct. Testée et déployée en ligne.</p>
-              <p class="mt-3 text-xs text-muted">
-                Compte démo : <span class="font-semibold text-head">demo@starshop.dev</span>
-                <button type="button" class="copy-btn inline-grid align-middle" data-copy="demo@starshop.dev" aria-label="Copier l'email de démonstration"><i class="fa-regular fa-copy"></i></button>
-                / <span class="font-semibold text-head">starshop-demo</span>
-                <button type="button" class="copy-btn inline-grid align-middle" data-copy="starshop-demo" aria-label="Copier le mot de passe de démonstration"><i class="fa-regular fa-copy"></i></button>
-              </p>
-              <p class="mt-auto flex gap-5 pt-5 text-sm"><a class="link-a" href="https://starshop-ky4b.onrender.com/login" target="_blank" rel="noopener">Démo</a><a class="link-a" href="https://github.com/TechSculptor/portfolio/tree/main/5-Starshop" target="_blank" rel="noopener">Code</a></p>
-            </div>
-          </article>
-
-          <article class="card flex flex-col">
-            <img class="aspect-video w-full object-cover object-top" src="Screen/Portfolio2.png" alt="Projet de cabinet médical" loading="lazy">
-            <div class="flex flex-1 flex-col p-6">
-              <p class="text-xs font-bold uppercase tracking-[0.15em] text-rose-500">Santé</p>
-              <h3 class="mt-2 text-lg font-extrabold text-head">Rendez-vous en ligne pour un cabinet médical</h3>
-              <p class="mt-3 text-sm">Réservation, créneaux libres en direct et récapitulatif PDF.</p>
-              <p class="mt-auto pt-5 text-sm"><a class="link-a" href="https://github.com/TechSculptor/portfolio/tree/main/1-Cabinet-Medical" target="_blank" rel="noopener">Code</a></p>
-            </div>
-          </article>
-
-          <article class="card flex flex-col">
-            <img class="aspect-video w-full object-cover object-top" src="2-Email-Tracker/visuals/dashboard1.jpg" alt="Tableau de bord du suivi d'emails" loading="lazy">
-            <div class="flex flex-1 flex-col p-6">
-              <p class="text-xs font-bold uppercase tracking-[0.15em] text-sky-500">Easy Tech · 2025</p>
-              <h3 class="mt-2 text-lg font-extrabold text-head">Suivi des emails &amp; tableau de bord</h3>
-              <p class="mt-3 text-sm">Qui ouvre vos emails, quand et où, dans un tableau de bord clair.</p>
-              <p class="mt-auto flex gap-5 pt-5 text-sm"><a class="link-a" href="https://lookerstudio.google.com/reporting/d4218795-26ec-4770-bd6d-1634ff8426f5" target="_blank" rel="noopener">Tableau de bord</a><a class="link-a" href="https://github.com/TechSculptor/portfolio/tree/main/2-Email-Tracker" target="_blank" rel="noopener">Code</a></p>
-            </div>
-          </article>
-
-          <article class="card flex flex-col">
-            <img class="aspect-video w-full object-cover object-top" src="Screen/Portfolio4.png" alt="Catalogue généré automatiquement" loading="lazy">
-            <div class="flex flex-1 flex-col p-6">
-              <p class="text-xs font-bold uppercase tracking-[0.15em] text-amber-500">Automatisation</p>
-              <h3 class="mt-2 text-lg font-extrabold text-head">40 pages produits générées automatiquement</h3>
-              <p class="mt-3 text-sm">Un fichier de données devient 40 pages web prêtes à publier.</p>
-              <p class="mt-auto flex gap-5 pt-5 text-sm"><a class="link-a" href="3-Generate-Html/index.html" target="_blank" rel="noopener">Rendu</a><a class="link-a" href="https://github.com/TechSculptor/portfolio/tree/main/3-Generate-Html" target="_blank" rel="noopener">Code</a></p>
-            </div>
-          </article>
-
-          <article class="card flex flex-col">
-            <img class="aspect-video w-full object-cover object-top" src="Screen/TodoList.png" alt="Gestionnaire de tâches" loading="lazy">
-            <div class="flex flex-1 flex-col p-6">
-              <p class="text-xs font-bold uppercase tracking-[0.15em] text-violet-500">Productivité</p>
-              <h3 class="mt-2 text-lg font-extrabold text-head">Gestionnaire de tâches intelligent</h3>
-              <p class="mt-3 text-sm">Priorités, catégories et rappels qui s'adaptent à l'échéance.</p>
-              <p class="mt-auto flex gap-5 pt-5 text-sm"><a class="link-a" href="4-Todo-List-Dev/demo/index.html" target="_blank" rel="noopener">Démo</a><a class="link-a" href="https://github.com/TechSculptor/portfolio/tree/main/4-Todo-List-Dev" target="_blank" rel="noopener">Code</a></p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== MÉTHODE ========== -->
-    <section id="methode" class="scroll-mt-16 bg-band py-20 text-white/75 md:py-24">
-      <div class="container-x">
-        <div class="text-center">
-          <p class="eyebrow">Méthode</p>
-          <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Comment on travaille ensemble</h2>
-          <div class="bar"></div>
-        </div>
-        <ol class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          <li><p class="text-4xl font-extrabold text-sky-400">01</p><p class="mt-2 font-bold text-white">On échange</p><p class="mt-1 text-sm">Vous me présentez votre besoin. Gratuit et sans engagement.</p></li>
-          <li><p class="text-4xl font-extrabold text-violet-400">02</p><p class="mt-2 font-bold text-white">Devis &amp; maquette</p><p class="mt-1 text-sm">Un devis clair, puis une maquette à valider ensemble.</p></li>
-          <li><p class="text-4xl font-extrabold text-amber-400">03</p><p class="mt-2 font-bold text-white">Développement</p><p class="mt-1 text-sm">Par étapes, avec des visios à la demande pour faire le point.</p></li>
-          <li><p class="text-4xl font-extrabold text-emerald-400">04</p><p class="mt-2 font-bold text-white">Mise en ligne &amp; suivi</p><p class="mt-1 text-sm">Code testé et documenté, puis suivi si vous le souhaitez.</p></li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- ========== À PROPOS ========== -->
-    <section id="apropos" class="scroll-mt-16 py-20 md:py-28">
-      <div class="container-x grid items-center gap-12 lg:grid-cols-[320px_1fr]">
-        <div class="relative mx-auto w-56 sm:w-64 lg:w-full">
-          <div class="absolute -inset-2 rounded-3xl bg-gradient-to-br from-sky-400 via-violet-500 to-amber-400 opacity-80 blur-sm" aria-hidden="true"></div>
-          <img src="assets/picture/thomas-daloz.jpg" alt="Thomas Daloz, fondateur de TechSculptor" class="relative aspect-square w-full rounded-3xl object-cover" loading="lazy">
-        </div>
-        <div>
-          <p class="eyebrow">À propos</p>
-          <h2 class="h-section">Derrière TechSculptor : Thomas Daloz</h2>
-          <div class="mt-5 space-y-4">
-            <p>Ouvert à tout projet, du référencement de site à la conception d'outils innovants en passant par la mise à jour d'un site existant, je suis disponible pour répondre à vos enjeux du moment.</p>
-            <p>En fin de Master Informatique au CNAM, j'ai notamment réalisé une plateforme de supervision énergétique en temps réel chez VISU Energy et un service de suivi d'emails chez Easy Tech. Vous avez un interlocuteur unique, qui explique clairement et reste disponible après la mise en ligne.</p>
-          </div>
-          <figure class="mt-8 rounded-2xl border-l-4 border-violet-500 bg-surface p-6 shadow-sm">
-            <blockquote class="text-sm italic text-head">« Thomas a montré une bonne motivation et une réelle curiosité pour le métier de développeur. Il s'est investi dans les missions confiées […] Son attitude a été respectueuse, sérieuse. »</blockquote>
-            <figcaption class="mt-3 text-xs font-semibold text-muted">Quin Axel, chef de projet chez Easy Tech</figcaption>
-          </figure>
-          <p class="mt-6 text-sm text-muted">
-            Vous recrutez ? Je suis aussi ouvert à un CDI :
-            <a class="link-a" href="cv/Thomas-Daloz-CV.pdf" download>CV</a> ·
-            <a class="link-a" href="https://github.com/TechSculptor/portfolio" target="_blank" rel="noopener">GitHub</a> ·
-            <a class="link-a" href="https://www.linkedin.com/in/thomas-daloz-16933b281" target="_blank" rel="noopener">LinkedIn</a>
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== FAQ ========== -->
-    <section id="faq" class="scroll-mt-16 bg-surface py-20 md:py-28">
-      <div class="container-x max-w-3xl">
-        <div class="text-center">
-          <p class="eyebrow">Questions</p>
-          <h2 class="h-section">Questions fréquentes</h2>
-          <div class="bar"></div>
-        </div>
-        <div class="mt-12 divide-y divide-line border-y border-line">
-          <details class="faq py-5">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-bold text-head">Combien coûte un site ou une application ?<i class="faq-icon fa-solid fa-plus text-accent transition"></i></summary>
-            <p class="mt-3 text-sm">Cela dépend de votre besoin. Après un premier échange, je vous envoie un devis gratuit et détaillé, sans engagement.</p>
-          </details>
-          <details class="faq py-5">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-bold text-head">Combien de temps faut-il ?<i class="faq-icon fa-solid fa-plus text-accent transition"></i></summary>
-            <p class="mt-3 text-sm">Un site vitrine demande généralement quelques semaines ; une application dépend de ses fonctionnalités. Le planning figure dans le devis.</p>
-          </details>
-          <details class="faq py-5">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-bold text-head">Pourrai-je modifier mon site moi-même ?<i class="faq-icon fa-solid fa-plus text-accent transition"></i></summary>
-            <p class="mt-3 text-sm">Oui : je peux mettre en place une interface simple pour vos textes et vos images, et je vous montre comment l'utiliser.</p>
-          </details>
-          <details class="faq py-5">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-bold text-head">Vous occupez-vous de l'hébergement et de la maintenance ?<i class="faq-icon fa-solid fa-plus text-accent transition"></i></summary>
-            <p class="mt-3 text-sm">Oui : nom de domaine, hébergement, mise en ligne, puis suivi mensuel (mises à jour, sauvegardes, évolutions) si vous le souhaitez.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== CONTACT ========== -->
-    <section id="contact" class="scroll-mt-16 py-20 md:py-28">
-      <div class="container-x grid gap-10 lg:grid-cols-[1fr_1.4fr]">
-        <div>
-          <p class="eyebrow">Contact</p>
-          <h2 class="h-section">Parlons de votre projet</h2>
-          <p class="mt-4">Décrivez votre besoin en quelques lignes : je vous réponds sous 48 h pour un premier échange gratuit.</p>
-          <ul class="mt-8 space-y-4 text-sm">
-            <li class="flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-sky-500/10 text-sky-500"><i class="fa-regular fa-envelope"></i></span><a class="link-a" href="mailto:thomasdaloz9799@gmail.com">thomasdaloz9799@gmail.com</a></li>
-            <li class="flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-violet-500/10 text-violet-500"><i class="fa-solid fa-location-dot"></i></span>France &amp; Suisse · à distance ou sur place</li>
-            <li class="flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-amber-500/10 text-amber-500"><i class="fa-solid fa-building"></i></span>Entrepreneur individuel · SIRET 904 066 461 00024</li>
+            </li>
           </ul>
-        </div>
 
-        <form id="contact-form" class="space-y-5 rounded-2xl border border-line bg-surface p-6 shadow-xl shadow-slate-900/5 sm:p-8" novalidate>
-          <div class="grid gap-5 sm:grid-cols-2">
-            <div><label for="name" class="form-label">Nom</label><input id="name" name="name" type="text" required autocomplete="name" placeholder="Jeanne Dupont" class="form-input"></div>
-            <div><label for="email" class="form-label">Email</label><input id="email" name="email" type="email" required autocomplete="email" placeholder="jeanne@entreprise.fr" class="form-input"></div>
+          <!-- Méthode -->
+          <h3 id="methode" class="mb-6 mt-16 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Comment on travaille ensemble</h3>
+          <ol class="grid gap-6 sm:grid-cols-2">
+            <li><p class="text-3xl font-extralight text-gold">01</p><p class="mt-1 font-semibold text-head">On échange</p><p class="text-sm">Vous me présentez votre besoin, je vous pose les bonnes questions. Gratuit et sans engagement.</p></li>
+            <li><p class="text-3xl font-extralight text-gold">02</p><p class="mt-1 font-semibold text-head">Devis &amp; maquette</p><p class="text-sm">Un devis détaillé, puis une maquette pour valider ensemble le rendu avant de développer.</p></li>
+            <li><p class="text-3xl font-extralight text-gold">03</p><p class="mt-1 font-semibold text-head">Développement</p><p class="text-sm">Je construis par étapes et vous montre l'avancement régulièrement.</p></li>
+            <li><p class="text-3xl font-extralight text-gold">04</p><p class="mt-1 font-semibold text-head">Mise en ligne &amp; suivi</p><p class="text-sm">Mise en ligne, prise en main, puis maintenance si vous le souhaitez.</p></li>
+          </ol>
+        </section>
+
+        <!-- RÉFÉRENCES (diaporama) -->
+        <section id="references" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Références">
+          <h2 class="section-title">Références</h2>
+          <p class="mb-6 hidden text-xs font-semibold uppercase tracking-[0.2em] text-gold lg:block">Des sites sur lesquels j'ai travaillé</p>
+          <div class="relative" role="region" aria-roledescription="carrousel" aria-label="Sites réalisés">
+            <div id="slides" class="slides flex snap-x snap-mandatory overflow-x-auto scroll-smooth">
+              <figure class="w-full shrink-0 snap-center" aria-roledescription="diapositive" aria-label="1 sur 4">
+                <div class="overflow-hidden rounded-md border border-line bg-surface shadow-lg shadow-black/20">
+                  <div class="flex items-center gap-1.5 border-b border-line px-3 py-2"><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="ml-2 truncate text-[11px] text-muted">visu-energy.fr</span></div>
+                  <img src="media/sites/visu-energy.jpg" alt="Page d'accueil du site VISU Energy" class="w-full" loading="lazy">
+                </div>
+                <figcaption class="mt-4 flex flex-wrap items-center justify-between gap-3 px-1">
+                  <div><p class="font-semibold text-head">VISU Energy</p><p class="text-sm text-muted">Supervision énergétique · site vitrine</p></div>
+                  <a class="link-gold text-sm" href="https://www.visu-energy.fr/" target="_blank" rel="noopener">Voir le site <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>
+                </figcaption>
+              </figure>
+              <figure class="w-full shrink-0 snap-center" aria-roledescription="diapositive" aria-label="2 sur 4">
+                <div class="overflow-hidden rounded-md border border-line bg-surface shadow-lg shadow-black/20">
+                  <div class="flex items-center gap-1.5 border-b border-line px-3 py-2"><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="ml-2 truncate text-[11px] text-muted">innovguide.com</span></div>
+                  <img src="media/sites/innovguide.jpg" alt="Page d'accueil du site InnovGuide" class="w-full" loading="lazy">
+                </div>
+                <figcaption class="mt-4 flex flex-wrap items-center justify-between gap-3 px-1">
+                  <div><p class="font-semibold text-head">InnovGuide</p><p class="text-sm text-muted">Guide digital pour les hébergeurs · site produit</p></div>
+                  <a class="link-gold text-sm" href="https://innovguide.com/fr/" target="_blank" rel="noopener">Voir le site <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>
+                </figcaption>
+              </figure>
+              <figure class="w-full shrink-0 snap-center" aria-roledescription="diapositive" aria-label="3 sur 4">
+                <div class="overflow-hidden rounded-md border border-line bg-surface shadow-lg shadow-black/20">
+                  <div class="flex items-center gap-1.5 border-b border-line px-3 py-2"><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="ml-2 truncate text-[11px] text-muted">pensionchatpetitparadis.com</span></div>
+                  <img src="media/sites/chat-petit-paradis.jpg" alt="Page d'accueil du site de la Pension Chat Petit Paradis" class="w-full" loading="lazy">
+                </div>
+                <figcaption class="mt-4 flex flex-wrap items-center justify-between gap-3 px-1">
+                  <div><p class="font-semibold text-head">Pension Chat Petit Paradis</p><p class="text-sm text-muted">Pension pour chats · refonte du site, +40 % de trafic</p></div>
+                  <a class="link-gold text-sm" href="https://www.pensionchatpetitparadis.com/" target="_blank" rel="noopener">Voir le site <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>
+                </figcaption>
+              </figure>
+              <figure class="w-full shrink-0 snap-center" aria-roledescription="diapositive" aria-label="4 sur 4">
+                <div class="overflow-hidden rounded-md border border-line bg-surface shadow-lg shadow-black/20">
+                  <div class="flex items-center gap-1.5 border-b border-line px-3 py-2"><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="h-2 w-2 rounded-full bg-muted/40"></span><span class="ml-2 truncate text-[11px] text-muted">predescoons.com</span></div>
+                  <img src="media/sites/predescoons.jpg" alt="Page d'accueil du site de la chatterie Pre des Coon's" class="w-full" loading="lazy">
+                </div>
+                <figcaption class="mt-4 flex flex-wrap items-center justify-between gap-3 px-1">
+                  <div><p class="font-semibold text-head">Pre des Coon's</p><p class="text-sm text-muted">Chatterie de Maine Coons · site vitrine</p></div>
+                  <a class="link-gold text-sm" href="https://www.predescoons.com/" target="_blank" rel="noopener">Voir le site <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>
+                </figcaption>
+              </figure>
+            </div>
+            <div class="mt-5 flex items-center justify-between">
+              <div id="dots" class="flex gap-2"></div>
+              <div class="flex gap-1">
+                <button type="button" data-slide="-1" class="icon-btn" aria-label="Site précédent"><i class="fa-solid fa-chevron-left"></i></button>
+                <button type="button" data-slide="1" class="icon-btn" aria-label="Site suivant"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
           </div>
-          <div class="grid gap-5 sm:grid-cols-2">
+        </section>
+
+        <!-- RÉALISATIONS -->
+        <section id="realisations" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Réalisations">
+          <h2 class="section-title">Réalisations</h2>
+          <p class="mb-6 hidden text-xs font-semibold uppercase tracking-[0.2em] text-gold lg:block">Quelques réalisations</p>
+          <ul class="group/list space-y-6">
+
+            <!-- VISU Energy -->
+            <li class="card">
+              <div class="space-y-5">
+                <video class="w-full rounded-md border border-line shadow-lg shadow-black/20" src="media/visu-energy-demo.mp4" poster="media/visu-energy-poster.jpg"
+                  autoplay muted loop playsinline controls preload="metadata" aria-label="Démonstration de la plateforme VISU Energy : connexion, gestion du parc et des projets, calendrier, table des départs et éditeur de plan"></video>
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">VISU Energy · Stage 2026</p>
+                  <h3 class="mt-1 font-semibold text-head">Supervision énergétique en temps réel</h3>
+                  <p class="mt-2 text-sm">Une application web qui affiche en direct la consommation électrique d'événements et de chantiers. J'ai réalisé une grande partie de l'interface (tableaux de bord, calendrier, éditeur de plan, version mobile) et, en binôme, la collecte des mesures.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">Node-RED</li><li class="pill">JavaScript</li><li class="pill">PostgreSQL</li><li class="pill">Figma</li>
+                  </ul>
+                  <p class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    <a class="link-gold" href="https://github.com/TechSculptor/portfolio/tree/main/6-Visu-Energy" target="_blank" rel="noopener">Extraits de code</a>
+                    <span class="text-xs text-muted"><i class="fa-solid fa-lock mr-1"></i>Reste du code privé, propriété de VISU Energy</span>
+                  </p>
+                </div>
+              </div>
+            </li>
+
+            <!-- Starshop -->
+            <li class="card">
+              <div class="grid gap-4 sm:grid-cols-8 sm:gap-6">
+                <div class="sm:order-2 sm:col-span-5">
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Projet de démonstration</p>
+                  <h3 class="mt-1 font-semibold text-head">Boutique &amp; atelier avec espace d'administration</h3>
+                  <p class="mt-2 text-sm">Une application complète : catalogue, comptes utilisateurs, back-office réservé à l'administrateur, données externes en direct. Testée automatiquement et déployée en ligne.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">Symfony 8</li><li class="pill">PostgreSQL</li><li class="pill">Docker</li><li class="pill">Tailwind</li>
+                  </ul>
+                  <div class="mt-4 rounded-md border border-dashed border-gold/40 p-3 text-xs">
+                    <p class="font-semibold text-head"><i class="fa-solid fa-key mr-1 text-gold"></i>Compte de démonstration (lecture seule)</p>
+                    <dl class="mt-2 grid grid-cols-[auto_1fr_auto] items-center gap-x-3 gap-y-1">
+                      <dt class="text-muted">Email</dt><dd class="text-head">demo@starshop.dev</dd>
+                      <dd><button type="button" class="copy-btn" data-copy="demo@starshop.dev" aria-label="Copier l'email de démonstration"><i class="fa-regular fa-copy"></i></button></dd>
+                      <dt class="text-muted">Mot de passe</dt><dd class="text-head">starshop-demo</dd>
+                      <dd><button type="button" class="copy-btn" data-copy="starshop-demo" aria-label="Copier le mot de passe de démonstration"><i class="fa-regular fa-copy"></i></button></dd>
+                    </dl>
+                    <p class="mt-2 text-muted"><i class="fa-regular fa-clock mr-1"></i>Hébergement gratuit : le premier chargement peut prendre environ 1 minute.</p>
+                  </div>
+                  <p class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    <a class="link-gold" href="https://starshop-ky4b.onrender.com/login" target="_blank" rel="noopener">Démo en ligne</a>
+                    <a class="link-gold" href="https://github.com/TechSculptor/portfolio/tree/main/5-Starshop" target="_blank" rel="noopener">Code</a>
+                  </p>
+                </div>
+                <img class="w-full rounded border border-line sm:order-1 sm:col-span-3 sm:mt-1" src="Screen/Starshop3-vaisseau.png" alt="Fiche détaillée d'un article dans Starshop" loading="lazy">
+              </div>
+            </li>
+
+            <!-- Cabinet médical -->
+            <li class="card">
+              <div class="grid gap-4 sm:grid-cols-8 sm:gap-6">
+                <div class="sm:order-2 sm:col-span-5">
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Santé</p>
+                  <h3 class="mt-1 font-semibold text-head">Prise de rendez-vous pour un cabinet médical</h3>
+                  <p class="mt-2 text-sm">Les patients réservent et annulent en ligne, voient les créneaux libres en direct et reçoivent un récapitulatif PDF. L'administrateur gère les médecins et leurs plannings.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">PHP</li><li class="pill">PostgreSQL</li><li class="pill">Docker</li><li class="pill">AJAX</li>
+                  </ul>
+                  <p class="mt-4 text-sm"><a class="link-gold" href="https://github.com/TechSculptor/portfolio/tree/main/1-Cabinet-Medical" target="_blank" rel="noopener">Code</a></p>
+                </div>
+                <img class="w-full rounded border border-line sm:order-1 sm:col-span-3 sm:mt-1" src="Screen/Portfolio2.png" alt="Aperçu du projet de cabinet médical" loading="lazy">
+              </div>
+            </li>
+
+            <!-- Email Tracker -->
+            <li class="card">
+              <div class="grid gap-4 sm:grid-cols-8 sm:gap-6">
+                <div class="sm:order-2 sm:col-span-5">
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Easy Tech · Mission 2025</p>
+                  <h3 class="mt-1 font-semibold text-head">Suivi des emails &amp; tableau de bord</h3>
+                  <p class="mt-2 text-sm">Savoir qui ouvre vos emails, quand et sur quel appareil : les ouvertures sont enregistrées automatiquement dans Google Sheets et présentées dans un tableau de bord clair.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">Node.js</li><li class="pill">Google Sheets</li><li class="pill">Looker Studio</li>
+                  </ul>
+                  <p class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    <a class="link-gold" href="https://lookerstudio.google.com/reporting/d4218795-26ec-4770-bd6d-1634ff8426f5" target="_blank" rel="noopener">Tableau de bord</a>
+                    <a class="link-gold" href="https://github.com/TechSculptor/portfolio/tree/main/2-Email-Tracker" target="_blank" rel="noopener">Code</a>
+                  </p>
+                </div>
+                <img class="w-full rounded border border-line sm:order-1 sm:col-span-3 sm:mt-1" src="2-Email-Tracker/visuals/dashboard1.jpg" alt="Tableau de bord Looker Studio du suivi d'emails" loading="lazy">
+              </div>
+            </li>
+
+            <!-- Generate HTML -->
+            <li class="card">
+              <div class="grid gap-4 sm:grid-cols-8 sm:gap-6">
+                <div class="sm:order-2 sm:col-span-5">
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Automatisation</p>
+                  <h3 class="mt-1 font-semibold text-head">40 pages produits générées automatiquement</h3>
+                  <p class="mt-2 text-sm">À partir d'un simple fichier de données, un script crée 40 pages web prêtes à publier, ainsi qu'un export pour alimenter d'autres outils. Des heures de saisie évitées.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">Python</li><li class="pill">Pandas</li><li class="pill">HTML/CSS</li>
+                  </ul>
+                  <p class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    <a class="link-gold" href="3-Generate-Html/index.html" target="_blank" rel="noopener">Rendu final</a>
+                    <a class="link-gold" href="https://github.com/TechSculptor/portfolio/tree/main/3-Generate-Html" target="_blank" rel="noopener">Code</a>
+                  </p>
+                </div>
+                <img class="w-full rounded border border-line sm:order-1 sm:col-span-3 sm:mt-1" src="Screen/Portfolio4.png" alt="Catalogue généré automatiquement" loading="lazy">
+              </div>
+            </li>
+
+            <!-- Todo List -->
+            <li class="card">
+              <div class="grid gap-4 sm:grid-cols-8 sm:gap-6">
+                <div class="sm:order-2 sm:col-span-5">
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Productivité</p>
+                  <h3 class="mt-1 font-semibold text-head">Gestionnaire de tâches intelligent</h3>
+                  <p class="mt-2 text-sm">Priorités, catégories, sous-tâches et rappels qui s'adaptent à l'échéance. Les données restent dans le navigateur, sans compte à créer.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">Angular 21</li><li class="pill">TypeScript</li>
+                  </ul>
+                  <p class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    <a class="link-gold" href="4-Todo-List-Dev/demo/index.html" target="_blank" rel="noopener">Démo en ligne</a>
+                    <a class="link-gold" href="https://github.com/TechSculptor/portfolio/tree/main/4-Todo-List-Dev" target="_blank" rel="noopener">Code</a>
+                  </p>
+                </div>
+                <img class="w-full rounded border border-line sm:order-1 sm:col-span-3 sm:mt-1" src="Screen/TodoList.png" alt="Liste de tâches avec priorités, catégories et rappels" loading="lazy">
+              </div>
+            </li>
+          </ul>
+
+          <p class="mt-10 text-sm">
+            <a class="link-gold inline-flex items-center gap-2" href="https://github.com/TechSculptor/portfolio" target="_blank" rel="noopener">Tout le code sur GitHub <i class="fa-solid fa-arrow-right text-xs"></i></a>
+          </p>
+        </section>
+
+        <!-- À PROPOS -->
+        <section id="apropos" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="À propos">
+          <h2 class="section-title">À propos</h2>
+          <div class="mb-8 flex items-center gap-5">
+            <img src="assets/picture/thomas-daloz.jpg" alt="Thomas Daloz, fondateur de TechSculptor" class="h-24 w-24 shrink-0 rounded-full object-cover ring-2 ring-gold/70 ring-offset-4 ring-offset-canvas" loading="lazy">
             <div>
-              <label for="subject" class="form-label">Votre projet</label>
-              <select id="subject" name="subject" class="form-input">
-                <option>Site vitrine / référencement</option>
-                <option>Application sur mesure</option>
-                <option>Automatisation / tableau de bord</option>
-                <option>Suivi ou maintenance d'un site</option>
-                <option>Recrutement (CDI)</option>
-                <option>Autre</option>
-              </select>
+              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Derrière TechSculptor</p>
+              <p class="mt-1 text-2xl font-extralight text-head">Thomas Daloz</p>
+              <p class="text-sm text-muted">Développeur web · entrepreneur individuel</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <p>
+              Ouvert à tout projet, du <span class="text-head">référencement de site</span> à la <span class="text-head">conception d'algorithmes pour créer des outils innovants</span>, en passant par la <span class="text-head">mise à jour d'un site existant</span>, je suis disponible pour répondre à vos enjeux du moment.
+            </p>
+            <p>
+              En M1 Informatique au CNAM, je multiplie les expériences, notamment récemment chez <span class="text-head">VISU Energy</span>, où j'ai réalisé une plateforme de supervision énergétique en temps réel. J'ai aussi développé un service de suivi d'emails chez <span class="text-head">Easy Tech</span> et refondu plusieurs sites Wix, dont celui de VISU Energy, avec <span class="text-head">+40 % de trafic</span> à la clé.
+            </p>
+            <p>
+              Vous exposez vos besoins, on en discute tout au long du projet : j'explique clairement, je reste attentif à vos questions et je livre un travail <span class="text-head">documenté, dans les délais</span>. Après la mise en ligne, je reste disponible pour les adaptations, les mises à jour et la résolution de problèmes.
+            </p>
+          </div>
+          <ul class="mt-8 grid gap-4 sm:grid-cols-3">
+            <li class="border-l-2 border-gold/70 pl-4"><p class="text-sm font-semibold text-head">Un suivi régulier</p><p class="text-sm text-muted">Un forfait mensuel pour vos tâches hebdomadaires ou quotidiennes.</p></li>
+            <li class="border-l-2 border-gold/70 pl-4"><p class="text-sm font-semibold text-head">Des visios à la demande</p><p class="text-sm text-muted">Pour faire le point quand vous le souhaitez.</p></li>
+            <li class="border-l-2 border-gold/70 pl-4"><p class="text-sm font-semibold text-head">Une vraie méthode</p><p class="text-sm text-muted">Un code testé, documenté, puis mis en production.</p></li>
+          </ul>
+        </section>
+
+        <!-- EXPÉRIENCE -->
+        <section id="experience" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Expérience">
+          <h2 class="section-title">Expérience</h2>
+          <p class="mb-6 hidden text-xs font-semibold uppercase tracking-[0.2em] text-gold lg:block">Mon parcours</p>
+          <ol class="group/list space-y-4">
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2026 · 4 mois</p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Développeur web &amp; support IoT · VISU Energy</h3>
+                  <p class="mt-2 text-sm">Plateforme de supervision énergétique : interfaces d'après les maquettes Figma, version mobile, traduction FR/EN, rapports automatisés, sécurité de l'API.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2"><li class="pill">Node-RED</li><li class="pill">JavaScript</li><li class="pill">PostgreSQL</li></ul>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2026 · 2 mois</p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Développeur web full-stack · DATALIA</h3>
+                  <p class="mt-2 text-sm">Intégration d'API REST, travail en équipe Agile avec GitHub Projects, rédaction de documentation technique.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2"><li class="pill">API REST</li><li class="pill">Agile</li></ul>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2025 · 2 mois</p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Développeur tracking &amp; analytics · Easy Tech</h3>
+                  <p class="mt-2 text-sm">Service de suivi des ouvertures et des clics d'emails, avec restitution en temps réel dans des tableaux de bord.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2"><li class="pill">Node.js</li><li class="pill">Looker Studio</li></ul>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2025 · 2 mois</p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Développeur WordPress &amp; intégrateur · Innovqube</h3>
+                  <p class="mt-2 text-sm">Intégration d'interfaces et de widgets responsive, maintenance de pages et optimisation du référencement.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2"><li class="pill">WordPress</li><li class="pill">SEO</li><li class="pill">PageSpeed</li></ul>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2025 · 3 mois</p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Développeur Rust · MD Solutions</h3>
+                  <p class="mt-2 text-sm">Récupération asynchrone de données de marché via l'API KuCoin et modélisation de bases de données.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2"><li class="pill">Rust</li><li class="pill">API</li></ul>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">Depuis 2023</p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Master 1 &amp; Licence Informatique · CNAM Lyon</h3>
+                  <p class="mt-2 text-sm">Génie logiciel, bases de données, architecture des applications.</p>
+                </div>
+              </div>
+            </li>
+          </ol>
+          <p class="mt-10 text-sm">
+            <a class="link-gold inline-flex items-center gap-2" href="cv/Thomas-Daloz-CV.pdf" download>Télécharger mon CV complet <i class="fa-solid fa-arrow-down text-xs"></i></a>
+          </p>
+        </section>
+
+        <!-- TÉMOIGNAGE -->
+        <section id="temoignage" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Témoignage">
+          <h2 class="section-title">Témoignage</h2>
+          <p class="mb-6 hidden text-xs font-semibold uppercase tracking-[0.2em] text-gold lg:block">Ils en parlent</p>
+          <figure class="border-l-2 border-gold pl-6">
+            <blockquote class="text-lg font-light leading-relaxed text-head">
+              « Thomas a montré une bonne motivation et une réelle curiosité pour le métier de développeur informatique. Il s'est investi dans les missions confiées et a su s'adapter progressivement à notre environnement de travail. Son attitude a été respectueuse, sérieuse et il a manifesté un réel intérêt pour comprendre les outils, les méthodes et les enjeux liés au développement web et à l'organisation d'un projet technique. »
+            </blockquote>
+            <figcaption class="mt-4 text-sm"><span class="font-semibold text-gold">Quin Axel</span> <span class="text-muted">· Chef de projet, Easy Tech</span></figcaption>
+          </figure>
+        </section>
+
+        <!-- VOUS RECRUTEZ ? -->
+        <section id="recrutement" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Pour les recruteurs">
+          <h2 class="section-title">Vous recrutez ?</h2>
+          <div class="rounded-lg border border-line bg-surface/40 p-6">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Vous recrutez ?</p>
+            <p class="mt-3 text-sm">Je suis aussi <span class="text-head">ouvert à un CDI</span>. Côté technique, voici ma stack :</p>
+            <dl class="mt-5 grid gap-4 text-sm sm:grid-cols-2">
+              <div><dt class="font-semibold text-head">Back-end</dt><dd class="mt-2 flex flex-wrap gap-2"><span class="pill">PHP / Symfony 8</span><span class="pill">Node.js</span><span class="pill">Python</span><span class="pill">Node-RED</span></dd></div>
+              <div><dt class="font-semibold text-head">Front-end</dt><dd class="mt-2 flex flex-wrap gap-2"><span class="pill">Angular 21</span><span class="pill">React</span><span class="pill">TypeScript</span><span class="pill">Tailwind</span></dd></div>
+              <div><dt class="font-semibold text-head">Données &amp; DevOps</dt><dd class="mt-2 flex flex-wrap gap-2"><span class="pill">PostgreSQL</span><span class="pill">Docker</span><span class="pill">GitHub Actions</span><span class="pill">PHPUnit</span></dd></div>
+              <div><dt class="font-semibold text-head">Outils</dt><dd class="mt-2 flex flex-wrap gap-2"><span class="pill">n8n</span><span class="pill">WordPress</span><span class="pill">Looker Studio</span><span class="pill">Figma</span></dd></div>
+            </dl>
+            <p class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              <a class="link-gold" href="cv/Thomas-Daloz-CV.pdf" download>Mon CV (PDF)</a>
+              <a class="link-gold" href="https://github.com/TechSculptor/portfolio" target="_blank" rel="noopener">Le code sur GitHub</a>
+              <a class="link-gold" href="https://www.linkedin.com/in/thomas-daloz-16933b281" target="_blank" rel="noopener">LinkedIn</a>
+            </p>
+          </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Questions fréquentes">
+          <h2 class="section-title">Questions fréquentes</h2>
+          <p class="mb-6 hidden text-xs font-semibold uppercase tracking-[0.2em] text-gold lg:block">Questions fréquentes</p>
+          <div class="divide-y divide-line border-y border-line">
+            <details class="faq group py-4">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-head">Combien coûte un site ou une application ?<i class="faq-icon fa-solid fa-plus text-gold transition"></i></summary>
+              <p class="mt-3 text-sm">Cela dépend de votre besoin. Après un premier échange, je vous envoie un devis gratuit et détaillé, sans engagement, pour que vous sachiez exactement ce que vous payez.</p>
+            </details>
+            <details class="faq group py-4">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-head">Combien de temps faut-il ?<i class="faq-icon fa-solid fa-plus text-gold transition"></i></summary>
+              <p class="mt-3 text-sm">Un site vitrine demande généralement quelques semaines ; une application sur mesure dépend de ses fonctionnalités. Le planning est indiqué dans le devis.</p>
+            </details>
+            <details class="faq group py-4">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-head">Je n'y connais rien en technique, est-ce un problème ?<i class="faq-icon fa-solid fa-plus text-gold transition"></i></summary>
+              <p class="mt-3 text-sm">Pas du tout. Vous m'expliquez votre activité, je m'occupe de la technique et je vous explique chaque choix simplement.</p>
+            </details>
+            <details class="faq group py-4">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-head">Pourrai-je modifier mon site moi-même ?<i class="faq-icon fa-solid fa-plus text-gold transition"></i></summary>
+              <p class="mt-3 text-sm">Oui, si vous le souhaitez : je peux mettre en place une interface simple pour modifier vos textes et vos images, et je vous montre comment l'utiliser.</p>
+            </details>
+            <details class="faq group py-4">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-head">Vous occupez-vous de l'hébergement et de la maintenance ?<i class="faq-icon fa-solid fa-plus text-gold transition"></i></summary>
+              <p class="mt-3 text-sm">Oui : nom de domaine, hébergement, mise en ligne, puis suivi (mises à jour, sauvegardes, petites évolutions) si vous le souhaitez.</p>
+            </details>
+            <details class="faq group py-4">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-head">Où travaillez-vous ?<i class="faq-icon fa-solid fa-plus text-gold transition"></i></summary>
+              <p class="mt-3 text-sm">Partout en France et en Suisse : l'essentiel se fait à distance, avec des visios à la demande. Je suis basé dans l'Ain, près de Genève, et je peux aussi me déplacer.</p>
+            </details>
+          </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="scroll-mt-16 lg:scroll-mt-24" aria-label="Contact">
+          <h2 class="section-title">Contact</h2>
+          <h3 class="text-4xl font-extralight tracking-tight text-head sm:text-5xl">Parlons de votre projet.</h3>
+          <p class="mt-4 border-l-2 border-gold/70 pl-4">Décrivez-moi votre besoin en quelques lignes : je vous réponds sous 48 h pour fixer un premier échange gratuit.</p>
+
+          <form id="contact-form" class="mt-10 space-y-5" novalidate>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="name" class="form-label">Nom</label>
+                <input id="name" name="name" type="text" required autocomplete="name" placeholder="Jeanne Dupont" class="form-input">
+              </div>
+              <div>
+                <label for="email" class="form-label">Email</label>
+                <input id="email" name="email" type="email" required autocomplete="email" placeholder="jeanne@entreprise.fr" class="form-input">
+              </div>
+            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="subject" class="form-label">Votre projet</label>
+                <select id="subject" name="subject" class="form-input">
+                  <option>Site vitrine / référencement</option>
+                  <option>Application sur mesure</option>
+                  <option>Automatisation / tableau de bord</option>
+                  <option>Reprise ou maintenance d'un site</option>
+                  <option>Recrutement (CDI)</option>
+                  <option>Autre</option>
+                </select>
+              </div>
+              <div>
+                <label for="budget" class="form-label">Budget (facultatif)</label>
+                <select id="budget" name="budget" class="form-input">
+                  <option>Je ne sais pas encore</option>
+                  <option>Moins de 500 €</option>
+                  <option>500 € à 1 500 €</option>
+                  <option>1 500 € à 3 000 €</option>
+                  <option>3 000 € à 5 000 €</option>
+                </select>
+              </div>
             </div>
             <div>
-              <label for="budget" class="form-label">Budget (facultatif)</label>
-              <select id="budget" name="budget" class="form-input">
-                <option>Je ne sais pas encore</option>
-                <option>Moins de 500 €</option>
-                <option>500 € à 1 500 €</option>
-                <option>1 500 € à 3 000 €</option>
-                <option>3 000 € à 5 000 €</option>
-              </select>
+              <label for="message" class="form-label">Message</label>
+              <textarea id="message" name="message" rows="5" required placeholder="Bonjour Thomas, je souhaiterais…" class="form-input resize-y"></textarea>
             </div>
-          </div>
-          <div><label for="message" class="form-label">Message</label><textarea id="message" name="message" rows="5" required placeholder="Bonjour, je souhaiterais…" class="form-input resize-y"></textarea></div>
-          <!-- Piège à robots : invisible pour les humains -->
-          <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
-          <p id="form-status" class="hidden text-sm" role="status"></p>
-          <button type="submit" class="btn-main w-full disabled:cursor-wait disabled:opacity-60"><i class="fa-solid fa-paper-plane"></i> Envoyer ma demande</button>
-        </form>
-      </div>
-    </section>
-  </main>
+            <!-- Piège à robots : invisible pour les humains -->
+            <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+            <p id="form-status" class="hidden text-sm" role="status"></p>
+            <button type="submit" class="btn-primary disabled:cursor-wait disabled:opacity-60"><i class="fa-solid fa-paper-plane text-gold"></i> Envoyer le message</button>
+          </form>
 
-  <!-- ========== PIED DE PAGE ========== -->
-  <footer class="bg-band py-12 text-sm text-white/60">
-    <div class="container-x grid gap-8 md:grid-cols-3">
-      <div>
-        <p class="text-lg font-extrabold text-white">Tech<span class="text-brand">Sculptor</span></p>
-        <p class="mt-2">Création de sites web, applications sur mesure et automatisation.</p>
-      </div>
-      <ul class="space-y-1">
-        <li><a class="hover:text-white" href="#services">Services</a></li>
-        <li><a class="hover:text-white" href="#references">Références</a></li>
-        <li><a class="hover:text-white" href="#projets">Projets</a></li>
-        <li><a class="hover:text-white" href="#contact">Contact</a></li>
-      </ul>
-      <div>
-        <p>Thomas Daloz, entrepreneur individuel</p>
-        <p>SIRET 904 066 461 00024 · NAF 6201Z</p>
-        <p class="mt-3 flex gap-4">
-          <a class="hover:text-white" href="mentions-legales.html">Mentions légales</a>
-          <a class="hover:text-white" href="https://github.com/TechSculptor" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-          <a class="hover:text-white" href="https://www.linkedin.com/in/thomas-daloz-16933b281" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-        </p>
-      </div>
+          <ul class="mt-10 space-y-2 text-sm">
+            <li><i class="fa-regular fa-envelope mr-2 w-4 text-gold"></i><a class="link-gold" href="mailto:thomasdaloz9799@gmail.com">thomasdaloz9799@gmail.com</a></li>
+            <li><i class="fa-solid fa-location-dot mr-2 w-4 text-gold"></i>France &amp; Suisse · à distance ou sur place</li>
+            <li><i class="fa-solid fa-building mr-2 w-4 text-gold"></i>Entrepreneur individuel · SIRET 904 066 461 00024</li>
+          </ul>
+        </section>
+
+        <footer class="mt-24 max-w-md pb-16 text-xs text-muted sm:pb-0">
+          <p>© <span id="year"></span> TechSculptor · Thomas Daloz, entrepreneur individuel · SIRET 904 066 461 00024 · NAF 6201Z</p>
+          <p class="mt-2"><a class="link-gold" href="mentions-legales.html">Mentions légales</a></p>
+        </footer>
+      </main>
     </div>
-    <p class="container-x mt-10 text-xs text-white/40">© <span id="year"></span> TechSculptor · Thomas Daloz</p>
-  </footer>
+  </div>
 
   <script>
     (function () {
@@ -520,29 +659,15 @@
         try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
       });
 
-      // --- Menu mobile ---
-      var menuBtn = document.getElementById('menu-toggle');
-      var menu = document.getElementById('mobile-menu');
-      function setMenu(open) {
-        menu.classList.toggle('hidden', !open);
-        menuBtn.setAttribute('aria-expanded', String(open));
-        menuBtn.innerHTML = open ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+      // --- Halo qui suit la souris ---
+      var spotlight = document.getElementById('spotlight');
+      function paintSpotlight(x, y) {
+        spotlight.style.background = 'radial-gradient(600px at ' + x + 'px ' + y + 'px, rgb(var(--gold) / 0.07), transparent 80%)';
       }
-      menuBtn.addEventListener('click', function () { setMenu(menu.classList.contains('hidden')); });
-      menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
-
-      // --- Lien de navigation actif selon la section visible ---
-      var links = document.querySelectorAll('header .nav-a');
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          links.forEach(function (l) { l.classList.toggle('is-current', l.getAttribute('href') === '#' + entry.target.id); });
-        });
-      }, { rootMargin: '-40% 0px -55% 0px' });
-      ['services', 'references', 'projets', 'apropos', 'faq', 'contact'].forEach(function (id) {
-        var el = document.getElementById(id);
-        if (el) observer.observe(el);
-      });
+      paintSpotlight(-1000, -1000);
+      if (!prefersReduced) {
+        window.addEventListener('pointermove', function (e) { paintSpotlight(e.clientX, e.clientY); }, { passive: true });
+      }
 
       // --- Curseur personnalisé : seulement avec une souris et sans « animations réduites » ---
       if (!prefersReduced && window.matchMedia('(pointer: fine)').matches) {
@@ -553,7 +678,7 @@
           mx = e.clientX; my = e.clientY;
           dot.style.transform = 'translate(' + mx + 'px,' + my + 'px)';
           document.body.classList.add('cursor-on');
-          var hit = e.target.closest && e.target.closest('a, button, summary, select, label, .card, .service');
+          var hit = e.target.closest && e.target.closest('a, button, summary, select, label, .card');
           document.body.classList.toggle('cursor-hover', !!hit);
         }, { passive: true });
         document.addEventListener('mouseleave', function () { document.body.classList.remove('cursor-on'); });
@@ -564,7 +689,23 @@
         })();
       }
 
-      // --- Diaporama des références ---
+      // --- Lien de navigation actif selon la section visible ---
+      var links = document.querySelectorAll('.nav-link');
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          links.forEach(function (l) { l.classList.toggle('is-current', l.getAttribute('href') === '#' + entry.target.id); });
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+      ['services', 'references', 'realisations', 'apropos', 'faq', 'contact'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+
+      // --- Vidéos : pas de lecture automatique si l'utilisateur limite les animations ---
+      if (prefersReduced) document.querySelectorAll('video[autoplay]').forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); });
+
+      // --- Diaporama des références (défilement auto toutes les 5 s, pause au survol) ---
       var track = document.getElementById('slides');
       var slides = track.children;
       var dotsBox = document.getElementById('dots');
@@ -602,8 +743,6 @@
         region.addEventListener('focusin', function () { paused = true; });
         region.addEventListener('focusout', function () { paused = false; });
         setInterval(function () { if (!paused && !document.hidden) goTo(current + 1); }, 5000);
-      } else {
-        document.querySelectorAll('video[autoplay]').forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); });
       }
 
       // --- Boutons de copie (identifiants de démo) ---
@@ -623,7 +762,7 @@
       var status = document.getElementById('form-status');
       var submitBtn = form.querySelector('button[type="submit"]');
       function setStatus(html, color) {
-        status.classList.remove('hidden', 'text-muted', 'text-rose-500', 'text-emerald-500');
+        status.classList.remove('hidden', 'text-muted', 'text-red-500', 'text-emerald-500');
         status.classList.add(color);
         status.innerHTML = html;
       }
@@ -637,7 +776,7 @@
           if (!valid) ok = false;
         });
         if (!ok) {
-          setStatus('Merci de remplir correctement tous les champs.', 'text-rose-500');
+          setStatus('Merci de remplir correctement tous les champs.', 'text-red-500');
           return;
         }
         if (form.elements._honey.value) return;
@@ -663,13 +802,13 @@
         })
           .then(function (res) { return res.json().then(function (data) { if (!res.ok || String(data.success) !== 'true') throw data; }); })
           .then(function () {
-            setStatus('<i class="fa-solid fa-circle-check mr-1"></i> Demande envoyée, merci ! Je vous réponds sous 48 h.', 'text-emerald-500');
+            setStatus('<i class="fa-solid fa-circle-check mr-1"></i> Message envoyé, merci ! Je vous réponds sous 48 h.', 'text-emerald-500');
             form.reset();
           })
           .catch(function () {
             var href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject)
               + '&body=' + encodeURIComponent(form.elements.message.value);
-            setStatus('L\'envoi a échoué. Écrivez-moi directement à <a class="link-a" href="' + href + '">' + CONTACT_EMAIL + '</a>.', 'text-rose-500');
+            setStatus('L\'envoi a échoué. Écrivez-moi directement à <a class="link-gold" href="' + href + '">' + CONTACT_EMAIL + '</a>.', 'text-red-500');
           })
           .then(function () { submitBtn.disabled = false; });
       });

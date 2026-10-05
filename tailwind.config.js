@@ -9,9 +9,8 @@ module.exports = {
       fontFamily: {
         sans: ['Montserrat', 'system-ui', 'sans-serif']
       },
-      // Couleurs de structure pilotées par des variables CSS (voir assets/css/input.css) :
-      // le mode clair / sombre ne fait que changer les variables. Les couleurs vives
-      // (sky, violet, amber, emerald) viennent de la palette Tailwind.
+      // Couleurs pilotées par des variables CSS (voir assets/css/input.css) :
+      // le mode clair / sombre ne fait que changer les variables.
       colors: {
         canvas: v('canvas'),
         surface: v('surface'),
@@ -19,8 +18,8 @@ module.exports = {
         fg: v('fg'),
         head: v('head'),
         muted: v('muted'),
-        accent: v('accent'),
-        band: v('band')
+        gold: v('gold'),
+        steel: v('steel')
       }
     }
   }
