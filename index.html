@@ -1,28 +1,748 @@
 <!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="google-site-verification" content="GpqSldElB2aNI_mNfHQaOyntkXYiyZSp07EEdTLn7qk" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-    <!-- Titre visible sur Google -->
-    <title>Thomas Daloz | Développeur Fullstack & Génie Logiciel</title>
-  
-    <!-- Description sous le titre dans les résultats Google -->
-    <meta name="description" content="Portfolio de Thomas Daloz, développeur Fullstack (Node.js, Python, TypeScript, SQL). Projets web, intégration d'API et solutions sur mesure.">
-  
-    <!-- Mots-clés pour le référencement -->
-    <meta name="keywords" content="Thomas Daloz, Développeur Web, Fullstack, Python, TypeScript, Node.js, Ain, Genève, Portfolio">
-    <meta name="author" content="Thomas Daloz">
-    <meta name="robots" content="index, follow">
-  
-    <!-- Open Graph (Aperçu réseaux sociaux) -->
-    <meta property="og:title" content="Thomas Daloz | Développeur Fullstack">
-    <meta property="og:description" content="Découvrez mes projets web, applications et réalisations techniques.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://techsculptor.github.io/portfolio/">
-  </head>
-  <body>
-    <!-- GitHub Pages affichera ton site normalement -->
-  </body>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="GpqSldElB2aNI_mNfHQaOyntkXYiyZSp07EEdTLn7qk" />
+
+  <!-- SEO -->
+  <title>Thomas Daloz | Développeur Fullstack &amp; Génie Logiciel</title>
+  <meta name="description" content="Portfolio de Thomas Daloz, développeur Fullstack et étudiant en M1 Informatique (Génie Logiciel) : Symfony 8, Angular 21, React, Node.js, Python, PostgreSQL, Docker. Projets web, API et automatisation.">
+  <meta name="keywords" content="Thomas Daloz, TechSculptor, Développeur Fullstack, Génie Logiciel, PHP, Symfony, Angular, React, TypeScript, Node.js, Python, PostgreSQL, Docker, n8n, Ain, Genève, Portfolio">
+  <meta name="author" content="Thomas Daloz">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="canonical" href="https://techsculptor.github.io/portfolio/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="TechSculptor">
+  <meta property="og:title" content="Thomas Daloz | Développeur Fullstack &amp; Génie Logiciel">
+  <meta property="og:description" content="Symfony 8, Angular 21, React, Node.js, Python, PostgreSQL, Docker : découvrez mes projets web, applications et réalisations techniques.">
+  <meta property="og:url" content="https://techsculptor.github.io/portfolio/">
+  <meta property="og:image" content="https://techsculptor.github.io/portfolio/Screen/Starshop3-vaisseau.png">
+  <meta property="og:image:alt" content="Aperçu du projet Starshop, application Symfony 8">
+
+  <!-- Données structurées -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Thomas Daloz",
+    "alternateName": "TechSculptor",
+    "jobTitle": "Développeur Fullstack & Génie Logiciel",
+    "url": "https://techsculptor.github.io/portfolio/",
+    "sameAs": ["https://github.com/TechSculptor", "https://www.linkedin.com/in/thomas-daloz-16933b281"],
+    "knowsAbout": ["PHP", "Symfony", "Node.js", "Python", "TypeScript", "Angular", "React", "PostgreSQL", "Docker", "n8n"]
+  }
+  </script>
+
+  <!-- Thème appliqué avant le rendu pour éviter le flash -->
+  <script>
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem('theme'); } catch (e) {}
+      var dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', dark);
+    })();
+  </script>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['"Space Grotesk"', 'Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+          },
+          colors: {
+            ink: { 950: '#070a14', 900: '#0b1020', 800: '#121a30', 700: '#1c2643' }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Polices & icônes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+
+  <style>
+    body { -webkit-font-smoothing: antialiased; }
+    .text-gradient {
+      background: linear-gradient(100deg, #6366f1 0%, #22d3ee 50%, #a855f7 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: shine 6s linear infinite;
+    }
+    @keyframes shine { to { background-position: 200% center; } }
+
+    .blob { position: absolute; border-radius: 9999px; filter: blur(80px); opacity: .45; animation: float 14s ease-in-out infinite; }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -40px) scale(1.08); }
+    }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(to right, rgba(99,102,241,.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99,102,241,.08) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.is-visible { opacity: 1; transform: none; }
+
+    .card-glow { position: relative; }
+    .card-glow::before {
+      content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px;
+      background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(99,102,241,.7), transparent 40%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      opacity: 0; transition: opacity .3s; pointer-events: none;
+    }
+    .card-glow:hover::before { opacity: 1; }
+
+    .project.is-hidden { display: none; }
+
+    .caret::after { content: "▍"; margin-left: 2px; animation: blink 1s steps(1) infinite; color: #22d3ee; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-700 dark:bg-ink-950 dark:text-slate-300 font-sans transition-colors duration-300">
+
+  <!-- ========== NAVIGATION ========== -->
+  <header id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+    <nav class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between" aria-label="Navigation principale">
+      <a href="#accueil" class="flex items-center gap-2 font-display font-bold text-lg text-slate-900 dark:text-white">
+        <span class="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 text-white shadow-lg shadow-indigo-500/30">
+          <i class="fa-solid fa-code text-sm"></i>
+        </span>
+        Tech<span class="text-indigo-500 dark:text-cyan-400">Sculptor</span>
+      </a>
+
+      <ul class="hidden md:flex items-center gap-1 text-sm font-medium">
+        <li><a href="#accueil" class="nav-link px-3 py-2 rounded-lg hover:text-indigo-600 dark:hover:text-cyan-400 transition">Accueil</a></li>
+        <li><a href="#projets" class="nav-link px-3 py-2 rounded-lg hover:text-indigo-600 dark:hover:text-cyan-400 transition">Projets</a></li>
+        <li><a href="#competences" class="nav-link px-3 py-2 rounded-lg hover:text-indigo-600 dark:hover:text-cyan-400 transition">Compétences</a></li>
+        <li><a href="#contact" class="nav-link px-3 py-2 rounded-lg hover:text-indigo-600 dark:hover:text-cyan-400 transition">Contact</a></li>
+      </ul>
+
+      <div class="flex items-center gap-2">
+        <button id="theme-toggle" type="button" aria-label="Basculer le thème clair / sombre"
+          class="w-10 h-10 grid place-items-center rounded-xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 hover:border-indigo-400 dark:hover:border-cyan-400 transition">
+          <i class="fa-solid fa-moon dark:hidden text-slate-700"></i>
+          <i class="fa-solid fa-sun hidden dark:inline text-amber-300"></i>
+        </button>
+        <button id="menu-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-menu"
+          class="md:hidden w-10 h-10 grid place-items-center rounded-xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+
+    <div id="mobile-menu" class="md:hidden hidden border-t border-slate-200 dark:border-white/10 bg-white/95 dark:bg-ink-900/95 backdrop-blur-xl">
+      <ul class="px-4 py-3 flex flex-col text-sm font-medium">
+        <li><a href="#accueil" class="block py-3 border-b border-slate-100 dark:border-white/5">Accueil</a></li>
+        <li><a href="#projets" class="block py-3 border-b border-slate-100 dark:border-white/5">Projets</a></li>
+        <li><a href="#competences" class="block py-3 border-b border-slate-100 dark:border-white/5">Compétences</a></li>
+        <li><a href="#contact" class="block py-3">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========== HERO ========== -->
+    <section id="accueil" class="relative min-h-screen flex items-center overflow-hidden pt-24 pb-16">
+      <div class="absolute inset-0 grid-bg" aria-hidden="true"></div>
+      <div class="blob w-96 h-96 bg-indigo-500 -top-20 -left-20" aria-hidden="true"></div>
+      <div class="blob w-80 h-80 bg-cyan-400 top-1/3 -right-24" style="animation-delay:-5s" aria-hidden="true"></div>
+      <div class="blob w-72 h-72 bg-purple-500 bottom-0 left-1/3 opacity-30" style="animation-delay:-9s" aria-hidden="true"></div>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-[1.25fr_1fr] gap-12 items-center w-full">
+        <div class="reveal">
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+            <span class="relative flex w-2 h-2"><span class="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75 animate-ping"></span><span class="relative inline-flex w-2 h-2 rounded-full bg-emerald-500"></span></span>
+            Disponible en freelance · ouvert au CDI
+          </span>
+
+          <h1 class="mt-6 font-display font-bold text-4xl sm:text-5xl lg:text-6xl leading-[1.05] text-slate-900 dark:text-white">
+            Développement et référencement de site web<br>
+            <span class="text-gradient">avec frameworks modernes, CMS et SQL.</span>
+          </h1>
+
+          <p class="mt-5 font-mono text-base sm:text-lg text-indigo-600 dark:text-cyan-300">
+            <span class="text-slate-400">&gt;</span> <span id="typed" class="caret">Développeur Web &amp; Mobile</span>
+          </p>
+
+          <p class="mt-5 max-w-xl text-base sm:text-lg leading-relaxed">
+            Je suis <strong class="text-slate-900 dark:text-white">Thomas Daloz</strong>, étudiant en <strong class="text-slate-900 dark:text-white">M1 Informatique</strong>.
+            Je travaille sur vos projets web : API et logique métier en PHP/Symfony ou Node.js, interfaces réactives en Angular ou React.
+            Je maîtrise PostgreSQL et l'administration de conteneurs avec Docker. 3 étapes pour un développement performant : du code testé, documenté puis finalement mis en production.
+          </p>
+
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#projets" class="group inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-indigo-600 to-cyan-500 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5 transition">
+              <i class="fa-solid fa-rocket"></i> Voir mes projets
+              <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition"></i>
+            </a>
+            <a href="#contact" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold border border-slate-300 dark:border-white/15 bg-white/70 dark:bg-white/5 text-slate-900 dark:text-white hover:border-indigo-500 dark:hover:border-cyan-400 hover:-translate-y-0.5 transition">
+              <i class="fa-solid fa-paper-plane"></i> Me contacter
+            </a>
+            <a href="cv/Thomas-Daloz-CV.pdf" download class="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-cyan-300 transition">
+              <i class="fa-solid fa-file-arrow-down"></i> Télécharger mon CV
+            </a>
+          </div>
+
+          <dl class="mt-12 grid grid-cols-2 max-w-xs gap-6">
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-slate-500">Projets</dt>
+              <dd class="font-display text-3xl font-bold text-slate-900 dark:text-white"><span class="counter" data-target="5">0</span></dd>
+            </div>
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-slate-500">Démos live</dt>
+              <dd class="font-display text-3xl font-bold text-slate-900 dark:text-white"><span class="counter" data-target="3">0</span></dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Fenêtre de code décorative -->
+        <div class="reveal hidden lg:block" style="transition-delay:.15s">
+          <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-ink-900/80 backdrop-blur-xl shadow-2xl shadow-indigo-500/10 overflow-hidden rotate-1 hover:rotate-0 transition duration-500">
+            <div class="flex items-center gap-2 px-4 py-3 border-b border-slate-200 dark:border-white/10">
+              <span class="w-3 h-3 rounded-full bg-red-400"></span>
+              <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+              <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+              <span class="ml-3 font-mono text-xs text-slate-500">src/Developer.php</span>
+            </div>
+            <pre class="p-5 font-mono text-[13px] leading-relaxed overflow-x-auto"><code><span class="text-purple-500 dark:text-purple-400">final class</span> <span class="text-cyan-600 dark:text-cyan-300">Developer</span>
+<span class="text-slate-400">{</span>
+  <span class="text-purple-500 dark:text-purple-400">public string</span> $name = <span class="text-emerald-600 dark:text-emerald-300">'Thomas Daloz'</span>;
+  <span class="text-purple-500 dark:text-purple-400">public string</span> $role = <span class="text-emerald-600 dark:text-emerald-300">'Fullstack'</span>;
+
+  <span class="text-purple-500 dark:text-purple-400">public array</span> $stack = [
+    <span class="text-emerald-600 dark:text-emerald-300">'back'</span>  =&gt; [<span class="text-amber-600 dark:text-amber-300">'Symfony 8'</span>, <span class="text-amber-600 dark:text-amber-300">'Node.js'</span>, <span class="text-amber-600 dark:text-amber-300">'Python'</span>],
+    <span class="text-emerald-600 dark:text-emerald-300">'front'</span> =&gt; [<span class="text-amber-600 dark:text-amber-300">'Angular 21'</span>, <span class="text-amber-600 dark:text-amber-300">'React'</span>, <span class="text-amber-600 dark:text-amber-300">'TS'</span>],
+    <span class="text-emerald-600 dark:text-emerald-300">'data'</span>  =&gt; [<span class="text-amber-600 dark:text-amber-300">'PostgreSQL'</span>],
+    <span class="text-emerald-600 dark:text-emerald-300">'ops'</span>   =&gt; [<span class="text-amber-600 dark:text-amber-300">'Docker'</span>, <span class="text-amber-600 dark:text-amber-300">'n8n'</span>, <span class="text-amber-600 dark:text-amber-300">'CI/CD'</span>],
+  ];
+
+  <span class="text-purple-500 dark:text-purple-400">public function</span> <span class="text-cyan-600 dark:text-cyan-300">ship</span>(): <span class="text-purple-500 dark:text-purple-400">Product</span>
+  <span class="text-slate-400">{</span>
+    <span class="text-purple-500 dark:text-purple-400">return</span> $this-&gt;<span class="text-cyan-600 dark:text-cyan-300">design</span>()
+      -&gt;<span class="text-cyan-600 dark:text-cyan-300">test</span>()
+      -&gt;<span class="text-cyan-600 dark:text-cyan-300">deploy</span>(); <span class="text-slate-400">// ✔ en production</span>
+  <span class="text-slate-400">}</span>
+<span class="text-slate-400">}</span></code></pre>
+          </div>
+        </div>
+      </div>
+
+      <a href="#projets" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-slate-400 hover:text-indigo-500 animate-bounce" aria-label="Défiler vers les projets">
+        <i class="fa-solid fa-chevron-down"></i>
+      </a>
+    </section>
+
+    <!-- ========== PROJETS ========== -->
+    <section id="projets" class="py-24 scroll-mt-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+          <div>
+            <p class="font-mono text-sm text-indigo-600 dark:text-cyan-400">01. // projets</p>
+            <h2 class="mt-2 font-display text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">Projets</h2>
+            <p class="mt-3 max-w-xl">Des projets documentés, testables en quelques commandes et représentatifs de ma façon de travailler.</p>
+          </div>
+
+          <div id="filters" class="flex flex-wrap gap-2" role="group" aria-label="Filtrer les projets">
+            <button type="button" data-filter="all" class="filter-btn is-active">Tous</button>
+            <button type="button" data-filter="php" class="filter-btn">PHP</button>
+            <button type="button" data-filter="js" class="filter-btn">JS / TS</button>
+            <button type="button" data-filter="python" class="filter-btn">Python</button>
+            <button type="button" data-filter="docker" class="filter-btn">Docker</button>
+          </div>
+        </div>
+
+        <div id="project-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- 5-Starshop -->
+          <article class="project reveal card-glow group md:col-span-2 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-ink-900 overflow-hidden flex flex-col md:flex-row hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/10 transition duration-300" data-tags="php docker">
+            <div class="relative md:w-1/2 aspect-video md:aspect-auto overflow-hidden bg-ink-800">
+              <img src="Screen/Starshop3-vaisseau.png" alt="Fiche détaillée d'un vaisseau dans Starshop" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-700">
+              <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-400 text-amber-950"><i class="fa-solid fa-star mr-1"></i>Projet en cours</span>
+            </div>
+            <div class="p-6 md:w-1/2 flex flex-col">
+              <p class="font-mono text-xs text-slate-500">Starshop</p>
+              <h3 class="mt-1 font-display text-xl font-bold text-slate-900 dark:text-white">Starshop : application web complète</h3>
+              <p class="mt-3 text-sm leading-relaxed">Boutique et atelier de réparation de vaisseaux : authentification et rôles, relations Doctrine, API JSON, back-office admin, intégration de l'API de l'ISS et CI GitHub Actions. Déployée sur Render.</p>
+              <ul class="mt-4 flex flex-wrap gap-1.5 text-xs font-medium">
+                <li class="tag">Symfony 8</li><li class="tag">PostgreSQL</li><li class="tag">Docker</li><li class="tag">Tailwind</li><li class="tag">Twig</li><li class="tag">PHPUnit</li><li class="tag">CI/CD Render</li>
+              </ul>
+              <div class="mt-auto pt-6 flex flex-wrap gap-4 text-sm font-semibold">
+                <a href="https://starshop-ky4b.onrender.com" target="_blank" rel="noopener" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Démo live</a>
+                <a href="https://github.com/TechSculptor/portfolio/tree/main/5-Starshop" target="_blank" rel="noopener" class="proj-link"><i class="fa-brands fa-github"></i> Code</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 1-Cabinet-Medical -->
+          <article class="project reveal card-glow group rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-ink-900 overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/10 transition duration-300" data-tags="php docker js">
+            <div class="relative aspect-video overflow-hidden bg-ink-800">
+              <img src="Screen/Portfolio2.png" alt="Code des fonctionnalités du cabinet médical" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-700">
+            </div>
+            <div class="p-6 flex flex-col flex-1">
+              <p class="font-mono text-xs text-slate-500">Cabinet Médical</p>
+              <h3 class="mt-1 font-display text-xl font-bold text-slate-900 dark:text-white">Gestion de cabinet médical</h3>
+              <p class="mt-3 text-sm leading-relaxed">Prise de rendez-vous pour patients, médecins et administrateurs : vérification par email, planning des créneaux en AJAX, récapitulatif PDF. 12 critères fonctionnels, MCD/MLD documentés.</p>
+              <ul class="mt-4 flex flex-wrap gap-1.5 text-xs font-medium">
+                <li class="tag">PHP</li><li class="tag">PostgreSQL</li><li class="tag">Docker</li><li class="tag">TCPDF</li><li class="tag">AJAX</li>
+              </ul>
+              <div class="mt-auto pt-6 flex gap-4 text-sm font-semibold">
+                <a href="https://github.com/TechSculptor/portfolio/tree/main/1-Cabinet-Medical" target="_blank" rel="noopener" class="proj-link"><i class="fa-brands fa-github"></i> Code</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 4-Todo-List-Dev -->
+          <article class="project reveal card-glow group rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-ink-900 overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/10 transition duration-300" data-tags="js">
+            <div class="relative aspect-video overflow-hidden bg-gradient-to-br from-rose-500 via-fuchsia-600 to-indigo-700 p-5 flex items-center justify-center">
+              <div class="w-full max-w-[240px] rounded-xl bg-white/95 dark:bg-ink-900/95 shadow-2xl p-3 space-y-2 text-[11px] group-hover:scale-105 transition duration-700" aria-hidden="true">
+                <div class="flex items-center justify-between font-semibold text-slate-800 dark:text-white"><span><i class="fa-brands fa-angular text-rose-500 mr-1"></i>Mes tâches</span><span class="text-slate-400">3/5</span></div>
+                <div class="h-1.5 rounded-full bg-slate-200 dark:bg-white/10"><div class="h-full w-3/5 rounded-full bg-gradient-to-r from-rose-500 to-indigo-500"></div></div>
+                <div class="flex items-center gap-2 text-slate-400 line-through"><i class="fa-solid fa-square-check text-emerald-500"></i>Revue de PR</div>
+                <div class="flex items-center gap-2 text-slate-700 dark:text-slate-200"><i class="fa-regular fa-square"></i>Migrer vers Signals<span class="ml-auto px-1.5 rounded bg-red-500/15 text-red-500">haute</span></div>
+                <div class="flex items-center gap-2 text-slate-700 dark:text-slate-200"><i class="fa-regular fa-square"></i>Écrire les tests<span class="ml-auto px-1.5 rounded bg-amber-500/15 text-amber-600">moy.</span></div>
+              </div>
+            </div>
+            <div class="p-6 flex flex-col flex-1">
+              <p class="font-mono text-xs text-slate-500">Todo List Dev</p>
+              <h3 class="mt-1 font-display text-xl font-bold text-slate-900 dark:text-white">Todo List pour développeurs</h3>
+              <p class="mt-3 text-sm leading-relaxed">Priorités, catégories, sous-tâches et rappels adaptatifs selon l'échéance. État 100 % réactif via Signals sans RxJS, persistance locale avec migration de schéma.</p>
+              <ul class="mt-4 flex flex-wrap gap-1.5 text-xs font-medium">
+                <li class="tag">Angular 21</li><li class="tag">TypeScript</li><li class="tag">Signals</li><li class="tag">localStorage</li>
+              </ul>
+              <div class="mt-auto pt-6 flex gap-4 text-sm font-semibold">
+                <a href="4-Todo-List-Dev/demo/index.html" target="_blank" rel="noopener" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Démo live</a>
+                <a href="https://github.com/TechSculptor/portfolio/tree/main/4-Todo-List-Dev" target="_blank" rel="noopener" class="proj-link"><i class="fa-brands fa-github"></i> Code</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2-Email-Tracker -->
+          <article class="project reveal card-glow group rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-ink-900 overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/10 transition duration-300" data-tags="js docker">
+            <div class="relative aspect-video overflow-hidden bg-ink-800">
+              <img src="Screen/Portfolio3.png" alt="Code du micro-service de suivi d'emails" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-700">
+            </div>
+            <div class="p-6 flex flex-col flex-1">
+              <p class="font-mono text-xs text-slate-500">Email Tracker</p>
+              <h3 class="mt-1 font-display text-xl font-bold text-slate-900 dark:text-white">Micro-service de suivi d'emails</h3>
+              <p class="mt-3 text-sm leading-relaxed">Suivi des ouvertures d'emails par pixel invisible, journalisation dans Google Sheets et tableau de bord de visualisation dans Looker Studio.</p>
+              <p class="mt-3 text-xs font-medium text-indigo-600 dark:text-cyan-400"><i class="fa-solid fa-briefcase mr-1"></i>Réalisé lors de ma mission chez Easy Tech</p>
+              <ul class="mt-4 flex flex-wrap gap-1.5 text-xs font-medium">
+                <li class="tag">Node.js</li><li class="tag">Express</li><li class="tag">Google Sheets API</li><li class="tag">Looker Studio</li>
+              </ul>
+              <div class="mt-auto pt-6 flex flex-wrap gap-4 text-sm font-semibold">
+                <a href="https://lookerstudio.google.com/reporting/d4218795-26ec-4770-bd6d-1634ff8426f5" target="_blank" rel="noopener" class="proj-link"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="https://github.com/TechSculptor/portfolio/tree/main/2-Email-Tracker" target="_blank" rel="noopener" class="proj-link"><i class="fa-brands fa-github"></i> Code</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3-Generate-Html -->
+          <article class="project reveal card-glow group rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-ink-900 overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/10 transition duration-300" data-tags="python">
+            <div class="relative aspect-video overflow-hidden bg-ink-800">
+              <img src="Screen/Portfolio4.png" alt="Catalogue généré automatiquement par le pipeline Python" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-700">
+            </div>
+            <div class="p-6 flex flex-col flex-1">
+              <p class="font-mono text-xs text-slate-500">Generate HTML</p>
+              <h3 class="mt-1 font-display text-xl font-bold text-slate-900 dark:text-white">Pipeline de génération de 40 pages</h3>
+              <p class="mt-3 text-sm leading-relaxed">Pipeline en 4 étapes qui transforme des fichiers CSV en 40 pages web responsive, avec export JSON prêt à alimenter une API.</p>
+              <ul class="mt-4 flex flex-wrap gap-1.5 text-xs font-medium">
+                <li class="tag">Python</li><li class="tag">Pandas</li><li class="tag">HTML/CSS</li><li class="tag">JSON</li>
+              </ul>
+              <div class="mt-auto pt-6 flex flex-wrap gap-4 text-sm font-semibold">
+                <a href="3-Generate-Html/index.html" target="_blank" rel="noopener" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Rendu final</a>
+                <a href="https://github.com/TechSculptor/portfolio/tree/main/3-Generate-Html" target="_blank" rel="noopener" class="proj-link"><i class="fa-brands fa-github"></i> Code</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p id="no-project" class="hidden text-center py-10 text-slate-500">Aucun projet pour ce filtre.</p>
+
+        <div class="reveal mt-10 text-center">
+          <a href="https://github.com/TechSculptor/portfolio" target="_blank" rel="noopener" class="inline-flex items-center gap-2 font-semibold text-indigo-600 dark:text-cyan-400 hover:underline">
+            <i class="fa-brands fa-github"></i> Tout le code sur GitHub <i class="fa-solid fa-arrow-right text-xs"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== COMPÉTENCES ========== -->
+    <section id="competences" class="py-24 scroll-mt-16 bg-white dark:bg-ink-900/50 border-y border-slate-200 dark:border-white/5">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="reveal mb-12">
+          <p class="font-mono text-sm text-indigo-600 dark:text-cyan-400">02. // compétences</p>
+          <h2 class="mt-2 font-display text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">Compétences &amp; stack technique</h2>
+          <p class="mt-3 max-w-xl">Une stack choisie pour livrer de bout en bout : de la base de données jusqu'au déploiement.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="skill-card reveal">
+            <div class="skill-icon from-indigo-500 to-violet-500"><i class="fa-solid fa-server"></i></div>
+            <h3 class="skill-title">Backend</h3>
+            <ul class="skill-list">
+              <li><i class="fa-brands fa-php text-indigo-400"></i>PHP / Symfony 8</li>
+              <li><i class="fa-solid fa-layer-group text-indigo-400"></i>Doctrine ORM</li>
+              <li><i class="fa-brands fa-node-js text-emerald-500"></i>Node.js / Express</li>
+              <li><i class="fa-brands fa-python text-sky-500"></i>Python / Pandas</li>
+              <li><i class="fa-solid fa-shield-halved text-rose-400"></i>Sécurité : CSRF, rôles, hachage</li>
+            </ul>
+          </div>
+
+          <div class="skill-card reveal" style="transition-delay:.08s">
+            <div class="skill-icon from-rose-500 to-orange-400"><i class="fa-solid fa-display"></i></div>
+            <h3 class="skill-title">Frontend</h3>
+            <ul class="skill-list">
+              <li><i class="fa-brands fa-angular text-rose-500"></i>Angular 21 (Signals)</li>
+              <li><i class="fa-brands fa-react text-cyan-400"></i>ReactJS</li>
+              <li><i class="fa-solid fa-code text-blue-500"></i>TypeScript / JavaScript</li>
+              <li><i class="fa-brands fa-html5 text-orange-500"></i>HTML5 / CSS3 / Twig</li>
+              <li><i class="fa-solid fa-wind text-cyan-500"></i>Tailwind CSS / Responsive</li>
+            </ul>
+          </div>
+
+          <div class="skill-card reveal" style="transition-delay:.16s">
+            <div class="skill-icon from-cyan-500 to-sky-600"><i class="fa-solid fa-database"></i></div>
+            <h3 class="skill-title">Base de données &amp; DevOps</h3>
+            <ul class="skill-list">
+              <li><i class="fa-solid fa-database text-sky-500"></i>PostgreSQL / Modélisation SQL</li>
+              <li><i class="fa-brands fa-docker text-sky-500"></i>Docker &amp; Docker Compose</li>
+              <li><i class="fa-solid fa-gears text-slate-400"></i>GitHub Actions (CI)</li>
+              <li><i class="fa-solid fa-cloud text-violet-400"></i>Déploiement Render</li>
+              <li><i class="fa-solid fa-vial text-emerald-500"></i>PHPUnit / Vitest</li>
+            </ul>
+          </div>
+
+          <div class="skill-card reveal" style="transition-delay:.24s">
+            <div class="skill-icon from-emerald-500 to-teal-500"><i class="fa-solid fa-toolbox"></i></div>
+            <h3 class="skill-title">Outils</h3>
+            <ul class="skill-list">
+              <li><i class="fa-solid fa-diagram-project text-rose-400"></i>n8n (workflows)</li>
+              <li><i class="fa-brands fa-git-alt text-orange-500"></i>Git &amp; GitHub</li>
+              <li><i class="fa-solid fa-chart-pie text-blue-500"></i>Looker Studio</li>
+              <li><i class="fa-brands fa-google text-amber-500"></i>Google Sheets API</li>
+              <li><i class="fa-solid fa-sitemap text-indigo-400"></i>UML / MCD / MLD</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Bandeau défilant -->
+        <div class="reveal mt-14 relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]" aria-hidden="true">
+          <div id="marquee" class="flex gap-10 w-max text-4xl text-slate-400 dark:text-slate-600">
+            <i class="fa-brands fa-symfony"></i><i class="fa-brands fa-php"></i><i class="fa-brands fa-angular"></i><i class="fa-brands fa-react"></i><i class="fa-brands fa-node-js"></i><i class="fa-brands fa-python"></i><i class="fa-brands fa-js"></i><i class="fa-brands fa-docker"></i><i class="fa-brands fa-git-alt"></i><i class="fa-brands fa-github"></i><i class="fa-brands fa-html5"></i><i class="fa-brands fa-css3-alt"></i><i class="fa-solid fa-database"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== RECOMMANDATION ========== -->
+    <section id="recommandation" class="py-24">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <p class="reveal font-mono text-sm text-indigo-600 dark:text-cyan-400 text-center">03. // recommandation</p>
+        <figure class="reveal relative mt-6 rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-indigo-600 via-indigo-700 to-cyan-700 text-white shadow-2xl shadow-indigo-500/20 overflow-hidden">
+          <i class="fa-solid fa-quote-left absolute -top-2 left-6 text-[120px] text-white/10" aria-hidden="true"></i>
+          <div class="flex gap-1 text-amber-300 mb-6" aria-label="Recommandation professionnelle">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <blockquote class="relative text-lg sm:text-xl leading-relaxed text-white/95">
+            « Thomas a montré une <strong>bonne motivation</strong> et une réelle curiosité pour le métier de développeur informatique.
+            Il s'est investi dans les missions confiées et a su <strong>s'adapter progressivement à notre environnement de travail</strong>.
+            Son attitude a été <strong>respectueuse, sérieuse</strong> et il a manifesté un réel intérêt pour comprendre les outils,
+            les méthodes et les enjeux liés au développement web et à l'organisation d'un projet technique.
+            Cette immersion s'est déroulée dans de bonnes conditions et a été globalement positive. »
+          </blockquote>
+          <figcaption class="mt-8 flex items-center gap-4">
+            <span class="grid place-items-center w-12 h-12 rounded-full bg-white/15 font-display font-bold">QA</span>
+            <span>
+              <span class="block font-semibold">Quin Axel</span>
+              <span class="block text-sm text-white/70">Chef de projet, Easy Tech</span>
+            </span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section id="contact" class="py-24 scroll-mt-16 bg-white dark:bg-ink-900/50 border-t border-slate-200 dark:border-white/5">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-12">
+        <div class="reveal">
+          <p class="font-mono text-sm text-indigo-600 dark:text-cyan-400">04. // contact</p>
+          <h2 class="mt-2 font-display text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">Construisons quelque chose ensemble</h2>
+          <p class="mt-4 max-w-md leading-relaxed">Une mission freelance, un poste en CDI ou simplement une question ? Écrivez-moi, je réponds rapidement.</p>
+
+          <ul class="mt-8 space-y-4">
+            <li>
+              <a href="mailto:thomasdaloz9799@gmail.com" class="contact-item">
+                <span class="contact-icon"><i class="fa-solid fa-envelope"></i></span>
+                <span><span class="block text-xs uppercase tracking-wider text-slate-500">Email</span><span class="font-semibold text-slate-900 dark:text-white break-all">thomasdaloz9799@gmail.com</span></span>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/TechSculptor" target="_blank" rel="noopener" class="contact-item">
+                <span class="contact-icon"><i class="fa-brands fa-github"></i></span>
+                <span><span class="block text-xs uppercase tracking-wider text-slate-500">GitHub</span><span class="font-semibold text-slate-900 dark:text-white">github.com/TechSculptor</span></span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/in/thomas-daloz-16933b281" target="_blank" rel="noopener" class="contact-item">
+                <span class="contact-icon"><i class="fa-brands fa-linkedin-in"></i></span>
+                <span><span class="block text-xs uppercase tracking-wider text-slate-500">LinkedIn</span><span class="font-semibold text-slate-900 dark:text-white">Thomas Daloz</span></span>
+              </a>
+            </li>
+            <li class="contact-item cursor-default">
+              <span class="contact-icon"><i class="fa-solid fa-location-dot"></i></span>
+              <span><span class="block text-xs uppercase tracking-wider text-slate-500">Localisation</span><span class="font-semibold text-slate-900 dark:text-white">Ain / Genève</span></span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Formulaire : site statique, l'envoi ouvre le client mail avec le message pré-rempli -->
+        <form id="contact-form" class="reveal rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-ink-900 p-6 sm:p-8 space-y-5 shadow-xl shadow-indigo-500/5" novalidate>
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label for="name" class="form-label">Nom</label>
+              <input id="name" name="name" type="text" required autocomplete="name" placeholder="Jeanne Dupont" class="form-input">
+            </div>
+            <div>
+              <label for="email" class="form-label">Email</label>
+              <input id="email" name="email" type="email" required autocomplete="email" placeholder="jeanne@entreprise.fr" class="form-input">
+            </div>
+          </div>
+          <div>
+            <label for="subject" class="form-label">Sujet</label>
+            <select id="subject" name="subject" class="form-input">
+              <option>Mission freelance</option>
+              <option>Poste en CDI</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div>
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Bonjour Thomas, ..." class="form-input resize-y"></textarea>
+          </div>
+          <p id="form-status" class="hidden text-sm" role="status"></p>
+          <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-indigo-600 to-cyan-500 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5 transition">
+            <i class="fa-solid fa-paper-plane"></i> Envoyer le message
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="py-10 border-t border-slate-200 dark:border-white/5">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+      <p>© <span id="year"></span> Thomas Daloz · <span class="font-display font-semibold">TechSculptor</span></p>
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/TechSculptor" target="_blank" rel="noopener" aria-label="GitHub" class="social-btn"><i class="fa-brands fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/thomas-daloz-16933b281" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-btn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="mailto:thomasdaloz9799@gmail.com" aria-label="Email" class="social-btn"><i class="fa-solid fa-envelope"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <button id="to-top" type="button" aria-label="Revenir en haut"
+    class="fixed bottom-6 right-6 z-40 w-11 h-11 grid place-items-center rounded-xl text-white bg-gradient-to-br from-indigo-600 to-cyan-500 shadow-lg opacity-0 pointer-events-none translate-y-4 transition">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <!-- Composants réutilisés -->
+  <style type="text/tailwindcss">
+    .tag { @apply px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 dark:bg-white/5 dark:text-cyan-300 border border-indigo-100 dark:border-white/10; }
+    .proj-link { @apply inline-flex items-center gap-1.5 text-indigo-600 dark:text-cyan-400 hover:underline underline-offset-4; }
+    .filter-btn { @apply px-4 py-2 rounded-xl text-sm font-medium border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:border-indigo-400 dark:hover:border-cyan-400 transition; }
+    .filter-btn.is-active { @apply bg-gradient-to-r from-indigo-600 to-cyan-500 text-white border-transparent shadow-md shadow-indigo-500/30; }
+    .skill-card { @apply rounded-2xl p-6 border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-ink-900 hover:-translate-y-1 hover:border-indigo-400 dark:hover:border-cyan-400/50 transition duration-300; }
+    .skill-icon { @apply w-12 h-12 grid place-items-center rounded-xl text-white text-lg bg-gradient-to-br shadow-lg; }
+    .skill-title { @apply mt-5 font-display text-lg font-bold text-slate-900 dark:text-white; }
+    .skill-list { @apply mt-4 space-y-2.5 text-sm; }
+    .skill-list li { @apply flex items-center gap-3; }
+    .skill-list i { @apply w-5 text-center; }
+    .contact-item { @apply flex items-center gap-4 p-3 -m-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition; }
+    .contact-icon { @apply w-12 h-12 shrink-0 grid place-items-center rounded-xl bg-indigo-50 dark:bg-white/5 text-indigo-600 dark:text-cyan-400 text-lg border border-indigo-100 dark:border-white/10; }
+    .form-label { @apply block mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-300; }
+    .form-input { @apply w-full px-4 py-3 rounded-xl bg-white dark:bg-ink-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-cyan-400 focus:border-transparent transition; }
+    .form-input.is-invalid { @apply ring-2 ring-red-500 border-transparent; }
+    .social-btn { @apply w-10 h-10 grid place-items-center rounded-xl border border-slate-200 dark:border-white/10 hover:text-white hover:bg-indigo-600 hover:border-indigo-600 transition; }
+    .nav-link.is-current { @apply text-indigo-600 dark:text-cyan-400 bg-indigo-50 dark:bg-white/5; }
+    #navbar.is-scrolled { @apply bg-white/80 dark:bg-ink-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 shadow-sm; }
+  </style>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // --- Thème clair / sombre ---
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        var dark = root.classList.toggle('dark');
+        try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+      });
+
+      // --- Menu mobile ---
+      var menuBtn = document.getElementById('menu-toggle');
+      var menu = document.getElementById('mobile-menu');
+      function setMenu(open) {
+        menu.classList.toggle('hidden', !open);
+        menuBtn.setAttribute('aria-expanded', String(open));
+        menuBtn.innerHTML = open ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+      }
+      menuBtn.addEventListener('click', function () { setMenu(menu.classList.contains('hidden')); });
+      menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+
+      // --- Navbar au scroll + bouton retour en haut ---
+      var navbar = document.getElementById('navbar');
+      var toTop = document.getElementById('to-top');
+      function onScroll() {
+        var y = window.scrollY;
+        navbar.classList.toggle('is-scrolled', y > 20);
+        var show = y > 600;
+        toTop.classList.toggle('opacity-0', !show);
+        toTop.classList.toggle('pointer-events-none', !show);
+        toTop.classList.toggle('translate-y-4', !show);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+      toTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' }); });
+
+      // --- Lien actif selon la section visible ---
+      var links = document.querySelectorAll('.nav-link');
+      var sectionObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          links.forEach(function (l) { l.classList.toggle('is-current', l.getAttribute('href') === '#' + entry.target.id); });
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      ['accueil', 'projets', 'competences', 'contact'].forEach(function (id) { sectionObserver.observe(document.getElementById(id)); });
+
+      // --- Apparition au défilement ---
+      var revealObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(function (el) { revealObserver.observe(el); });
+
+      // --- Compteurs animés ---
+      var counterObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target, target = +el.dataset.target, start = null;
+          counterObserver.unobserve(el);
+          if (prefersReduced) { el.textContent = target; return; }
+          requestAnimationFrame(function step(ts) {
+            if (!start) start = ts;
+            var p = Math.min((ts - start) / 1200, 1);
+            el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+            if (p < 1) requestAnimationFrame(step);
+          });
+        });
+      });
+      document.querySelectorAll('.counter').forEach(function (el) { counterObserver.observe(el); });
+
+      // --- Rôle tapé au clavier ---
+      var typed = document.getElementById('typed');
+      var roles = ['Développeur Web & Mobile', 'Symfony 8 · PostgreSQL · Docker', 'Angular 21 · React · TypeScript', 'Node.js · Python · n8n'];
+      if (!prefersReduced) {
+        var r = 0, i = roles[0].length, deleting = true;
+        setTimeout(function tick() {
+          var word = roles[r];
+          i += deleting ? -1 : 1;
+          typed.textContent = word.slice(0, i);
+          var delay = deleting ? 35 : 70;
+          if (deleting && i === 0) { deleting = false; r = (r + 1) % roles.length; delay = 300; }
+          else if (!deleting && i === roles[r].length) { deleting = true; delay = 2200; }
+          setTimeout(tick, delay);
+        }, 2500);
+      }
+
+      // --- Filtres de projets ---
+      var buttons = document.querySelectorAll('.filter-btn');
+      var projects = document.querySelectorAll('.project');
+      var empty = document.getElementById('no-project');
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var filter = btn.dataset.filter, visible = 0;
+          buttons.forEach(function (b) { b.classList.toggle('is-active', b === btn); b.setAttribute('aria-pressed', String(b === btn)); });
+          projects.forEach(function (p) {
+            var match = filter === 'all' || p.dataset.tags.split(' ').indexOf(filter) !== -1;
+            p.classList.toggle('is-hidden', !match);
+            if (match) { visible++; p.classList.add('is-visible'); }
+          });
+          empty.classList.toggle('hidden', visible > 0);
+        });
+      });
+
+      // --- Halo qui suit la souris sur les cartes ---
+      document.querySelectorAll('.card-glow').forEach(function (card) {
+        card.addEventListener('pointermove', function (e) {
+          var rect = card.getBoundingClientRect();
+          card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+          card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+        });
+      });
+
+      // --- Bandeau de logos défilant ---
+      var marquee = document.getElementById('marquee');
+      if (!prefersReduced && marquee.animate) {
+        marquee.innerHTML += marquee.innerHTML;
+        marquee.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-50%)' }], { duration: 30000, iterations: Infinity });
+      }
+
+      // --- Formulaire de contact (mailto) ---
+      var form = document.getElementById('contact-form');
+      var status = document.getElementById('form-status');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var ok = true;
+        ['name', 'email', 'message'].forEach(function (id) {
+          var field = form.elements[id];
+          var valid = field.checkValidity() && field.value.trim() !== '';
+          field.classList.toggle('is-invalid', !valid);
+          if (!valid) ok = false;
+        });
+        status.classList.remove('hidden', 'text-red-500', 'text-emerald-600', 'dark:text-emerald-400');
+        if (!ok) {
+          status.textContent = 'Merci de remplir correctement tous les champs.';
+          status.classList.add('text-red-500');
+          return;
+        }
+        var body = form.elements.message.value + '\n\n--\n' + form.elements.name.value + ' <' + form.elements.email.value + '>';
+        window.location.href = 'mailto:thomasdaloz9799@gmail.com'
+          + '?subject=' + encodeURIComponent('[Portfolio] ' + form.elements.subject.value)
+          + '&body=' + encodeURIComponent(body);
+        status.textContent = 'Votre client mail va s\'ouvrir avec le message pré-rempli. Merci !';
+        status.classList.add('text-emerald-600', 'dark:text-emerald-400');
+        form.reset();
+      });
+
+      document.getElementById('year').textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
 </html>
