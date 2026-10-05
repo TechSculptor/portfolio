@@ -1,17 +1,19 @@
 # 🚀 Portfolio Technique | TechSculptor
 
-**Développeur Junior Back-End (PHP/PostgreSQL) et Front-End (ReactJS/JavaScript/HTML5/CSS3).**
+**Thomas Daloz, développeur Fullstack & Génie Logiciel (M1 Informatique, CNAM).** Disponible en freelance, ouvert au CDI.
 
-Ce répertoire démontre ma capacité à concevoir, développer et déployer des solutions simples et évolutives.
+### 🌐 [Voir le portfolio en ligne : techsculptor.github.io/portfolio](https://techsculptor.github.io/portfolio/)
+
+Ce dépôt réunit le code de mes projets : applications web complètes, API, automatisation et une expérience professionnelle en supervision énergétique. Chaque projet est documenté et se lance en quelques commandes.
 
 ## 🛠️ Compétences Techniques Clés
 
-* **Backend & API :** PHP (Symfony, Doctrine), Sécurité (PDO, hachage, CSRF, rôles), Docker, n8n (Workflows).
-* **Frontend & UX :** Angular (Signals, Standalone Components), ReactJS, TypeScript, JavaScript, HTML5/CSS3 (W3.CSS, Tailwind), Responsive.
-* **Base de Données & BI :** PostgreSQL, Modélisation SQL, Looker Studio (pour la visualisation des données).
-* **Déploiement & Qualité :** Docker & Docker Compose, Render, GitHub Actions (CI), tests PHPUnit, variables d'environnement.
+* **Backend & API :** PHP (Symfony 8, Doctrine), Node.js / Express, Python, Node-RED, API REST, sécurité (CSRF, hachage, rôles, limitation de débit), n8n.
+* **Frontend & UX :** Angular 21 (Signals, composants standalone), ReactJS, TypeScript, JavaScript, HTML5/CSS3 (Tailwind, W3.CSS), responsive, traduction FR/EN, intégration de maquettes Figma.
+* **Base de Données & BI :** PostgreSQL / TimescaleDB, Supabase, modélisation SQL (MCD/MLD), Looker Studio.
+* **Déploiement & Qualité :** Docker & Docker Compose, Render, GitHub Actions (CI), tests PHPUnit / Vitest, variables d'environnement.
 
-**Sommaire :** [Projets de référence](#-projets-de-référence) · [Projets connexes](#-projets-connexes) · [Lancer les projets](docs/LANCER-LES-PROJETS.md) · [Aperçu visuel](#-aperçu-visuel)
+**Sommaire :** [Projets de référence](#-projets-de-référence) · [Expérience professionnelle](#-expérience-professionnelle--visu-energy) · [Projets connexes](#-projets-connexes) · [Lancer les projets](docs/LANCER-LES-PROJETS.md) · [Aperçu visuel](#-aperçu-visuel)
 
 ---
 
@@ -70,6 +72,26 @@ Une todo-list conçue spécifiquement pour l'organisation quotidienne d'un déve
     - 💾 Persistance `localStorage` avec migration de schéma pour les anciennes données sauvegardées.
 
 [**✨ Voir la démo en ligne**](https://techsculptor.github.io/portfolio/4-Todo-List-Dev/demo/index.html) · [**📂 Voir le code**](https://github.com/TechSculptor/portfolio/tree/main/4-Todo-List-Dev) · [**🚀 Le lancer en local**](docs/LANCER-LES-PROJETS.md#4-todo-list-dev)
+
+---
+
+## 💼 Expérience professionnelle : VISU Energy
+
+### 6-Visu-Energy : Plateforme de supervision énergétique (stage 2026)
+
+Application web qui collecte en temps réel les mesures électriques de boîtiers installés sur des sites événementiels et les restitue dans une interface de supervision (tableau de bord, graphiques, alarmes, rapports). Principal contributeur du dépôt (plus de 330 commits).
+
+* **Stack :** Node-RED (API REST + WebSocket), JavaScript, PostgreSQL / TimescaleDB (Supabase), API Talk2M, FullCalendar, Figma.
+* **Ce que j'ai réalisé :**
+    - 🎨 Interfaces réactives d'après les maquettes Figma, version mobile et traduction FR/EN.
+    - 🗺️ Éditeur de plan de site (zones, équipements, connexions) et calendrier des séquences de projet.
+    - 📡 Collecte des mesures via l'API Talk2M avec Node-RED (en binôme avec Omar Chrayah).
+    - 🔔 Seuils d'alarme configurables par projet, rapports PDF / Excel automatisés.
+    - 🔐 Sécurité de l'API : helmet, limitation de débit, contrôle des rôles.
+
+Le code appartient à VISU Energy : seuls des extraits de mon travail sont publiés, avec son accord, et sans aucun identifiant.
+
+[**🎬 Voir la vidéo de démonstration**](media/visu-energy-demo.mp4) · [**📂 Voir les extraits de code**](6-Visu-Energy/README.md)
 
 ---
 
@@ -136,3 +158,13 @@ Quelques captures des projets réalisés :
 
 ![Starshop - Administration](Screen/Starshop5-admin.png)
 *Back-office CRUD réservé au rôle `ROLE_ADMIN`*
+
+---
+
+## 🛠️ Modifier le site du portfolio
+
+La page `index.html` utilise un CSS Tailwind **compilé** (`assets/css/site.css`). Après avoir ajouté ou changé des classes Tailwind dans `index.html` (ou les composants de `assets/css/input.css`), recompilez :
+
+```bash
+npx tailwindcss@3 -i assets/css/input.css -o assets/css/site.css --minify
+```

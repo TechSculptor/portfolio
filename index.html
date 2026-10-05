@@ -13,6 +13,7 @@
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#0b1020">
   <link rel="canonical" href="https://techsculptor.github.io/portfolio/">
+  <link rel="apple-touch-icon" href="media/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M25 20 13 32l12 12M39 20l12 12-12 12' fill='none' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 
   <!-- Open Graph -->
@@ -22,8 +23,10 @@
   <meta property="og:title" content="Thomas Daloz | Développeur Fullstack &amp; Génie Logiciel">
   <meta property="og:description" content="Symfony 8, Angular 21, React, Node.js, Python, PostgreSQL, Docker : découvrez mes projets web, applications et réalisations techniques.">
   <meta property="og:url" content="https://techsculptor.github.io/portfolio/">
-  <meta property="og:image" content="https://techsculptor.github.io/portfolio/Screen/Starshop3-vaisseau.png">
-  <meta property="og:image:alt" content="Aperçu du projet Starshop, application Symfony 8">
+  <meta property="og:image" content="https://techsculptor.github.io/portfolio/media/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Thomas Daloz, développeur Fullstack et Génie Logiciel : Symfony, Angular, React, Node.js, Python, PostgreSQL, Docker">
 
   <!-- Données structurées -->
   <script type="application/ld+json">
@@ -49,31 +52,15 @@
     })();
   </script>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-            display: ['"Space Grotesk"', 'Inter', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
-          },
-          colors: {
-            ink: { 950: '#070a14', 900: '#0b1020', 800: '#121a30', 700: '#1c2643' }
-          }
-        }
-      }
-    };
-  </script>
 
   <!-- Polices & icônes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+
+  <!-- Tailwind CSS compilé, chargé après Font Awesome pour que `hidden` l'emporte (source : assets/css/input.css, config : tailwind.config.js) -->
+  <link rel="stylesheet" href="assets/css/site.css">
 
   <style>
     body { -webkit-font-smoothing: antialiased; }
@@ -617,29 +604,6 @@
     class="fixed bottom-6 right-6 z-40 w-11 h-11 grid place-items-center rounded-xl text-white bg-gradient-to-br from-indigo-600 to-cyan-500 shadow-lg opacity-0 pointer-events-none translate-y-4 transition">
     <i class="fa-solid fa-arrow-up"></i>
   </button>
-
-  <!-- Composants réutilisés -->
-  <style type="text/tailwindcss">
-    .tag { @apply px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 dark:bg-white/5 dark:text-cyan-300 border border-indigo-100 dark:border-white/10; }
-    .proj-link { @apply inline-flex items-center gap-1.5 text-indigo-600 dark:text-cyan-400 hover:underline underline-offset-4; }
-    .filter-btn { @apply px-4 py-2 rounded-xl text-sm font-medium border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:border-indigo-400 dark:hover:border-cyan-400 transition; }
-    .filter-btn.is-active { @apply bg-gradient-to-r from-indigo-600 to-cyan-500 text-white border-transparent shadow-md shadow-indigo-500/30; }
-    .skill-card { @apply rounded-2xl p-6 border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-ink-900 hover:-translate-y-1 hover:border-indigo-400 dark:hover:border-cyan-400/50 transition duration-300; }
-    .skill-icon { @apply w-12 h-12 grid place-items-center rounded-xl text-white text-lg bg-gradient-to-br shadow-lg; }
-    .skill-title { @apply mt-5 font-display text-lg font-bold text-slate-900 dark:text-white; }
-    .skill-list { @apply mt-4 space-y-2.5 text-sm; }
-    .skill-list li { @apply flex items-center gap-3; }
-    .skill-list i { @apply w-5 text-center; }
-    .contact-item { @apply flex items-center gap-4 p-3 -m-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition; }
-    .contact-icon { @apply w-12 h-12 shrink-0 grid place-items-center rounded-xl bg-indigo-50 dark:bg-white/5 text-indigo-600 dark:text-cyan-400 text-lg border border-indigo-100 dark:border-white/10; }
-    .form-label { @apply block mb-1.5 text-sm font-medium text-slate-700 dark:text-slate-300; }
-    .form-input { @apply w-full px-4 py-3 rounded-xl bg-white dark:bg-ink-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-cyan-400 focus:border-transparent transition; }
-    .form-input.is-invalid { @apply ring-2 ring-red-500 border-transparent; }
-    .social-btn { @apply w-10 h-10 grid place-items-center rounded-xl border border-slate-200 dark:border-white/10 hover:text-white hover:bg-indigo-600 hover:border-indigo-600 transition; }
-    .copy-btn { @apply w-7 h-7 grid place-items-center rounded-md text-slate-500 hover:text-indigo-600 dark:hover:text-cyan-400 hover:bg-white dark:hover:bg-white/10 transition; }
-    .nav-link.is-current { @apply text-indigo-600 dark:text-cyan-400 bg-indigo-50 dark:bg-white/5; }
-    #navbar.is-scrolled { @apply bg-white/80 dark:bg-ink-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 shadow-sm; }
-  </style>
 
   <script>
     (function () {
