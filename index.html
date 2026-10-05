@@ -11,7 +11,8 @@
   <meta name="keywords" content="Thomas Daloz, TechSculptor, développeur web freelance, création site internet, application sur mesure, référencement, Ain, Pays de Gex, Genève, Symfony, Angular, React, Node.js, PostgreSQL, Docker">
   <meta name="author" content="Thomas Daloz">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#1c1c1f">
+  <meta name="theme-color" content="#1c1c1f" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f8fc" media="(prefers-color-scheme: light)">
   <link rel="canonical" href="https://techsculptor.github.io/portfolio/">
   <link rel="apple-touch-icon" href="media/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23d6c05c'/%3E%3Cstop offset='1' stop-color='%238e8e96'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%231c1c1f'/%3E%3Cpath d='M25 20 13 32l12 12M39 20l12 12-12 12' fill='none' stroke='url(%23g)' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -86,11 +87,11 @@
 
   <a href="#contenu" class="absolute left-0 top-0 z-50 -translate-y-full rounded bg-gold px-4 py-3 text-sm font-semibold text-canvas focus:translate-y-0">Aller au contenu</a>
 
-  <div class="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
+  <div class="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 pb-12 pt-[60px] md:px-12 md:pb-20 lg:px-24 lg:py-0">
     <div class="lg:flex lg:justify-between lg:gap-8">
 
       <!-- ========== COLONNE GAUCHE (fixe sur grand écran) ========== -->
-      <header class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[46%] lg:flex-col lg:justify-between lg:py-12">
+      <header class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[46%] lg:flex-col lg:justify-between lg:pb-8 lg:pt-[60px]">
         <div>
           <div class="flex items-center justify-between">
             <a href="#apropos" class="group flex items-center gap-3" aria-label="TechSculptor, retour en haut">
@@ -106,7 +107,7 @@
             </button>
           </div>
 
-          <p class="mt-10 text-sm font-medium text-gold">Bonjour, je suis</p>
+          <p class="mt-8 text-sm font-medium text-gold">Bonjour, je suis</p>
           <h1 class="mt-2 text-5xl font-extralight tracking-tight text-head sm:text-6xl">Thomas Daloz.</h1>
           <h2 class="mt-4 text-lg font-medium text-head sm:text-xl">Développeur web freelance</h2>
           <p class="mt-5 max-w-sm border-l-2 border-gold/70 pl-4 leading-normal">
@@ -118,24 +119,24 @@
             Disponible pour de nouveaux projets · ouvert au CDI
           </p>
 
-          <div class="mt-8 flex flex-wrap gap-3">
+          <div class="mt-6 flex flex-wrap gap-3">
             <a href="#contact" class="btn-primary"><i class="fa-regular fa-calendar text-gold"></i> Réserver un échange</a>
             <a href="#realisations" class="btn-line">Voir mes réalisations</a>
           </div>
 
           <nav class="nav hidden lg:block" aria-label="Sections de la page">
-            <ul class="mt-14 w-max">
-              <li><a class="nav-link group flex items-center py-3" href="#apropos"><span class="nav-indicator"></span><span class="nav-text">À propos</span></a></li>
-              <li><a class="nav-link group flex items-center py-3" href="#services"><span class="nav-indicator"></span><span class="nav-text">Services</span></a></li>
-              <li><a class="nav-link group flex items-center py-3" href="#realisations"><span class="nav-indicator"></span><span class="nav-text">Réalisations</span></a></li>
-              <li><a class="nav-link group flex items-center py-3" href="#experience"><span class="nav-indicator"></span><span class="nav-text">Expérience</span></a></li>
-              <li><a class="nav-link group flex items-center py-3" href="#faq"><span class="nav-indicator"></span><span class="nav-text">Questions</span></a></li>
-              <li><a class="nav-link group flex items-center py-3" href="#contact"><span class="nav-indicator"></span><span class="nav-text">Contact</span></a></li>
+            <ul class="mt-10 w-max">
+              <li><a class="nav-link group flex items-center py-2" href="#apropos"><span class="nav-indicator"></span><span class="nav-text">À propos</span></a></li>
+              <li><a class="nav-link group flex items-center py-2" href="#services"><span class="nav-indicator"></span><span class="nav-text">Services</span></a></li>
+              <li><a class="nav-link group flex items-center py-2" href="#realisations"><span class="nav-indicator"></span><span class="nav-text">Réalisations</span></a></li>
+              <li><a class="nav-link group flex items-center py-2" href="#experience"><span class="nav-indicator"></span><span class="nav-text">Expérience</span></a></li>
+              <li><a class="nav-link group flex items-center py-2" href="#faq"><span class="nav-indicator"></span><span class="nav-text">Questions</span></a></li>
+              <li><a class="nav-link group flex items-center py-2" href="#contact"><span class="nav-indicator"></span><span class="nav-text">Contact</span></a></li>
             </ul>
           </nav>
         </div>
 
-        <ul class="mt-8 flex items-center gap-2" aria-label="Réseaux">
+        <ul class="mt-6 flex items-center gap-2" aria-label="Réseaux">
           <li><a class="icon-btn text-xl" href="https://github.com/TechSculptor" target="_blank" rel="noopener" aria-label="GitHub (nouvel onglet)"><i class="fa-brands fa-github"></i></a></li>
           <li><a class="icon-btn text-xl" href="https://www.linkedin.com/in/thomas-daloz-16933b281" target="_blank" rel="noopener" aria-label="LinkedIn (nouvel onglet)"><i class="fa-brands fa-linkedin"></i></a></li>
           <li><a class="icon-btn text-xl" href="mailto:thomasdaloz9799@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a></li>
