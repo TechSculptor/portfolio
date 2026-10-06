@@ -163,6 +163,18 @@ Quelques captures des projets réalisés :
 
 ## 🛠️ Modifier le site du portfolio
 
+### Voir le site en local
+
+👉 **[http://localhost:8000/](http://localhost:8000/)** (après avoir lancé le serveur)
+
+```bash
+python -m http.server 8000
+```
+
+Dans VS Code : `Ctrl+Maj+P` > **Tasks: Run Task** > **Voir le site en local** (lance le serveur et ouvre le navigateur). Pensez à `Ctrl+F5` pour recharger sans cache.
+
+### Recompiler le CSS
+
 La page `index.html` utilise un CSS Tailwind **compilé** (`assets/css/site.css`). Après avoir ajouté ou changé des classes Tailwind dans `index.html` (ou les composants de `assets/css/input.css`), recompilez :
 
 ```bash
