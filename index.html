@@ -11,8 +11,7 @@
   <meta name="keywords" content="TechSculptor, Thomas Daloz, création site internet, développeur web freelance, site vitrine, référencement, application sur mesure, automatisation, Ain, Pays de Gex, Genève, France, Suisse">
   <meta name="author" content="Thomas Daloz">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#1c1c1f" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1c1f">
   <link rel="canonical" href="https://techsculptor.github.io/portfolio/">
   <link rel="apple-touch-icon" href="media/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23d6c05c'/%3E%3Cstop offset='1' stop-color='%238e8e96'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%231c1c1f'/%3E%3Cpath d='M25 20 13 32l12 12M39 20l12 12-12 12' fill='none' stroke='url(%23g)' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -78,7 +77,10 @@
     (function () {
       var stored = null;
       try { stored = localStorage.getItem('theme'); } catch (e) {}
-      document.documentElement.classList.toggle('dark', stored !== 'light');
+      var dark = stored !== 'light';
+      document.documentElement.classList.toggle('dark', dark);
+      // Barre d'adresse / d'onglets du navigateur assortie au thème affiché
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#1c1c1f' : '#ffffff');
     })();
   </script>
 
@@ -659,6 +661,7 @@
       // --- Thème clair / sombre ---
       document.getElementById('theme-toggle').addEventListener('click', function () {
         var dark = root.classList.toggle('dark');
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#1c1c1f' : '#ffffff');
         try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
       });
 
