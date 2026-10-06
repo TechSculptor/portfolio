@@ -163,6 +163,8 @@ Quelques captures des projets réalisés :
 
 ## 🛠️ Modifier le site du portfolio
 
+📘 Comprendre tout le code et refaire une page du même type : [docs/GUIDE-PAGE-VITRINE.md](docs/GUIDE-PAGE-VITRINE.md)
+
 ### Voir le site en local
 
 👉 **[http://localhost:8000/](http://localhost:8000/)** (après avoir lancé le serveur)

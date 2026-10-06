@@ -34,9 +34,10 @@ html { scroll-behavior: smooth; }
 body { -webkit-font-smoothing: antialiased; }
 
 /* Composants réutilisés (hors @layer pour ne jamais être purgés) */
-/* Une partie sur deux sur un fond légèrement différent : pleine largeur sur mobile, panneau arrondi sur grand écran */
 /* Une carte sur deux (Réalisations, Expérience) sur un bleu plus léger que les bandes */
 .zebra > li:nth-child(odd) { background-color: rgb(var(--band-soft)); }
+/* Parties en alternance : .plain sur le fond normal, .band sur le fond bleu
+   (pleine largeur sur mobile, panneau arrondi sur grand écran) */
 .plain { @apply py-12 lg:py-14; }
 .band { @apply -mx-6 px-6 py-12 md:-mx-12 md:px-12 lg:-mx-10 lg:rounded-2xl lg:px-10 lg:py-14; background-color: rgb(var(--band)); }
 .pill { @apply inline-flex items-center rounded-full bg-gold/10 px-3 py-1 text-xs font-medium leading-5 text-gold; }
