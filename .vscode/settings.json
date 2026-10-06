@@ -1,0 +1,7 @@
+{
+  // @tailwind et @apply sont des directives Tailwind, inconnues du CSS standard :
+  // on coupe l'avertissement « Unknown at rule » dans assets/css/input.css
+  "css.lint.unknownAtRules": "ignore",
+  // Avec l'extension Tailwind CSS IntelliSense : autocomplétion des classes dans le HTML
+  "tailwindCSS.experimental.configFile": "tailwind.config.js"
+}
