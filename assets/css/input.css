@@ -37,6 +37,7 @@ body { -webkit-font-smoothing: antialiased; }
 /* Une partie sur deux sur un fond légèrement différent : pleine largeur sur mobile, panneau arrondi sur grand écran */
 /* Une carte sur deux (Réalisations, Expérience) sur un bleu plus léger que les bandes */
 .zebra > li:nth-child(odd) { background-color: rgb(var(--band-soft)); }
+.plain { @apply py-12 lg:py-14; }
 .band { @apply -mx-6 px-6 py-12 md:-mx-12 md:px-12 lg:-mx-10 lg:rounded-2xl lg:px-10 lg:py-14; background-color: rgb(var(--band)); }
 .pill { @apply inline-flex items-center rounded-full bg-gold/10 px-3 py-1 text-xs font-medium leading-5 text-gold; }
 .link-gold { @apply font-medium text-head underline decoration-gold/60 decoration-1 underline-offset-[6px] transition hover:text-gold hover:decoration-gold; }
