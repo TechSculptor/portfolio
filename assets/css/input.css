@@ -32,7 +32,8 @@ body { -webkit-font-smoothing: antialiased; }
 /* Composants réutilisés (hors @layer pour ne jamais être purgés) */
 .pill { @apply inline-flex items-center rounded-full bg-gold/10 px-3 py-1 text-xs font-medium leading-5 text-gold; }
 .link-gold { @apply font-medium text-head underline decoration-gold/60 decoration-1 underline-offset-[6px] transition hover:text-gold hover:decoration-gold; }
-.section-title { @apply sticky top-0 z-20 -mx-6 mb-6 bg-canvas/80 px-6 py-5 text-sm font-semibold uppercase tracking-[0.2em] text-head backdrop-blur md:-mx-12 md:px-12 lg:sr-only; }
+.section-title { @apply mb-6 text-3xl font-bold tracking-tight text-head sm:text-4xl; }
+.section-title::after { content: ''; display: block; width: 3rem; height: 3px; margin-top: 0.85rem; border-radius: 9999px; background: linear-gradient(90deg, rgb(var(--gold)), rgb(var(--steel))); }
 .card { @apply relative rounded-lg p-5 transition lg:-mx-5 lg:hover:bg-surface/60 lg:hover:shadow-[inset_0_1px_0_0_rgb(var(--line)/0.6)] lg:group-hover/list:opacity-50 lg:hover:!opacity-100; }
 .nav-link .nav-indicator { @apply mr-4 h-px w-8 bg-muted transition-all motion-reduce:transition-none; }
 .nav-link .nav-text { @apply text-xs font-semibold uppercase tracking-[0.2em] text-muted transition; }
