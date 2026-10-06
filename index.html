@@ -118,11 +118,11 @@
 
   <a href="#contenu" class="absolute left-0 top-0 z-50 -translate-y-full rounded bg-gold px-4 py-3 text-sm font-semibold text-canvas focus:translate-y-0">Aller au contenu</a>
 
-  <div class="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 pb-12 pt-[60px] md:px-12 md:pb-20 lg:px-24 lg:py-0">
-    <div class="lg:flex lg:justify-between lg:gap-8">
+  <div class="relative z-10 mx-auto min-h-screen max-w-screen-xl 2xl:max-w-screen-2xl px-6 pb-12 pt-[60px] md:px-12 md:pb-20 lg:px-24 lg:py-0">
+    <div class="lg:flex lg:justify-between lg:gap-16 xl:gap-24">
 
       <!-- ========== COLONNE GAUCHE (fixe sur grand écran) ========== -->
-      <header class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[46%] lg:flex-col lg:justify-between lg:pb-8 lg:pt-[60px]">
+      <header class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[46%] lg:flex-col lg:justify-between lg:pb-6 lg:pr-12 lg:pt-12">
         <div>
           <div class="flex items-center justify-between">
             <a href="#services" class="group flex items-center gap-3" aria-label="TechSculptor, retour en haut">
@@ -138,37 +138,38 @@
             </button>
           </div>
 
-          <div class="mx-auto max-w-md text-center">
-            <p class="mt-10 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Studio web indépendant · France &amp; Suisse</p>
-            <h1 class="mt-4 text-4xl font-extralight leading-tight tracking-tight text-head sm:text-5xl">Des sites et des outils web qui font grandir votre activité.</h1>
+          <div class="mx-auto max-w-md text-center lg:mx-0 lg:max-w-lg lg:text-left">
+            <p class="mt-10 text-xs lg:mt-8 font-semibold uppercase tracking-[0.2em] text-gold">Studio web indépendant · France &amp; Suisse</p>
+            <h1 class="mt-4 text-4xl font-light leading-tight tracking-tight text-head sm:text-5xl">Des sites et des outils web qui font grandir votre activité.</h1>
             <p class="mt-5 leading-normal">
               Sites vitrines, référencement, applications sur mesure et automatisation pour les TPE, PME, indépendants et associations. À distance ou sur place.
             </p>
 
-            <div class="mt-7 flex flex-wrap justify-center gap-3">
-              <a href="#contact" class="btn-primary"><i class="fa-regular fa-calendar text-gold"></i> Réserver un échange gratuit</a>
+            <div class="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
+              <a href="#contact" class="btn-primary"><i class="fa-regular fa-calendar"></i> Réserver un échange gratuit</a>
               <a href="#references" class="btn-line">Voir mes réalisations</a>
             </div>
 
-            <p class="mt-6 inline-flex items-center gap-2 text-xs font-medium text-muted">
+            <p class="status-pill mt-6">
+              <img src="assets/picture/thomas-daloz.jpg" alt="" class="h-7 w-7 rounded-full object-cover">
               <span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span></span>
-              Disponible pour de nouveaux projets
+              Thomas · disponible pour de nouveaux projets
             </p>
           </div>
 
           <nav class="nav hidden lg:block" aria-label="Sections de la page">
-            <ul class="mx-auto mt-10 w-max">
-              <li><a class="nav-link group flex items-center py-2" href="#services"><span class="nav-indicator"></span><span class="nav-text">Services</span></a></li>
-              <li><a class="nav-link group flex items-center py-2" href="#references"><span class="nav-indicator"></span><span class="nav-text">Références</span></a></li>
-              <li><a class="nav-link group flex items-center py-2" href="#realisations"><span class="nav-indicator"></span><span class="nav-text">Réalisations</span></a></li>
-              <li><a class="nav-link group flex items-center py-2" href="#apropos"><span class="nav-indicator"></span><span class="nav-text">À propos</span></a></li>
-              <li><a class="nav-link group flex items-center py-2" href="#faq"><span class="nav-indicator"></span><span class="nav-text">Questions</span></a></li>
-              <li><a class="nav-link group flex items-center py-2" href="#contact"><span class="nav-indicator"></span><span class="nav-text">Contact</span></a></li>
+            <ul class="mx-auto mt-10 w-max lg:mx-0 lg:mt-6">
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#services"><span class="nav-indicator"></span><span class="nav-text">Services</span></a></li>
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#references"><span class="nav-indicator"></span><span class="nav-text">Références</span></a></li>
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#realisations"><span class="nav-indicator"></span><span class="nav-text">Réalisations</span></a></li>
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#apropos"><span class="nav-indicator"></span><span class="nav-text">À propos</span></a></li>
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#faq"><span class="nav-indicator"></span><span class="nav-text">Questions</span></a></li>
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#contact"><span class="nav-indicator"></span><span class="nav-text">Contact</span></a></li>
             </ul>
           </nav>
         </div>
 
-        <ul class="mt-6 flex items-center justify-center gap-2" aria-label="Réseaux">
+        <ul class="mt-6 flex lg:mt-4 items-center justify-center gap-2 lg:justify-end" aria-label="Réseaux">
           <li><a class="icon-btn text-xl" href="https://github.com/TechSculptor" target="_blank" rel="noopener" aria-label="GitHub (nouvel onglet)"><i class="fa-brands fa-github"></i></a></li>
           <li><a class="icon-btn text-xl" href="https://www.linkedin.com/in/thomas-daloz-16933b281" target="_blank" rel="noopener" aria-label="LinkedIn (nouvel onglet)"><i class="fa-brands fa-linkedin"></i></a></li>
           <li><a class="icon-btn text-xl" href="https://www.instagram.com/techs.culptor/" target="_blank" rel="noopener" aria-label="Instagram (nouvel onglet)"><i class="fa-brands fa-instagram"></i></a></li>
@@ -185,8 +186,8 @@
         <!-- SERVICES -->
         <section id="services" class="band scroll-mt-16 lg:scroll-mt-24" aria-label="Services">
           <h2 class="section-title">Services</h2>
-          <p class="-mt-2 mb-8 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Ce que je peux faire pour vous</p>
-          <ul class="group/list space-y-4">
+          <p class="-mt-2 mb-8 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Ce que TechSculptor peut faire pour vous</p>
+          <ul class="group/list space-y-1">
             <li class="card">
               <div class="flex gap-4">
                 <i class="fa-solid fa-display mt-1 w-6 text-center text-xl text-gold"></i>
@@ -593,7 +594,7 @@
         <!-- CONTACT -->
         <section id="contact" class="plain scroll-mt-16 lg:scroll-mt-24" aria-label="Contact">
           <h2 class="section-title">Contact</h2>
-          <h3 class="text-4xl font-extralight tracking-tight text-head sm:text-5xl">Parlons de votre projet.</h3>
+          <h3 class="text-4xl font-light tracking-tight text-head sm:text-5xl">Parlons de votre projet.</h3>
           <p class="mt-4 border-l-2 border-gold/70 pl-4">Décrivez-moi votre besoin en quelques lignes : je vous réponds sous 48 h pour fixer un premier échange gratuit.</p>
 
           <form id="contact-form" class="mt-10 space-y-5" novalidate>
@@ -637,7 +638,7 @@
             <!-- Piège à robots : invisible pour les humains -->
             <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
             <p id="form-status" class="hidden text-sm" role="status"></p>
-            <button type="submit" class="btn-primary disabled:cursor-wait disabled:opacity-60"><i class="fa-solid fa-paper-plane text-gold"></i> Envoyer le message</button>
+            <button type="submit" class="btn-primary disabled:cursor-wait disabled:opacity-60"><i class="fa-solid fa-paper-plane"></i> Envoyer le message</button>
           </form>
 
           <ul class="mt-10 space-y-2 text-sm">

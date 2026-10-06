@@ -14,6 +14,8 @@
   --muted: 100 116 139;
   --gold: 14 165 233;
   --steel: 186 230 253;
+  --cta: 3 105 161;
+  --on-cta: 255 255 255;
   color-scheme: light;
 }
 .dark {
@@ -27,6 +29,8 @@
   --muted: 130 130 140;
   --gold: 214 192 92;
   --steel: 142 142 150;
+  --cta: 214 192 92;
+  --on-cta: 28 28 31;
   color-scheme: dark;
 }
 
@@ -55,16 +59,16 @@ body { -webkit-font-smoothing: antialiased; }
 .form-input { @apply w-full rounded-md border border-line bg-surface/60 px-4 py-3 text-head placeholder-muted/70 transition focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold; }
 .form-input.is-invalid { @apply border-red-500 ring-1 ring-red-500; }
 .btn-gold { @apply inline-flex items-center gap-2 rounded-md border border-gold bg-gold px-5 py-3 text-sm font-semibold text-canvas transition hover:bg-transparent hover:text-gold; }
-/* Bouton principal : fond sombre + contour en dégradé or -> gris (comme les équerres) */
+/* Bouton principal : fond plein (bleu foncé en clair pour le contraste du texte blanc, or en sombre) */
 .btn-primary {
-  @apply inline-flex items-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-head transition;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(rgb(var(--surface)), rgb(var(--surface))) padding-box,
-    linear-gradient(120deg, rgb(var(--gold)), rgb(var(--steel))) border-box;
+  @apply inline-flex items-center gap-2 rounded-md border border-transparent px-5 py-3 text-sm font-semibold transition;
+  background-color: rgb(var(--cta));
+  color: rgb(var(--on-cta));
   box-shadow: 0 0 0 0 rgb(var(--gold) / 0);
 }
-.btn-primary:hover { box-shadow: 0 0 24px -6px rgb(var(--gold) / 0.55); transform: translateY(-1px); }
+.btn-primary:hover { box-shadow: 0 0 24px -6px rgb(var(--gold) / 0.7); transform: translateY(-1px); }
+/* Pastille « Disponible » avec photo */
+.status-pill { @apply inline-flex items-center gap-2.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 py-1 pl-1 pr-4 text-xs font-medium text-head; }
 
 /* Curseur personnalisé : point + anneau qui suit avec un léger retard */
 .cursor-dot, .cursor-ring { position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none; border-radius: 9999px; opacity: 0; transition: opacity .3s, width .25s, height .25s, background-color .25s, border-color .25s; }
