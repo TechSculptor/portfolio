@@ -98,7 +98,7 @@
     referrerpolicy="no-referrer">
 
   <!-- Tailwind CSS compilé, chargé après Font Awesome pour que `hidden` l'emporte (source : assets/css/input.css, config : tailwind.config.js) -->
-  <link rel="stylesheet" href="assets/css/site.css?v=2026-10-07c">
+  <link rel="stylesheet" href="assets/css/site.css?v=2026-10-07d">
 </head>
 
 <body class="bg-canvas font-sans leading-relaxed text-fg selection:bg-gold/30 selection:text-head">
@@ -136,12 +136,12 @@
     au contenu</a>
 
   <!-- ========== MENU MOBILE : bouton flottant + panneau (caché sur grand écran) ========== -->
-  <div class="fixed right-2 top-2 z-40 lg:hidden">
+  <div class="fixed left-2 top-2 z-40 lg:hidden">
     <button id="menu-toggle" type="button" class="icon-btn h-12 w-12 border border-line bg-canvas/90 text-2xl shadow-lg backdrop-blur"
       aria-expanded="false" aria-controls="mobile-menu" aria-label="Ouvrir le menu">
       <i class="fa-solid fa-bars"></i>
     </button>
-    <nav id="mobile-menu" class="hidden absolute right-0 top-14 w-60 rounded-lg border border-line bg-canvas px-4 py-2 shadow-lg" aria-label="Menu mobile">
+    <nav id="mobile-menu" class="hidden absolute left-0 top-14 w-60 rounded-lg border border-line bg-canvas px-4 py-2 shadow-lg" aria-label="Menu mobile">
       <ul class="divide-y divide-line">
         <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#services">Services</a></li>
         <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#tarifs">Tarifs</a></li>
