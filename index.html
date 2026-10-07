@@ -98,7 +98,7 @@
     referrerpolicy="no-referrer">
 
   <!-- Tailwind CSS compilé, chargé après Font Awesome pour que `hidden` l'emporte (source : assets/css/input.css, config : tailwind.config.js) -->
-  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/site.css?v=2026-10-07c">
 </head>
 
 <body class="bg-canvas font-sans leading-relaxed text-fg selection:bg-gold/30 selection:text-head">
@@ -135,6 +135,25 @@
     class="absolute left-0 top-0 z-50 -translate-y-full rounded bg-gold px-4 py-3 text-sm font-semibold text-canvas focus:translate-y-0">Aller
     au contenu</a>
 
+  <!-- ========== MENU MOBILE : bouton flottant + panneau (caché sur grand écran) ========== -->
+  <div class="fixed right-2 top-2 z-40 lg:hidden">
+    <button id="menu-toggle" type="button" class="icon-btn h-12 w-12 border border-line bg-canvas/90 text-2xl shadow-lg backdrop-blur"
+      aria-expanded="false" aria-controls="mobile-menu" aria-label="Ouvrir le menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <nav id="mobile-menu" class="hidden absolute right-0 top-14 w-60 rounded-lg border border-line bg-canvas px-4 py-2 shadow-lg" aria-label="Menu mobile">
+      <ul class="divide-y divide-line">
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#services">Services</a></li>
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#tarifs">Tarifs</a></li>
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#references">Références</a></li>
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#realisations">Réalisations</a></li>
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#apropos">À propos</a></li>
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#faq">Questions</a></li>
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+
   <div
     class="relative z-10 mx-auto min-h-screen max-w-screen-xl 2xl:max-w-screen-2xl px-6 pb-12 pt-[60px] md:px-12 md:pb-20 lg:px-24 lg:py-0">
     <div class="lg:flex lg:justify-between lg:gap-16 xl:gap-24">
@@ -162,8 +181,8 @@
             <h1 class="mt-4 text-4xl font-light leading-tight tracking-tight text-head sm:text-5xl">Des sites et des
               outils web au service de votre activité.</h1>
             <p class="mt-5 leading-normal">
-              Sites vitrines, référencement, applications sur mesure et automatisation pour les TPE, PME, indépendants
-              et associations, en France et en Suisse. À distance ou sur place.
+              Référencement Google et sites vitrines pour les TPE, PME, indépendants et associations, en France et en
+              Suisse : soyez trouvé par vos futurs clients. À distance ou sur place.
             </p>
 
             <div class="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
@@ -177,6 +196,8 @@
             <ul class="mx-auto mt-10 w-max lg:mx-0 lg:mt-6">
               <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#services"><span
                     class="nav-indicator"></span><span class="nav-text">Services</span></a></li>
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#tarifs"><span
+                    class="nav-indicator"></span><span class="nav-text">Tarifs</span></a></li>
               <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#references"><span
                     class="nav-indicator"></span><span class="nav-text">Références</span></a></li>
               <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#realisations"><span
@@ -218,13 +239,24 @@
           <p class="-mt-2 mb-8 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Ce que TechSculptor peut
             faire pour vous</p>
           <ul class="group/list space-y-1">
+            <li class="card bg-surface ring-1 ring-gold/40">
+              <div class="flex gap-4">
+                <i class="fa-solid fa-magnifying-glass-chart mt-1 w-6 text-center text-xl text-gold"></i>
+                <div>
+                  <h3 class="flex flex-wrap items-center gap-2 font-semibold text-head">Référencement Google <span
+                      class="pill">Spécialité</span></h3>
+                  <p class="mt-2 text-sm">Être trouvé quand vos clients vous cherchent : audit de votre site, mots-clés,
+                    optimisation des pages, fiche Google Business et suivi des résultats.</p>
+                </div>
+              </div>
+            </li>
             <li class="card">
               <div class="flex gap-4">
                 <i class="fa-solid fa-display mt-1 w-6 text-center text-xl text-gold"></i>
                 <div>
-                  <h3 class="font-semibold text-head">Site vitrine &amp; référencement</h3>
-                  <p class="mt-2 text-sm">Un site clair, rapide et bien placé sur Google pour présenter votre activité
-                    et être contacté.</p>
+                  <h3 class="font-semibold text-head">Site vitrine optimisé pour Google</h3>
+                  <p class="mt-2 text-sm">Un site clair, rapide et pensé dès le départ pour le référencement, pour
+                    présenter votre activité et être contacté.</p>
                 </div>
               </div>
             </li>
@@ -305,6 +337,11 @@
               </thead>
               <tbody class="divide-y divide-line">
                 <tr>
+                  <th scope="row" class="px-4 py-3 font-semibold text-head">Référencement Google <span class="pill ml-1 align-middle">Spécialité</span><span class="mt-1 block text-xs font-normal text-muted sm:hidden">Audit, optimisation, fiche Google Business</span></th>
+                  <td class="hidden px-4 py-3 sm:table-cell">Audit, optimisation, fiche Google Business</td>
+                  <td class="whitespace-nowrap bg-gold/5 px-4 py-3 text-right font-semibold text-head">200 – 300 €</td>
+                </tr>
+                <tr>
                   <th scope="row" class="px-4 py-3 font-semibold text-head">Site vitrine essentiel<span class="mt-1 block text-xs font-normal text-muted sm:hidden">1 à 5 pages, adapté mobile, formulaire de contact</span></th>
                   <td class="hidden px-4 py-3 sm:table-cell">1 à 5 pages, adapté mobile, formulaire de contact</td>
                   <td class="whitespace-nowrap bg-gold/5 px-4 py-3 text-right font-semibold text-head">400 – 500 €</td>
@@ -320,11 +357,6 @@
                   <td class="whitespace-nowrap bg-gold/5 px-4 py-3 text-right font-semibold text-head">600 – 700 €</td>
                 </tr>
                 <tr>
-                  <th scope="row" class="px-4 py-3 font-semibold text-head">Référencement Google<span class="mt-1 block text-xs font-normal text-muted sm:hidden">Audit, optimisation, fiche Google Business</span></th>
-                  <td class="hidden px-4 py-3 sm:table-cell">Audit, optimisation, fiche Google Business</td>
-                  <td class="whitespace-nowrap bg-gold/5 px-4 py-3 text-right font-semibold text-head">200 – 300 €</td>
-                </tr>
-                <tr>
                   <th scope="row" class="px-4 py-3 font-semibold text-head">Automatisation<span class="mt-1 block text-xs font-normal text-muted sm:hidden">Liaison de vos outils, tableau de bord</span></th>
                   <td class="hidden px-4 py-3 sm:table-cell">Liaison de vos outils, tableau de bord</td>
                   <td class="whitespace-nowrap bg-gold/5 px-4 py-3 text-right font-semibold text-head">200 – 300 €</td>
@@ -337,7 +369,7 @@
                 <tr>
                   <th scope="row" class="px-4 py-3 font-semibold text-head">Maintenance<span class="mt-1 block text-xs font-normal text-muted sm:hidden">Mises à jour, sauvegardes, petites modifications</span></th>
                   <td class="hidden px-4 py-3 sm:table-cell">Mises à jour, sauvegardes, petites modifications</td>
-                  <td class="whitespace-nowrap bg-gold/5 px-4 py-3 text-right font-semibold text-head">dès 40 € / mois</td>
+                  <td class="whitespace-nowrap bg-gold/5 px-4 py-3 text-right font-semibold text-head">40 – 80 € / mois</td>
                 </tr>
                 <tr>
                   <th scope="row" class="px-4 py-3 font-semibold text-head">Intervention ponctuelle<span class="mt-1 block text-xs font-normal text-muted sm:hidden">Correction, ajout de contenu, dépannage</span></th>
@@ -347,7 +379,8 @@
               </tbody>
             </table>
           </div>
-          <p class="mt-4 text-xs text-muted">Tarifs indicatifs. Chaque projet fait l'objet d'un devis gratuit et détaillé.</p>
+          <p class="mt-4 text-xs text-muted">Tarifs indicatifs. Chaque projet fait l'objet d'un devis gratuit et détaillé.
+            <span class="font-semibold text-head">Paiement possible en 3 fois.</span></p>
           <p class="mt-1 text-xs text-muted"><em>TVA non applicable, art. 293 B du CGI</em></p>
         </section>
 
@@ -970,6 +1003,20 @@
         try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) { }
       });
 
+      // --- Menu mobile : ouverture / fermeture (lien cliqué ou touche Échap) ---
+      var menuBtn = document.getElementById('menu-toggle');
+      var menu = document.getElementById('mobile-menu');
+      function setMenu(open) {
+        menu.classList.toggle('hidden', !open);
+        menuBtn.setAttribute('aria-expanded', open);
+        menuBtn.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+        menuBtn.querySelector('i').className = open ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+      }
+      menuBtn.addEventListener('click', function () { setMenu(menu.classList.contains('hidden')); });
+      menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+      document.addEventListener('click', function (e) { if (!menu.contains(e.target) && !menuBtn.contains(e.target)) setMenu(false); });
+
       // --- Halo qui suit la souris ---
       var spotlight = document.getElementById('spotlight');
       function paintSpotlight(x, y) {
@@ -1008,7 +1055,7 @@
           links.forEach(function (l) { l.classList.toggle('is-current', l.getAttribute('href') === '#' + entry.target.id); });
         });
       }, { rootMargin: '-30% 0px -60% 0px' });
-      ['services', 'references', 'realisations', 'apropos', 'faq', 'contact'].forEach(function (id) {
+      ['services', 'tarifs', 'references', 'realisations', 'apropos', 'faq', 'contact'].forEach(function (id) {
         var el = document.getElementById(id);
         if (el) observer.observe(el);
       });
