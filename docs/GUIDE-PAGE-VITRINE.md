@@ -29,7 +29,7 @@ Le site est **statique** : pas de serveur, pas de base de données, pas de frame
 | [mentions-legales.html](../mentions-legales.html) | Page légale obligatoire pour un professionnel |
 | [assets/css/input.css](../assets/css/input.css) | **Source** du CSS : couleurs + composants maison |
 | [tailwind.config.js](../tailwind.config.js) | Configuration Tailwind (fichiers à scanner, police, couleurs) |
-| [assets/css/site.css](../assets/css/site.css) | CSS **généré** (minifié) : ne jamais le modifier à la main |
+| [assets/css/site.css](../assets/css/site.css) | CSS **généré** (lisible, non minifié) : ne pas le modifier à la main, il est réécrit à chaque compilation. Modifier `input.css` à la place |
 | [sitemap.xml](../sitemap.xml) | Liste des pages pour Google |
 | `media/` | Image de partage (`og-image.png`), icône iPhone, vidéo, captures de sites |
 | [.vscode/tasks.json](../.vscode/tasks.json) | Raccourcis VS Code : serveur local + compilation CSS |
@@ -40,7 +40,7 @@ Le cycle de travail :
 modifier index.html / input.css
         │
         ▼
-npx tailwindcss@3 -i assets/css/input.css -o assets/css/site.css --minify
+npx tailwindcss@3 -i assets/css/input.css -o assets/css/site.css
         │
         ▼
 vérifier sur http://localhost:8000/   (python -m http.server 8000)
@@ -58,7 +58,7 @@ git commit + git push  →  GitHub Pages publie en ~1 minute
 Le CDN (`<script src="https://cdn.tailwindcss.com">`) est pratique pour tester, mais il génère le CSS **dans le navigateur de chaque visiteur** : plus lent, et Tailwind déconseille de l'utiliser en production. La compilation produit un petit fichier (`site.css`) qui ne contient **que les classes réellement utilisées**.
 
 ```bash
-npx tailwindcss@3 -i assets/css/input.css -o assets/css/site.css --minify
+npx tailwindcss@3 -i assets/css/input.css -o assets/css/site.css
 ```
 
 - `npx` télécharge Tailwind à la volée : rien à installer, pas de `node_modules` dans le dépôt.

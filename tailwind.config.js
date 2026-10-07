@@ -1,4 +1,4 @@
-/** Build : npx tailwindcss@3 -i assets/css/input.css -o assets/css/site.css --minify */
+/** Build : npx tailwindcss@3 -i assets/css/input.css -o assets/css/site.css */
 const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
 
 module.exports = {

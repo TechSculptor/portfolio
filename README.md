@@ -180,5 +180,5 @@ Dans VS Code : `Ctrl+Maj+P` > **Tasks: Run Task** > **Voir le site en local** (l
 La page `index.html` utilise un CSS Tailwind **compilé** (`assets/css/site.css`). Après avoir ajouté ou changé des classes Tailwind dans `index.html` (ou les composants de `assets/css/input.css`), recompilez :
 
 ```bash
-npx tailwindcss@3 -i assets/css/input.css -o assets/css/site.css --minify
+npx tailwindcss@3 -i assets/css/input.css -o assets/css/site.css
 ```
