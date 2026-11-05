@@ -1,1 +1,575 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Page destinée aux recruteurs : non référencée, non liée depuis l'accueil, absente du sitemap -->
+  <title>Thomas Daloz – Développeur full-stack en alternance</title>
+  <meta name="description"
+    content="Thomas Daloz, développeur full-stack : recherche d'une alternance de 12 mois (Mastère Développeur Full-Stack, Studi) dès novembre 2026.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="author" content="Thomas Daloz">
+  <meta name="theme-color" content="#1c1c1f">
+  <link rel="apple-touch-icon" href="../media/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23d6c05c'/%3E%3Cstop offset='1' stop-color='%238e8e96'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%231c1c1f'/%3E%3Cpath d='M25 20 13 32l12 12M39 20l12 12-12 12' fill='none' stroke='url(%23g)' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <!-- Thème appliqué avant le rendu : sombre par défaut, clair si choisi (même réglage que l'accueil) -->
+  <script>
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem('theme'); } catch (e) { }
+      var dark = stored !== 'light';
+      document.documentElement.classList.toggle('dark', dark);
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#1c1c1f' : '#ffffff');
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="../assets/css/site.css?v=2026-10-07d">
+</head>
+
+<body class="bg-canvas font-sans leading-relaxed text-fg selection:bg-gold/30 selection:text-head">
+
+  <svg class="absolute h-0 w-0" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="bracket" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0" style="stop-color: rgb(var(--gold))" />
+        <stop offset="1" style="stop-color: rgb(var(--steel))" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <svg class="pointer-events-none fixed left-4 top-0 z-0 hidden h-[200px] w-[220px] md:block lg:left-10"
+    viewBox="0 0 220 200" aria-hidden="true">
+    <path d="M0 0H210L196 14H14V182L0 196Z" fill="url(#bracket)" />
+  </svg>
+  <svg class="pointer-events-none fixed bottom-0 right-4 z-0 hidden h-[200px] w-[220px] rotate-180 md:block lg:right-10"
+    viewBox="0 0 220 200" aria-hidden="true">
+    <path d="M0 0H210L196 14H14V182L0 196Z" fill="url(#bracket)" />
+  </svg>
+
+  <a href="#contenu"
+    class="absolute left-0 top-0 z-50 -translate-y-full rounded bg-gold px-4 py-3 text-sm font-semibold text-canvas focus:translate-y-0">Aller
+    au contenu</a>
+
+  <!-- Menu mobile -->
+  <div class="fixed left-2 top-2 z-40 lg:hidden">
+    <button id="menu-toggle" type="button" class="icon-btn h-12 w-12 border border-line bg-canvas/90 text-2xl shadow-lg backdrop-blur"
+      aria-expanded="false" aria-controls="mobile-menu" aria-label="Ouvrir le menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <nav id="mobile-menu" class="hidden absolute left-0 top-14 w-60 rounded-lg border border-line bg-canvas px-4 py-2 shadow-lg" aria-label="Menu mobile">
+      <ul class="divide-y divide-line">
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#profil">Profil</a></li>
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#realisations">Réalisations</a></li>
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#experience">Expérience</a></li>
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#competences">Compétences</a></li>
+        <li><a class="block py-3 text-sm font-semibold uppercase tracking-[0.15em] text-head" href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div
+    class="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 pb-12 pt-[60px] md:px-12 md:pb-20 lg:px-24 lg:py-0">
+    <div class="lg:flex lg:justify-between lg:gap-16 xl:gap-24">
+
+      <!-- ========== COLONNE GAUCHE ========== -->
+      <header
+        class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[46%] lg:flex-col lg:justify-between lg:pb-6 lg:pr-12 lg:pt-12">
+        <div>
+          <div class="flex items-center justify-end">
+            <button id="theme-toggle" type="button" class="icon-btn" aria-label="Basculer le thème clair / sombre">
+              <i class="fa-solid fa-sun hidden dark:inline"></i>
+              <i class="fa-solid fa-moon dark:hidden"></i>
+            </button>
+          </div>
+
+          <div class="mx-auto max-w-md text-center lg:mx-0 lg:max-w-lg lg:text-left">
+            <p
+              class="mt-10 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold lg:mt-8 lg:justify-start">
+              <svg class="h-10 w-10 shrink-0" viewBox="0 0 64 64" aria-hidden="true">
+                <path d="M25 20 13 32l12 12M39 20l12 12-12 12" fill="none" stroke="url(#bracket)" stroke-width="5"
+                  stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Thomas Daloz <span class="text-head">· recherche d'alternance</span></span>
+            </p>
+            <h1 class="mt-4 text-4xl font-light leading-tight tracking-tight text-head sm:text-5xl">Développeur
+              full-stack en alternance, 12 mois.</h1>
+            <p class="mt-5 leading-normal">
+              Licence informatique validée au CNAM Lyon, M1 en cours. Je prépare le <span class="text-head">Mastère
+                Développeur Full-Stack de Studi (Bac+5)</span> et je cherche l'entreprise où l'appliquer, dès novembre
+              2026.
+            </p>
+
+            <div class="mt-7 flex flex-wrap justify-center gap-3 lg:justify-start">
+              <a href="mailto:thomasdaloz9799@gmail.com?subject=Alternance%20d%C3%A9veloppeur%20full-stack"
+                class="btn-primary"><i class="fa-regular fa-envelope"></i> Me contacter</a>
+              <a href="Thomas-Daloz-CV-alternance.pdf" download class="btn-line">Télécharger mon CV</a>
+            </div>
+          </div>
+
+          <nav class="nav hidden lg:block" aria-label="Sections de la page">
+            <ul class="mx-auto mt-10 w-max lg:mx-0 lg:mt-6">
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#profil"><span
+                    class="nav-indicator"></span><span class="nav-text">Profil</span></a></li>
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#realisations"><span
+                    class="nav-indicator"></span><span class="nav-text">Réalisations</span></a></li>
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#experience"><span
+                    class="nav-indicator"></span><span class="nav-text">Expérience</span></a></li>
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#competences"><span
+                    class="nav-indicator"></span><span class="nav-text">Compétences</span></a></li>
+              <li><a class="nav-link group flex items-center py-2 lg:py-1.5" href="#contact"><span
+                    class="nav-indicator"></span><span class="nav-text">Contact</span></a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <ul class="mt-6 flex lg:mt-4 items-center justify-center gap-2 lg:justify-end" aria-label="Liens">
+          <li><a class="icon-btn text-xl" href="https://github.com/TechSculptor" target="_blank" rel="noopener"
+              aria-label="GitHub (nouvel onglet)"><i class="fa-brands fa-github"></i></a></li>
+          <li><a class="icon-btn text-xl" href="https://www.linkedin.com/in/thomas-daloz-16933b281" target="_blank"
+              rel="noopener" aria-label="LinkedIn (nouvel onglet)"><i class="fa-brands fa-linkedin"></i></a></li>
+          <li><a class="icon-btn text-xl" href="mailto:thomasdaloz9799@gmail.com" aria-label="Email"><i
+                class="fa-regular fa-envelope"></i></a></li>
+          <li><a class="icon-btn text-xl" href="Thomas-Daloz-CV-alternance.pdf" download aria-label="Télécharger mon CV"><i
+                class="fa-regular fa-file-lines"></i></a></li>
+        </ul>
+      </header>
+
+      <!-- ========== COLONNE DROITE ========== -->
+      <main id="contenu" class="pt-24 lg:w-[54%] lg:py-24">
+
+        <!-- PROFIL -->
+        <section id="profil" class="plain scroll-mt-16 lg:scroll-mt-24" aria-label="Profil">
+          <h2 class="section-title">Profil</h2>
+          <div class="mb-8 flex items-center gap-5">
+            <img src="../assets/picture/thomas-daloz.jpg" alt="Thomas Daloz"
+              class="h-24 w-24 shrink-0 rounded-full object-cover ring-2 ring-gold/70 ring-offset-4 ring-offset-[rgb(var(--canvas))]"
+              loading="lazy">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Alternance · 12 mois</p>
+              <p class="mt-1 text-2xl font-extralight text-head">Thomas Daloz</p>
+              <p class="text-sm text-muted">Développeur full-stack · Farges (Ain)</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <p>
+              J'aime concevoir des applications <span class="text-head">utiles et fiables</span>, au plus près des
+              besoins métier : comprendre le besoin, proposer une architecture, livrer un code testé et documenté.
+            </p>
+            <p>
+              Mes stages m'ont fait travailler sur des sujets concrets : supervision énergétique en temps réel chez
+              <span class="text-head">VISU Energy</span>, API REST en équipe Agile chez <span
+                class="text-head">DATALIA</span>, service de suivi d'emails chez <span class="text-head">Easy
+                Tech</span>. J'utilise l'IA au quotidien (Claude, Gemini) en vérifiant toujours le code produit.
+            </p>
+          </div>
+          <ul class="mt-8 grid gap-4 sm:grid-cols-3">
+            <li class="border-l-2 border-gold/70 pl-4">
+              <p class="text-sm font-semibold text-head">Disponible</p>
+              <p class="text-sm text-muted">Dès novembre 2026, pour 12 mois.</p>
+            </li>
+            <li class="border-l-2 border-gold/70 pl-4">
+              <p class="text-sm font-semibold text-head">Rythme</p>
+              <p class="text-sm text-muted">4 jours en entreprise, 1 jour en formation (flexible).</p>
+            </li>
+            <li class="border-l-2 border-gold/70 pl-4">
+              <p class="text-sm font-semibold text-head">Formation</p>
+              <p class="text-sm text-muted">Mastère Full-Stack Studi, Bac+5, à distance.</p>
+            </li>
+          </ul>
+        </section>
+
+        <!-- RÉALISATIONS -->
+        <section id="realisations" class="band scroll-mt-16 lg:scroll-mt-24" aria-label="Réalisations">
+          <h2 class="section-title">Réalisations</h2>
+          <p class="-mt-2 mb-8 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Projets et missions</p>
+          <ul class="zebra group/list space-y-6">
+
+            <li class="card">
+              <div class="space-y-5">
+                <video class="w-full rounded-md border border-line shadow-lg shadow-black/20"
+                  src="../media/visu-energy-demo.mp4" poster="../media/visu-energy-poster.jpg" autoplay muted loop
+                  playsinline controls preload="metadata"
+                  aria-label="Démonstration de la plateforme VISU Energy : connexion, gestion du parc et des projets, calendrier, table des départs et éditeur de plan"></video>
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">VISU Energy · Stage 2026</p>
+                  <h3 class="mt-1 font-semibold text-head">Supervision énergétique en temps réel</h3>
+                  <p class="mt-2 text-sm">Une application web qui affiche en direct la consommation électrique
+                    d'événements et de chantiers. J'ai réalisé une grande partie de l'interface (tableaux de bord,
+                    calendrier, éditeur de plan, version mobile) et, en binôme, la collecte des mesures.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">Node-RED</li>
+                    <li class="pill">JavaScript</li>
+                    <li class="pill">PostgreSQL</li>
+                    <li class="pill">Figma</li>
+                  </ul>
+                  <p class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    <a class="link-gold" href="https://github.com/TechSculptor/portfolio/tree/main/6-Visu-Energy"
+                      target="_blank" rel="noopener">Extraits de code</a>
+                    <span class="text-xs text-muted"><i class="fa-solid fa-lock mr-1"></i>Reste du code privé, propriété
+                      de VISU Energy</span>
+                  </p>
+                </div>
+              </div>
+            </li>
+
+            <li class="card">
+              <div class="grid gap-4 sm:grid-cols-8 sm:gap-6">
+                <div class="sm:order-2 sm:col-span-5">
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Projet full-stack</p>
+                  <h3 class="mt-1 font-semibold text-head">Boutique &amp; atelier avec espace d'administration</h3>
+                  <p class="mt-2 text-sm">Catalogue, comptes utilisateurs, back-office réservé à l'administrateur,
+                    données externes en direct. Testé automatiquement et déployé en ligne.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">Symfony 8</li>
+                    <li class="pill">PostgreSQL</li>
+                    <li class="pill">Docker</li>
+                    <li class="pill">Tailwind</li>
+                  </ul>
+                  <div class="mt-4 rounded-md border border-dashed border-gold/40 p-3 text-xs">
+                    <p class="font-semibold text-head"><i class="fa-solid fa-key mr-1 text-gold"></i>Compte de
+                      démonstration (lecture seule)</p>
+                    <dl class="mt-2 grid grid-cols-[auto_1fr_auto] items-center gap-x-3 gap-y-1">
+                      <dt class="text-muted">Email</dt>
+                      <dd class="text-head">demo@starshop.dev</dd>
+                      <dd><button type="button" class="copy-btn" data-copy="demo@starshop.dev"
+                          aria-label="Copier l'email de démonstration"><i class="fa-regular fa-copy"></i></button></dd>
+                      <dt class="text-muted">Mot de passe</dt>
+                      <dd class="text-head">starshop-demo</dd>
+                      <dd><button type="button" class="copy-btn" data-copy="starshop-demo"
+                          aria-label="Copier le mot de passe de démonstration"><i
+                            class="fa-regular fa-copy"></i></button></dd>
+                    </dl>
+                    <p class="mt-2 text-muted"><i class="fa-regular fa-clock mr-1"></i>Hébergement gratuit : le premier
+                      chargement peut prendre environ 1 minute.</p>
+                  </div>
+                  <p class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    <a class="link-gold" href="https://starshop-ky4b.onrender.com/login" target="_blank"
+                      rel="noopener">Démo en ligne</a>
+                    <a class="link-gold" href="https://github.com/TechSculptor/portfolio/tree/main/5-Starshop"
+                      target="_blank" rel="noopener">Code</a>
+                  </p>
+                </div>
+                <img class="w-full rounded border border-line sm:order-1 sm:col-span-3 sm:mt-1"
+                  src="../Screen/Starshop3-vaisseau.png" alt="Fiche détaillée d'un article dans Starshop" loading="lazy">
+              </div>
+            </li>
+
+            <li class="card">
+              <div class="grid gap-4 sm:grid-cols-8 sm:gap-6">
+                <div class="sm:order-2 sm:col-span-5">
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Easy Tech · Stage 2025</p>
+                  <h3 class="mt-1 font-semibold text-head">Suivi des emails &amp; tableau de bord</h3>
+                  <p class="mt-2 text-sm">Un service back-end qui enregistre qui ouvre les emails, quand et sur quel
+                    appareil, avec restitution automatique dans Google Sheets et un tableau de bord Looker Studio.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">Node.js</li>
+                    <li class="pill">Google Sheets</li>
+                    <li class="pill">Looker Studio</li>
+                  </ul>
+                  <p class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    <a class="link-gold"
+                      href="https://lookerstudio.google.com/reporting/d4218795-26ec-4770-bd6d-1634ff8426f5"
+                      target="_blank" rel="noopener">Tableau de bord</a>
+                    <a class="link-gold" href="https://github.com/TechSculptor/portfolio/tree/main/2-Email-Tracker"
+                      target="_blank" rel="noopener">Code</a>
+                  </p>
+                </div>
+                <img class="w-full rounded border border-line sm:order-1 sm:col-span-3 sm:mt-1"
+                  src="../2-Email-Tracker/visuals/dashboard1.jpg" alt="Tableau de bord Looker Studio du suivi d'emails"
+                  loading="lazy">
+              </div>
+            </li>
+
+            <li class="card">
+              <div class="grid gap-4 sm:grid-cols-8 sm:gap-6">
+                <div class="sm:order-2 sm:col-span-5">
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Santé</p>
+                  <h3 class="mt-1 font-semibold text-head">Prise de rendez-vous pour un cabinet médical</h3>
+                  <p class="mt-2 text-sm">Les patients réservent et annulent en ligne, voient les créneaux libres en
+                    direct et reçoivent un récapitulatif PDF. L'administrateur gère les médecins et leurs plannings.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">PHP</li>
+                    <li class="pill">PostgreSQL</li>
+                    <li class="pill">Docker</li>
+                    <li class="pill">AJAX</li>
+                  </ul>
+                  <p class="mt-4 text-sm"><a class="link-gold"
+                      href="https://github.com/TechSculptor/portfolio/tree/main/1-Cabinet-Medical" target="_blank"
+                      rel="noopener">Code</a></p>
+                </div>
+                <img class="w-full rounded border border-line sm:order-1 sm:col-span-3 sm:mt-1"
+                  src="../Screen/Portfolio2.png" alt="Aperçu du projet de cabinet médical" loading="lazy">
+              </div>
+            </li>
+
+            <li class="card">
+              <div class="grid gap-4 sm:grid-cols-8 sm:gap-6">
+                <div class="sm:order-2 sm:col-span-5">
+                  <p class="text-xs font-semibold uppercase tracking-[0.15em] text-muted">Front-end</p>
+                  <h3 class="mt-1 font-semibold text-head">Gestionnaire de tâches intelligent</h3>
+                  <p class="mt-2 text-sm">Priorités, catégories, sous-tâches et rappels qui s'adaptent à l'échéance. Les
+                    données restent dans le navigateur, sans compte à créer.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+                    <li class="pill">Angular 21</li>
+                    <li class="pill">TypeScript</li>
+                  </ul>
+                  <p class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    <a class="link-gold" href="../4-Todo-List-Dev/demo/index.html" target="_blank" rel="noopener">Démo
+                      en ligne</a>
+                    <a class="link-gold" href="https://github.com/TechSculptor/portfolio/tree/main/4-Todo-List-Dev"
+                      target="_blank" rel="noopener">Code</a>
+                  </p>
+                </div>
+                <img class="w-full rounded border border-line sm:order-1 sm:col-span-3 sm:mt-1"
+                  src="../Screen/TodoList.png" alt="Liste de tâches avec priorités, catégories et rappels" loading="lazy">
+              </div>
+            </li>
+          </ul>
+
+          <p class="mt-10 text-sm">
+            <a class="link-gold inline-flex items-center gap-2" href="https://github.com/TechSculptor/portfolio"
+              target="_blank" rel="noopener">Tout le code sur GitHub <i class="fa-solid fa-arrow-right text-xs"></i></a>
+          </p>
+        </section>
+
+        <!-- EXPÉRIENCE -->
+        <section id="experience" class="plain scroll-mt-16 lg:scroll-mt-24" aria-label="Expérience">
+          <h2 class="section-title">Expérience</h2>
+          <p class="-mt-2 mb-8 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Stages et formation</p>
+          <ol class="zebra group/list space-y-4">
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2026 · 4 mois
+                </p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Développeur web &amp; support IoT · VISU Energy</h3>
+                  <p class="mt-2 text-sm">Flux télémétriques IoT en temps réel sous Node-RED, API REST et PostgreSQL,
+                    interfaces d'après les maquettes Figma, tests applicatifs.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2">
+                    <li class="pill">Node-RED</li>
+                    <li class="pill">JavaScript</li>
+                    <li class="pill">PostgreSQL</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2026 · 2 mois
+                </p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Développeur web full-stack · DATALIA</h3>
+                  <p class="mt-2 text-sm">Applications web en TypeScript et Supabase (Drizzle ORM), API REST sécurisées,
+                    équipe Agile / Scrum avec GitHub Projects, documentation technique.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2">
+                    <li class="pill">TypeScript</li>
+                    <li class="pill">Supabase</li>
+                    <li class="pill">API REST</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2025 · 2 mois
+                </p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Développeur tracking &amp; analytics · Easy Tech</h3>
+                  <p class="mt-2 text-sm">Service back-end Node.js de suivi d'engagement, restitution en temps réel sur
+                    tableaux de bord, recette du flux de données.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2">
+                    <li class="pill">Node.js</li>
+                    <li class="pill">Looker Studio</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2025 · 2 mois
+                </p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Développeur WordPress &amp; intégrateur · Innovqube</h3>
+                  <p class="mt-2 text-sm">Intégration d'interfaces et de widgets responsive, maintenance de pages et
+                    optimisation du référencement.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2">
+                    <li class="pill">WordPress</li>
+                    <li class="pill">SEO</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2025 · 3 mois
+                </p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Développeur Rust · MD Solutions</h3>
+                  <p class="mt-2 text-sm">Requêtes asynchrones multi-thread via l'API KuCoin (+50 % de vitesse
+                    d'exécution), structuration de crates internes, modélisation de bases de données.</p>
+                  <ul class="mt-3 flex flex-wrap gap-2">
+                    <li class="pill">Rust</li>
+                    <li class="pill">API</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2026 – 2027
+                </p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Mastère Développeur Full-Stack (Bac+5) · Studi</h3>
+                  <p class="mt-2 text-sm">En alternance, formation à distance.</p>
+                </div>
+              </div>
+            </li>
+            <li class="card">
+              <div class="grid gap-2 sm:grid-cols-8 sm:gap-6">
+                <p class="text-xs font-semibold uppercase tracking-wide text-muted sm:col-span-2 sm:mt-1">2022 – 2026
+                </p>
+                <div class="sm:col-span-6">
+                  <h3 class="font-semibold text-head">Licence Informatique (validée) &amp; M1 en cours · CNAM Lyon</h3>
+                  <p class="mt-2 text-sm">Génie logiciel, bases de données, architecture des applications.</p>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </section>
+
+        <!-- COMPÉTENCES -->
+        <section id="competences" class="band scroll-mt-16 lg:scroll-mt-24" aria-label="Compétences">
+          <h2 class="section-title">Compétences</h2>
+          <div class="rounded-lg border border-line bg-surface/40 p-6">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Ma stack</p>
+            <dl class="mt-5 grid gap-4 text-sm sm:grid-cols-2">
+              <div>
+                <dt class="font-semibold text-head">Back-end</dt>
+                <dd class="mt-2 flex flex-wrap gap-2"><span class="pill">PHP / Symfony 8</span><span
+                    class="pill">Node.js</span><span class="pill">C#</span><span class="pill">API REST</span></dd>
+              </div>
+              <div>
+                <dt class="font-semibold text-head">Front-end</dt>
+                <dd class="mt-2 flex flex-wrap gap-2"><span class="pill">Angular 21</span><span
+                    class="pill">React</span><span class="pill">TypeScript</span><span class="pill">Tailwind</span></dd>
+              </div>
+              <div>
+                <dt class="font-semibold text-head">Données &amp; DevOps</dt>
+                <dd class="mt-2 flex flex-wrap gap-2"><span class="pill">PostgreSQL</span><span
+                    class="pill">Supabase</span><span class="pill">Docker</span><span class="pill">GitHub Actions</span>
+                </dd>
+              </div>
+              <div>
+                <dt class="font-semibold text-head">Qualité &amp; sécurité</dt>
+                <dd class="mt-2 flex flex-wrap gap-2"><span class="pill">PHPUnit</span><span
+                    class="pill">Jest / Vitest</span><span class="pill">Scrum</span><span class="pill">OWASP</span>
+                </dd>
+              </div>
+              <div>
+                <dt class="font-semibold text-head">IA &amp; automatisation</dt>
+                <dd class="mt-2 flex flex-wrap gap-2"><span class="pill">Claude</span><span
+                    class="pill">Gemini</span><span class="pill">n8n</span><span class="pill">Node-RED</span></dd>
+              </div>
+              <div>
+                <dt class="font-semibold text-head">Langues</dt>
+                <dd class="mt-2 flex flex-wrap gap-2"><span class="pill">Anglais B2</span><span
+                    class="pill">Allemand A1</span></dd>
+              </div>
+            </dl>
+          </div>
+
+          <figure class="mt-10 border-l-2 border-gold pl-6">
+            <blockquote class="text-lg font-light leading-relaxed text-head">
+              « Thomas a montré une bonne motivation et une réelle curiosité pour le métier de développeur informatique.
+              Il s'est investi dans les missions confiées et a su s'adapter progressivement à notre environnement de
+              travail. »
+            </blockquote>
+            <figcaption class="mt-4 text-sm"><span class="font-semibold text-gold">Quin Axel</span> <span
+                class="text-muted">· Chef de projet, Easy Tech</span></figcaption>
+          </figure>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="plain scroll-mt-16 lg:scroll-mt-24" aria-label="Contact">
+          <h2 class="section-title">Contact</h2>
+          <div class="rounded-lg border border-line bg-surface/40 p-6">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Échangeons</p>
+            <p class="mt-3 text-sm">Vous cherchez un alternant développeur pour 12 mois ? Je serais ravi d'en discuter
+              avec vous, par email ou par téléphone.</p>
+            <p class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              <a class="link-gold" href="mailto:thomasdaloz9799@gmail.com?subject=Alternance%20d%C3%A9veloppeur%20full-stack">thomasdaloz9799@gmail.com</a>
+              <a class="link-gold" href="tel:+33624296356">06 24 29 63 56</a>
+              <a class="link-gold" href="Thomas-Daloz-CV-alternance.pdf" download>Mon CV (PDF)</a>
+              <a class="link-gold" href="https://www.linkedin.com/in/thomas-daloz-16933b281" target="_blank"
+                rel="noopener">LinkedIn</a>
+            </p>
+          </div>
+        </section>
+
+        <footer class="mt-24 max-w-md pb-16 text-xs text-muted sm:pb-0">
+          <p>© <span id="year"></span> Thomas Daloz · <a class="link-gold" href="../mentions-legales.html">Mentions
+              légales</a></p>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Thème clair / sombre (partagé avec l'accueil via localStorage)
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        var dark = !document.documentElement.classList.contains('dark');
+        document.documentElement.classList.toggle('dark', dark);
+        try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) { }
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#1c1c1f' : '#ffffff');
+      });
+
+      // Menu mobile
+      var toggle = document.getElementById('menu-toggle'), menu = document.getElementById('mobile-menu');
+      toggle.addEventListener('click', function () {
+        var open = menu.classList.toggle('hidden') === false;
+        toggle.setAttribute('aria-expanded', open);
+      });
+      menu.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { menu.classList.add('hidden'); toggle.setAttribute('aria-expanded', 'false'); });
+      });
+
+      // Copier les identifiants de démonstration
+      document.querySelectorAll('.copy-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!navigator.clipboard) return;
+          navigator.clipboard.writeText(btn.dataset.copy).then(function () {
+            btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+            setTimeout(function () { btn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 1500);
+          });
+        });
+      });
+
+      // Lien actif dans la navigation selon la section visible
+      var links = document.querySelectorAll('.nav-link');
+      if ('IntersectionObserver' in window && links.length) {
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            links.forEach(function (l) { l.classList.toggle('is-current', l.getAttribute('href') === '#' + e.target.id); });
+          });
+        }, { rootMargin: '-30% 0px -60% 0px' });
+        document.querySelectorAll('main section[id]').forEach(function (s) { obs.observe(s); });
+      }
+    })();
+  </script>
+</body>
+
+</html>
